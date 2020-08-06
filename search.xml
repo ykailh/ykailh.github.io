@@ -1,44 +1,215 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Hello World</title>
-    <url>/2020/08/05/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+    <title>markdown常用语法</title>
+    <url>/2020/08/05/markdown%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95/</url>
+    <content><![CDATA[<h1 id="markdown常用语法"><a href="#markdown常用语法" class="headerlink" title="markdown常用语法"></a>markdown常用语法</h1><p>​    工欲善其事必先利其器，markdown作为最适合程序员的文本编辑格式，是写技术博客不可或缺的一环，花了一天时间学习了相关的语法，总结分享作为新博客的第一篇文章。</p>
 <a id="more"></a>
 
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<h2 id="文本格式"><a href="#文本格式" class="headerlink" title="文本格式"></a>文本格式</h2><h3 id="0-标题"><a href="#0-标题" class="headerlink" title="0.标题"></a>0.标题</h3><p>​    标题格式：<strong># + 空格 + 标题内容</strong>，几个’#就代表几级标题。</p>
+<h3 id="1-字体"><a href="#1-字体" class="headerlink" title="1.字体"></a>1.字体</h3><p>​        字体格式：<strong>*文本内容* 或  _文本内容_</strong> ，一个符号为<em>斜体文本</em>，两个符号为<strong>粗体文本</strong>，三个符号为**<em>粗斜体文本**</em>。</p>
+<table>
+<thead>
+<tr>
+<th align="center">输入内容</th>
+<th align="center">效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">*斜体文本* 或  _斜体文本_</td>
+<td align="center"><em>斜体文本</em></td>
+</tr>
+<tr>
+<td align="center">**粗体文本** 或 __粗体文本__</td>
+<td align="center"><strong>粗体文本</strong></td>
+</tr>
+<tr>
+<td align="center">***粗斜体文本*** 或 ___粗斜体文本___</td>
+<td align="center"><strong><em>粗斜体文本</em></strong></td>
+</tr>
+</tbody></table>
+<h3 id="2-删除线"><a href="#2-删除线" class="headerlink" title="2.删除线"></a>2.删除线</h3><p>​        删除线格式：<strong>~~删除线文本~~</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">输入内容</th>
+<th align="center">效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">普通文本</td>
+<td align="center">普通文本</td>
+</tr>
+<tr>
+<td align="center">~~删除线文本~~</td>
+<td align="center"><del>删除线文本</del></td>
+</tr>
+</tbody></table>
+<h3 id="3-下划线"><a href="#3-下划线" class="headerlink" title="3.下划线"></a>3.下划线</h3><p>​        下划线格式：<strong>&lt;u&gt;带下划线的文本&lt;/u&gt;</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">输入内容</th>
+<th align="center">效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">普通文本</td>
+<td align="center">普通文本</td>
+</tr>
+<tr>
+<td align="center">&lt;u&gt;带下划线的文本&lt;/u&gt;</td>
+<td align="center"><u>带下划线的文本</u></td>
+</tr>
+</tbody></table>
+<h3 id="4-脚注"><a href="#4-脚注" class="headerlink" title="4.脚注"></a>4.脚注</h3><p>​    <strong>使用脚注</strong>：文本内容[^脚注名称]，<strong>解释脚注：</strong>[^脚注名称]:脚注内容。</p>
+<p>​    <strong>效果</strong>：文本内容<a href="%E8%BF%99%E6%98%AF%E4%B8%80%E4%B8%AA%E8%84%9A%E6%B3%A8">^脚注</a></p>
+<h3 id="5-分割线"><a href="#5-分割线" class="headerlink" title="5.分割线"></a>5.分割线</h3><p>​    使用三个或以上 * 或 - 来使用下划线，可以在符号中加空格（可能会在编写软件中识别为其他符号，<strong>不建议使用</strong>），且本行中不可有其他内容。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">几种分割线示意：</span><br><span class="line">***</span><br><span class="line"></span><br><span class="line">* * *</span><br><span class="line"></span><br><span class="line">*****</span><br><span class="line"></span><br><span class="line">- - -</span><br><span class="line"></span><br><span class="line">----------</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>分割线效果：</p>
+<hr>
+<p><strong>错误示范</strong>：***其他内容（未出现分割线效果）</p>
+<h2 id="列表与区块"><a href="#列表与区块" class="headerlink" title="列表与区块"></a>列表与区块</h2><h3 id="1-无序列表"><a href="#1-无序列表" class="headerlink" title="1.无序列表"></a>1.无序列表</h3><p>​    无序列表格式：<strong>* 或 + 或 - 加上一个空格后面再加上内容</strong>，三个符号效果相同。</p>
+<p><strong>输入</strong>：</p>
+<p>​    * 无序第一列</p>
+<p>​    + 无序第二列</p>
+<p>​    -  无序第三列</p>
+<p><strong>效果</strong>：</p>
+<pre><code>    * 无序第一列</code></pre>
+<ul>
+<li>无序第二列</li>
+</ul>
+<ul>
+<li>无序第三列</li>
+</ul>
+<h3 id="2-有序列表"><a href="#2-有序列表" class="headerlink" title="2.有序列表"></a>2.有序列表</h3><p>​    有序列表格式：<strong>数字+ . + 空格 + 内容</strong>，即将无序列表的符号替换为数字加点的格式（例如1.）。</p>
+<p><strong>输入</strong>：</p>
+<p>​    1. 有序第一列</p>
+<p>​    2. 有序第二列</p>
+<p>​    3. 有序第三列</p>
+<p><strong>效果</strong>:</p>
+<ol>
+<li>有序第一列</li>
+<li>有序第二列</li>
+<li>有序第三列</li>
+</ol>
+<h3 id="3-列表嵌套"><a href="#3-列表嵌套" class="headerlink" title="3.列表嵌套"></a>3.列表嵌套</h3><p>​    在语法中为在<strong>子列表前添加四个空格</strong>，不过一般都在编写软件上编写<strong>更推荐使用TAB（缩进）与SHIFT+TAB（反缩进）</strong></p>
+<p>​    <strong>输入</strong>：</p>
+<p>​    1. 第一项：</p>
+<p>​        * 第一项嵌套的第一个元素</p>
+<p>​        * 第一项嵌套的第二个元素</p>
+<p>​    2. 第二项：</p>
+<p>​        * 第二项嵌套的第一个元素</p>
+<p>​        * 第二项嵌套的第二个元素</p>
+<p><strong>效果</strong>:</p>
+<ol>
+<li>第一项：<ul>
+<li>第一项嵌套的第一个元素</li>
+<li>第一项嵌套的第二个元素</li>
+</ul>
+</li>
+<li>第二项：<pre><code>* 第二项嵌套的第一个元素
+   * 第二项嵌套的第二个元素</code></pre>
+</li>
+</ol>
+<h3 id="4-区块"><a href="#4-区块" class="headerlink" title="4.区块"></a>4.区块</h3><p>​    区块格式：<strong>在每行前加上 &gt; 然后紧跟一个空格。</strong></p>
+<p><strong>输入：</strong></p>
+<p>&gt; 区块引用第一行</p>
+<p>&gt; 区块引用第二行</p>
+<p><strong>效果：</strong></p>
+<blockquote>
+<p>区块引用第一行</p>
+<p>区块引用第二行</p>
+</blockquote>
+<h3 id="5-区块嵌套"><a href="#5-区块嵌套" class="headerlink" title="5.区块嵌套"></a>5.区块嵌套</h3><p>​    区块嵌套格式：<strong>每有一个 &gt; 号就表示一层嵌套</strong></p>
+<p><strong>输入：</strong></p>
+<p>&gt; 最外层</p>
+<p>&gt;&gt; 第一层嵌套</p>
+<p>&gt;&gt;&gt; 第二层嵌套</p>
+<p>**效果: **</p>
+<blockquote>
+<p>最外层</p>
+<blockquote>
+<p>第一层嵌套</p>
+<blockquote>
+<p>第二层嵌套</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><h3 id="1-代码片段"><a href="#1-代码片段" class="headerlink" title="1.代码片段"></a>1.代码片段</h3><p>​    代码片段格式：**` 代码内容 ` **(反引号)</p>
+<p>​    <strong>输入：</strong> ` int a ;`         <strong>效果：</strong> <code>int a;</code></p>
+<h3 id="2-代码区块"><a href="#2-代码区块" class="headerlink" title="2.代码区块"></a>2.代码区块</h3><p>​    格式：用 <strong>```</strong> 包裹一段代码，并指定一种语言（也可以不指定）：</p>
+<p><strong>输入：</strong></p>
+<p>​    ``` java</p>
+<p>public class Test {<br>    public static void main(String[] args) {<br>        System.out.println(“Hello World”);<br>    }<br>}</p>
+<p>​    ```</p>
+<p><strong>效果：</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Hello World&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-]]></content>
-      <tags>
-        <tag>test1</tag>
-        <tag>表单验证</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>第一篇测试</title>
-    <url>/2020/08/05/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%B5%8B%E8%AF%95/</url>
-    <content><![CDATA[<p>范德萨的</p>
-<a id="more"></a>
-
-<p>ad</p>
+<h2 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h2><h3 id="1-直接显示链接"><a href="#1-直接显示链接" class="headerlink" title="1.直接显示链接"></a>1.直接显示链接</h3><p>​    语法格式: <strong>&lt; 链接 &gt; **    **效果:</strong> <a href="https://www.baidu.com/">https://www.baidu.com/</a></p>
+<h3 id="2-用名称替代链接"><a href="#2-用名称替代链接" class="headerlink" title="2.用名称替代链接"></a>2.用名称替代链接</h3><p>​    语法格式：<strong>[链接名称](链接地址)  **效果：</strong>这是我的<a href="https://ykailh.github.io/">博客</a></p>
+<h3 id="3-用名称和变量替代链接"><a href="#3-用名称和变量替代链接" class="headerlink" title="3.用名称和变量替代链接"></a>3.用名称和变量替代链接</h3><p>​    语法格式：<strong>[链接名称][变量名称]，[变量名称]</strong>: 链接。变量定义类似于脚注，效果与用名称替代类似，但方便多次使用。</p>
+<p>效果：这是一个<a href="https://www.baidu.com/">百度链接</a>，再次使用<a href="https://www.baidu.com/">百度链接</a>。</p>
+<h2 id="表格"><a href="#表格" class="headerlink" title="表格"></a>表格</h2><p>​    <strong>用 | 来分隔单元格，- 来分隔表头。</strong></p>
+<p><strong>输入：</strong></p>
+<p>| 表头 | 表头 |</p>
+<p>|  —-  |  —-  |</p>
+<p>| 单元格 | 单元格 |</p>
+<p>| 单元格 | 单元格 |</p>
+<p><strong>效果：</strong></p>
+<table>
+<thead>
+<tr>
+<th>表头</th>
+<th>表头</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>单元格</td>
+<td>单元格</td>
+</tr>
+<tr>
+<td>单元格</td>
+<td>单元格</td>
+</tr>
+</tbody></table>
+<p><strong>默认为左对齐</strong></p>
+<hr>
+<p>将分隔符替换为<strong>-: , :-  , :-:</strong> 分别表示右对齐，左对齐，居中对齐。</p>
+<p><strong>输入：</strong></p>
+<p>| 左对齐 | 右对齐 | 居中对齐 |</p>
+<p>|  :—-  |  —-:  | :—-: |</p>
+<p>| 单元格 | 单元格 | 单元格 |</p>
+<p>| 单元格 | 单元格 | 单元格 |</p>
+<p><strong>效果</strong>：</p>
+<table>
+<thead>
+<tr>
+<th align="left">左对齐</th>
+<th align="right">右对齐</th>
+<th align="center">居中对齐</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">单元格</td>
+<td align="right">单元格</td>
+<td align="center">单元格</td>
+</tr>
+<tr>
+<td align="left">单元格</td>
+<td align="right">单元格</td>
+<td align="center">单元格</td>
+</tr>
+</tbody></table>
 ]]></content>
       <categories>
-        <category>test</category>
+        <category>常用软件</category>
       </categories>
       <tags>
-        <tag>表单验证</tag>
-        <tag>jQuery</tag>
-        <tag>表格</tag>
+        <tag>markdown</tag>
+        <tag>Typora</tag>
+        <tag>常用软件</tag>
       </tags>
   </entry>
 </search>
