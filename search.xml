@@ -1,143 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Java基础之包装类</title>
-    <url>/2020/08/08/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%8C%85%E8%A3%85%E7%B1%BB/</url>
-    <content><![CDATA[<h1 id="什么是包装类"><a href="#什么是包装类" class="headerlink" title="什么是包装类"></a>什么是包装类</h1><p>​    Java作为面向对象的编程语言在设计之初依然延续了C语言的8种基本数据类型，但在不断的更新中设计了很多针对对象的API和新的特性（例如泛型），不支持基本数据类型。为了解决这个问题，Java为每一个基本数据类型提供了包装类。</p>
-<a id="more"></a>
-
-<table>
-<thead>
-<tr>
-<th>基本数据类型</th>
-<th>包装类（java.lang.）</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>byte</td>
-<td>Byte</td>
-</tr>
-<tr>
-<td>short</td>
-<td>Short</td>
-</tr>
-<tr>
-<td>int</td>
-<td>Integer</td>
-</tr>
-<tr>
-<td>long</td>
-<td>Long</td>
-</tr>
-<tr>
-<td>float</td>
-<td>Float</td>
-</tr>
-<tr>
-<td>double</td>
-<td>Double</td>
-</tr>
-<tr>
-<td>char</td>
-<td>Character</td>
-</tr>
-<tr>
-<td>boolean</td>
-<td>Boolean</td>
-</tr>
-</tbody></table>
-<h1 id="装箱与拆箱"><a href="#装箱与拆箱" class="headerlink" title="装箱与拆箱"></a>装箱与拆箱</h1><p>​    装箱和拆箱实际上就是<strong>基本数据类型和它的包装类之间的转换</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer num1 = <span class="keyword">new</span> Integer(<span class="number">1</span>);    <span class="comment">//基本数据类型转为包装类也叫做手动装箱</span></span><br><span class="line"><span class="keyword">int</span> num2 = num1.intValue();        <span class="comment">//包装类转换为基本数据类型，也叫做手动拆箱</span></span><br></pre></td></tr></table></figure>
-
-<p>​    在J<strong>DK1.5</strong>之后为了方便使用等目的提供了<strong>自动装箱与自动拆箱</strong>。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//包装类中的自动装箱拆箱机制</span></span><br><span class="line">Integer  num1 = <span class="number">1</span>;        <span class="comment">//自动装箱</span></span><br><span class="line"><span class="comment">//这行代码实际等同于    Integer  num1 = Integer.valueOf(1);</span></span><br><span class="line"><span class="comment">//这个于new Integer(1)有所区别 下文会详细说明</span></span><br><span class="line"><span class="keyword">int</span> num2 = num1;        <span class="comment">//自动拆箱</span></span><br></pre></td></tr></table></figure>
-
-<p>​    需要注意的是只在与<strong>对应的基本数据类型和包装类之间</strong>才能实现自动装箱与拆箱。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Double d = <span class="number">1</span>;<span class="comment">//错误的，1是int类型</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="包装类对象的缓存问题"><a href="#包装类对象的缓存问题" class="headerlink" title="包装类对象的缓存问题"></a>包装类对象的缓存问题</h1><p>​    为了引出这个问题首先做以下测试</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer i = <span class="number">1</span>;</span><br><span class="line">Integer j = <span class="number">1</span>;</span><br><span class="line">System.out.println(i == j);<span class="comment">//true</span></span><br><span class="line"></span><br><span class="line">Integer i = <span class="number">128</span>;</span><br><span class="line">Integer j = <span class="number">128</span>;</span><br><span class="line">System.out.println(i == j);<span class="comment">//false</span></span><br></pre></td></tr></table></figure>
-
-<p>​    为什么改变了在包装类的值会影响结果，这就涉及到了包装类对象的缓存问题。对于对象而言，<code>==</code>所比较的是两个对象的地址值，上面的代码就说明了<strong>在一定的范围内相同值的包装类指向的是同一个对象</strong>。每个包装类的缓存范围如下：</p>
-<table>
-<thead>
-<tr>
-<th>包装类</th>
-<th>缓存对象</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Byte</td>
-<td>-128~127</td>
-</tr>
-<tr>
-<td>Short</td>
-<td>-128~127</td>
-</tr>
-<tr>
-<td>Integer</td>
-<td>-128~127</td>
-</tr>
-<tr>
-<td>Long</td>
-<td>-128~127</td>
-</tr>
-<tr>
-<td>Float</td>
-<td>没有</td>
-</tr>
-<tr>
-<td>Double</td>
-<td>没有</td>
-</tr>
-<tr>
-<td>Character</td>
-<td>0~127</td>
-</tr>
-<tr>
-<td>Boolean</td>
-<td>true和false</td>
-</tr>
-</tbody></table>
-<p>​    <strong>以Integer为例</strong>，上面也提到过自动装箱时是调用<code>Integer.valueOf()</code>方法来获取Integer对象的，查看这个方法的源码。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Integer <span class="title">valueOf</span><span class="params">(<span class="keyword">int</span> i)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (i &gt;= IntegerCache.low &amp;&amp; i &lt;= IntegerCache.high)</span><br><span class="line">        <span class="keyword">return</span> IntegerCache.cache[i + (-IntegerCache.low)];</span><br><span class="line">    <span class="comment">//若在某一个范围内直接返回一个cache数组中的Integer对象。</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Integer(i);</span><br><span class="line">   <span class="comment">//若不在这个范围则创建一个Integer对象返回</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>再找到<code>IntegerCache</code> 这是Integer的一个内部类</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">IntegerCache</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> low = -<span class="number">128</span>;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> high;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> Integer cache[];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="comment">// high value may be configured by property</span></span><br><span class="line">        <span class="keyword">int</span> h = <span class="number">127</span>;</span><br><span class="line">        String integerCacheHighPropValue =</span><br><span class="line">            sun.misc.VM.getSavedProperty(<span class="string">&quot;java.lang.Integer.IntegerCache.high&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span> (integerCacheHighPropValue != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">int</span> i = parseInt(integerCacheHighPropValue);</span><br><span class="line">                i = Math.max(i, <span class="number">127</span>);</span><br><span class="line">                <span class="comment">// Maximum array size is Integer.MAX_VALUE</span></span><br><span class="line">                h = Math.min(i, Integer.MAX_VALUE - (-low) -<span class="number">1</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span>( NumberFormatException nfe) &#123;</span><br><span class="line">                <span class="comment">// If the property cannot be parsed into an int, ignore it.</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        high = h;</span><br><span class="line"></span><br><span class="line">        cache = <span class="keyword">new</span> Integer[(high - low) + <span class="number">1</span>];</span><br><span class="line">        <span class="keyword">int</span> j = low;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; cache.length; k++)</span><br><span class="line">            cache[k] = <span class="keyword">new</span> Integer(j++);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// range [-128, 127] must be interned (JLS7 5.1.7)</span></span><br><span class="line">        <span class="keyword">assert</span> IntegerCache.high &gt;= <span class="number">127</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">IntegerCache</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>​    可以发现在Integer类初始化时会创建一个叫cache的数组，里面存放的是low至high范围的Integer类常量，这就是上面提到的缓存对象。</p>
-<p>这就解释了为什么在一定范围内使用<code>==</code>比较两个包装类对象会返回turn。</p>
-<p>再做几个比较实验：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer i = <span class="keyword">new</span> Integer(<span class="number">1</span>);<span class="comment">//新new的在堆中</span></span><br><span class="line">Integer j = <span class="number">1</span>;<span class="comment">//这个用的是缓冲的常量对象，在方法区</span></span><br><span class="line">System.out.println(i == j);<span class="comment">//false</span></span><br><span class="line">System.out.println(i.equals(j));<span class="comment">//true</span></span><br><span class="line"></span><br><span class="line">Integer i = <span class="keyword">new</span> Integer(<span class="number">1</span>);</span><br><span class="line"><span class="keyword">int</span> j = <span class="number">1</span>;</span><br><span class="line">System.out.println(i == j);<span class="comment">//true</span></span><br><span class="line">System.out.println(i.equals(j));<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
-
-<p>​    new出来的对象在堆当中，不指向常量对象，这就是<strong>new与valueOf()的区别</strong>，<code>valueOf()</code>只在超出缓存范围时才会创建一个新的对象，所以在实际使用过程中建议直接使用<code>valueOf()</code>。</p>
-<p>​    而与基本数据类型比较（包括计算）时会<strong>先拆箱</strong>再按照基本数据类型的规则比较，所以为了避免歧义，如果是判断值是否相等时建议同一使用<code>equals()</code>方法。</p>
-<h1 id="API演示"><a href="#API演示" class="headerlink" title="API演示"></a>API演示</h1><p>​    由于包装类的存在，许多处理基本数据类型的方法都可以定义在包装类中。下面进行一些<strong>举例</strong>。</p>
-<h2 id="1-把字符串转为基本数据类型"><a href="#1-把字符串转为基本数据类型" class="headerlink" title="1.把字符串转为基本数据类型"></a>1.把字符串转为基本数据类型</h2><p>​    <code>parsxxx()</code>方法</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = Integer.parseInt(<span class="string">&quot;整数的字符串&quot;</span>);</span><br><span class="line"><span class="keyword">double</span> a = Double.parseDouble(<span class="string">&quot;小数的字符串&quot;</span>);</span><br><span class="line"><span class="keyword">boolean</span> b = Boolean.parseBoolean(<span class="string">&quot;true或false&quot;</span>);</span><br><span class="line"></span><br><span class="line">System.out.println(Double.parseDouble(<span class="string">&quot;1.2&quot;</span>));<span class="comment">//1.2</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="2-数据类型的最大最小值"><a href="#2-数据类型的最大最小值" class="headerlink" title="2.数据类型的最大最小值"></a>2.数据类型的最大最小值</h2><p>​    <code>MAX_VALUE</code>和<code>MIN_VALUE</code></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer.MAX_VALUE和Integer.MIN_VALUE</span><br><span class="line">Long.MAX_VALUE和Long.MIN_VALUE</span><br><span class="line">Double.MAX_VALUE和Double.MIN_VALUE</span><br><span class="line">    </span><br><span class="line">System.out.println(Integer.MAX_VALUE);<span class="comment">//2147483647</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="3-转进制"><a href="#3-转进制" class="headerlink" title="3.转进制"></a>3.转进制</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer.toBinaryString(<span class="keyword">int</span> i) <span class="comment">//转为2进制</span></span><br><span class="line">Integer.toOctalString(<span class="keyword">int</span> i)  <span class="comment">//转为8进制</span></span><br><span class="line">Integer.toHexString(<span class="keyword">int</span> i)   <span class="comment">//转为16进制</span></span><br><span class="line"></span><br><span class="line">System.out.println(Integer.toBinaryString(<span class="number">15</span>));<span class="comment">//1111</span></span><br><span class="line">System.out.println(Integer.toOctalString(<span class="number">15</span>));<span class="comment">//17</span></span><br><span class="line">System.out.println(Integer.toHexString(<span class="number">15</span>));<span class="comment">//f</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-]]></content>
-      <categories>
-        <category>Java</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>Java基础</tag>
-        <tag>包装类</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Java基础之多线程</title>
     <url>/2020/08/10/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%A4%9A%E7%BA%BF%E7%A8%8B/</url>
     <content><![CDATA[<h1 id="相关的概念"><a href="#相关的概念" class="headerlink" title="相关的概念"></a>相关的概念</h1><ol>
@@ -283,7 +146,14 @@
 <blockquote>
 <p>此时的isAlive()返回值：false<br>此时的isAlive()返回值：true    //也可能是false<br>执行MyThread<br>此时的isAlive()返回值：false</p>
 </blockquote>
-<h1 id="关键字：volatile"><a href="#关键字：volatile" class="headerlink" title="关键字：volatile"></a>关键字：volatile</h1>]]></content>
+<h1 id="关键字：volatile"><a href="#关键字：volatile" class="headerlink" title="关键字：volatile"></a>关键字：volatile</h1><p>​    在现阶段<strong>先理解如何使用</strong><code>volatile</code>,等学习了Java内存模型时再深入了解。</p>
+<p>volatile可以理解为 <strong>易变</strong>，<strong>不稳定</strong>，<strong>不一定什么时候会变</strong>。用来<strong>保证</strong>多线程下变量的<strong>可见性</strong>。</p>
+<p>简单解释一下发生这种情况的原因：</p>
+<blockquote>
+<p>变量的值储存在缓存当中，每个线程都拥有自己的缓存，在线程对变量进行操作时，是先复制一份变量到缓存当中，对缓存中的数据进行修改在存储到主存当中。但是，如果在修改变量时，另一个线程的缓存中还可能是未修改前的变量值，此时该线程对变量的修改是基于原来缓存中的变量值，这就是所谓的不可见性。而如果有volatile，就会每次修改都会立即同步主存中的值，避免了这种情况。但会对写入速率造成一定的影响。</p>
+</blockquote>
+<p>​    想要深入了解可以参考这篇文章：<a href="https://www.cnblogs.com/dolphin0520/p/3920373.html">https://www.cnblogs.com/dolphin0520/p/3920373.html</a></p>
+<h1 id="关键字：synchronized"><a href="#关键字：synchronized" class="headerlink" title="关键字：synchronized"></a>关键字：synchronized</h1>]]></content>
       <categories>
         <category>Java</category>
       </categories>
@@ -291,6 +161,143 @@
         <tag>Java</tag>
         <tag>Java基础</tag>
         <tag>多线程</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java基础之包装类</title>
+    <url>/2020/08/08/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%8C%85%E8%A3%85%E7%B1%BB/</url>
+    <content><![CDATA[<h1 id="什么是包装类"><a href="#什么是包装类" class="headerlink" title="什么是包装类"></a>什么是包装类</h1><p>​    Java作为面向对象的编程语言在设计之初依然延续了C语言的8种基本数据类型，但在不断的更新中设计了很多针对对象的API和新的特性（例如泛型），不支持基本数据类型。为了解决这个问题，Java为每一个基本数据类型提供了包装类。</p>
+<a id="more"></a>
+
+<table>
+<thead>
+<tr>
+<th>基本数据类型</th>
+<th>包装类（java.lang.）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>byte</td>
+<td>Byte</td>
+</tr>
+<tr>
+<td>short</td>
+<td>Short</td>
+</tr>
+<tr>
+<td>int</td>
+<td>Integer</td>
+</tr>
+<tr>
+<td>long</td>
+<td>Long</td>
+</tr>
+<tr>
+<td>float</td>
+<td>Float</td>
+</tr>
+<tr>
+<td>double</td>
+<td>Double</td>
+</tr>
+<tr>
+<td>char</td>
+<td>Character</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>Boolean</td>
+</tr>
+</tbody></table>
+<h1 id="装箱与拆箱"><a href="#装箱与拆箱" class="headerlink" title="装箱与拆箱"></a>装箱与拆箱</h1><p>​    装箱和拆箱实际上就是<strong>基本数据类型和它的包装类之间的转换</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer num1 = <span class="keyword">new</span> Integer(<span class="number">1</span>);    <span class="comment">//基本数据类型转为包装类也叫做手动装箱</span></span><br><span class="line"><span class="keyword">int</span> num2 = num1.intValue();        <span class="comment">//包装类转换为基本数据类型，也叫做手动拆箱</span></span><br></pre></td></tr></table></figure>
+
+<p>​    在J<strong>DK1.5</strong>之后为了方便使用等目的提供了<strong>自动装箱与自动拆箱</strong>。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//包装类中的自动装箱拆箱机制</span></span><br><span class="line">Integer  num1 = <span class="number">1</span>;        <span class="comment">//自动装箱</span></span><br><span class="line"><span class="comment">//这行代码实际等同于    Integer  num1 = Integer.valueOf(1);</span></span><br><span class="line"><span class="comment">//这个于new Integer(1)有所区别 下文会详细说明</span></span><br><span class="line"><span class="keyword">int</span> num2 = num1;        <span class="comment">//自动拆箱</span></span><br></pre></td></tr></table></figure>
+
+<p>​    需要注意的是只在与<strong>对应的基本数据类型和包装类之间</strong>才能实现自动装箱与拆箱。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Double d = <span class="number">1</span>;<span class="comment">//错误的，1是int类型</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="包装类对象的缓存问题"><a href="#包装类对象的缓存问题" class="headerlink" title="包装类对象的缓存问题"></a>包装类对象的缓存问题</h1><p>​    为了引出这个问题首先做以下测试</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer i = <span class="number">1</span>;</span><br><span class="line">Integer j = <span class="number">1</span>;</span><br><span class="line">System.out.println(i == j);<span class="comment">//true</span></span><br><span class="line"></span><br><span class="line">Integer i = <span class="number">128</span>;</span><br><span class="line">Integer j = <span class="number">128</span>;</span><br><span class="line">System.out.println(i == j);<span class="comment">//false</span></span><br></pre></td></tr></table></figure>
+
+<p>​    为什么改变了在包装类的值会影响结果，这就涉及到了包装类对象的缓存问题。对于对象而言，<code>==</code>所比较的是两个对象的地址值，上面的代码就说明了<strong>在一定的范围内相同值的包装类指向的是同一个对象</strong>。每个包装类的缓存范围如下：</p>
+<table>
+<thead>
+<tr>
+<th>包装类</th>
+<th>缓存对象</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Byte</td>
+<td>-128~127</td>
+</tr>
+<tr>
+<td>Short</td>
+<td>-128~127</td>
+</tr>
+<tr>
+<td>Integer</td>
+<td>-128~127</td>
+</tr>
+<tr>
+<td>Long</td>
+<td>-128~127</td>
+</tr>
+<tr>
+<td>Float</td>
+<td>没有</td>
+</tr>
+<tr>
+<td>Double</td>
+<td>没有</td>
+</tr>
+<tr>
+<td>Character</td>
+<td>0~127</td>
+</tr>
+<tr>
+<td>Boolean</td>
+<td>true和false</td>
+</tr>
+</tbody></table>
+<p>​    <strong>以Integer为例</strong>，上面也提到过自动装箱时是调用<code>Integer.valueOf()</code>方法来获取Integer对象的，查看这个方法的源码。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Integer <span class="title">valueOf</span><span class="params">(<span class="keyword">int</span> i)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (i &gt;= IntegerCache.low &amp;&amp; i &lt;= IntegerCache.high)</span><br><span class="line">        <span class="keyword">return</span> IntegerCache.cache[i + (-IntegerCache.low)];</span><br><span class="line">    <span class="comment">//若在某一个范围内直接返回一个cache数组中的Integer对象。</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Integer(i);</span><br><span class="line">   <span class="comment">//若不在这个范围则创建一个Integer对象返回</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再找到<code>IntegerCache</code> 这是Integer的一个内部类</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">IntegerCache</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> low = -<span class="number">128</span>;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> high;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> Integer cache[];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="comment">// high value may be configured by property</span></span><br><span class="line">        <span class="keyword">int</span> h = <span class="number">127</span>;</span><br><span class="line">        String integerCacheHighPropValue =</span><br><span class="line">            sun.misc.VM.getSavedProperty(<span class="string">&quot;java.lang.Integer.IntegerCache.high&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span> (integerCacheHighPropValue != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">int</span> i = parseInt(integerCacheHighPropValue);</span><br><span class="line">                i = Math.max(i, <span class="number">127</span>);</span><br><span class="line">                <span class="comment">// Maximum array size is Integer.MAX_VALUE</span></span><br><span class="line">                h = Math.min(i, Integer.MAX_VALUE - (-low) -<span class="number">1</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span>( NumberFormatException nfe) &#123;</span><br><span class="line">                <span class="comment">// If the property cannot be parsed into an int, ignore it.</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        high = h;</span><br><span class="line"></span><br><span class="line">        cache = <span class="keyword">new</span> Integer[(high - low) + <span class="number">1</span>];</span><br><span class="line">        <span class="keyword">int</span> j = low;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; cache.length; k++)</span><br><span class="line">            cache[k] = <span class="keyword">new</span> Integer(j++);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// range [-128, 127] must be interned (JLS7 5.1.7)</span></span><br><span class="line">        <span class="keyword">assert</span> IntegerCache.high &gt;= <span class="number">127</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">IntegerCache</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    可以发现在Integer类初始化时会创建一个叫cache的数组，里面存放的是low至high范围的Integer类常量，这就是上面提到的缓存对象。</p>
+<p>这就解释了为什么在一定范围内使用<code>==</code>比较两个包装类对象会返回turn。</p>
+<p>再做几个比较实验：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer i = <span class="keyword">new</span> Integer(<span class="number">1</span>);<span class="comment">//新new的在堆中</span></span><br><span class="line">Integer j = <span class="number">1</span>;<span class="comment">//这个用的是缓冲的常量对象，在方法区</span></span><br><span class="line">System.out.println(i == j);<span class="comment">//false</span></span><br><span class="line">System.out.println(i.equals(j));<span class="comment">//true</span></span><br><span class="line"></span><br><span class="line">Integer i = <span class="keyword">new</span> Integer(<span class="number">1</span>);</span><br><span class="line"><span class="keyword">int</span> j = <span class="number">1</span>;</span><br><span class="line">System.out.println(i == j);<span class="comment">//true</span></span><br><span class="line">System.out.println(i.equals(j));<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<p>​    new出来的对象在堆当中，不指向常量对象，这就是<strong>new与valueOf()的区别</strong>，<code>valueOf()</code>只在超出缓存范围时才会创建一个新的对象，所以在实际使用过程中建议直接使用<code>valueOf()</code>。</p>
+<p>​    而与基本数据类型比较（包括计算）时会<strong>先拆箱</strong>再按照基本数据类型的规则比较，所以为了避免歧义，如果是判断值是否相等时建议同一使用<code>equals()</code>方法。</p>
+<h1 id="API演示"><a href="#API演示" class="headerlink" title="API演示"></a>API演示</h1><p>​    由于包装类的存在，许多处理基本数据类型的方法都可以定义在包装类中。下面进行一些<strong>举例</strong>。</p>
+<h2 id="1-把字符串转为基本数据类型"><a href="#1-把字符串转为基本数据类型" class="headerlink" title="1.把字符串转为基本数据类型"></a>1.把字符串转为基本数据类型</h2><p>​    <code>parsxxx()</code>方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = Integer.parseInt(<span class="string">&quot;整数的字符串&quot;</span>);</span><br><span class="line"><span class="keyword">double</span> a = Double.parseDouble(<span class="string">&quot;小数的字符串&quot;</span>);</span><br><span class="line"><span class="keyword">boolean</span> b = Boolean.parseBoolean(<span class="string">&quot;true或false&quot;</span>);</span><br><span class="line"></span><br><span class="line">System.out.println(Double.parseDouble(<span class="string">&quot;1.2&quot;</span>));<span class="comment">//1.2</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-数据类型的最大最小值"><a href="#2-数据类型的最大最小值" class="headerlink" title="2.数据类型的最大最小值"></a>2.数据类型的最大最小值</h2><p>​    <code>MAX_VALUE</code>和<code>MIN_VALUE</code></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer.MAX_VALUE和Integer.MIN_VALUE</span><br><span class="line">Long.MAX_VALUE和Long.MIN_VALUE</span><br><span class="line">Double.MAX_VALUE和Double.MIN_VALUE</span><br><span class="line">    </span><br><span class="line">System.out.println(Integer.MAX_VALUE);<span class="comment">//2147483647</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="3-转进制"><a href="#3-转进制" class="headerlink" title="3.转进制"></a>3.转进制</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer.toBinaryString(<span class="keyword">int</span> i) <span class="comment">//转为2进制</span></span><br><span class="line">Integer.toOctalString(<span class="keyword">int</span> i)  <span class="comment">//转为8进制</span></span><br><span class="line">Integer.toHexString(<span class="keyword">int</span> i)   <span class="comment">//转为16进制</span></span><br><span class="line"></span><br><span class="line">System.out.println(Integer.toBinaryString(<span class="number">15</span>));<span class="comment">//1111</span></span><br><span class="line">System.out.println(Integer.toOctalString(<span class="number">15</span>));<span class="comment">//17</span></span><br><span class="line">System.out.println(Integer.toHexString(<span class="number">15</span>));<span class="comment">//f</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>Java基础</tag>
+        <tag>包装类</tag>
       </tags>
   </entry>
   <entry>
@@ -1094,6 +1101,7 @@
     <content><![CDATA[<h1 id="MySQL运算符"><a href="#MySQL运算符" class="headerlink" title="MySQL运算符"></a>MySQL运算符</h1><p>​    MySQL的运算符分为<strong>算术运算符</strong>、<strong>比较运算符</strong>、<strong>逻辑运算符</strong>、<strong>位运算符</strong>四个类型。</p>
 <a id="more"></a>
 
+<p>​                                                                                                                        <strong><em>使用MySQL5.7演示</em></strong></p>
 <h2 id="算术运算符"><a href="#算术运算符" class="headerlink" title="算术运算符"></a>算术运算符</h2><p>MySQL 支持的算术运算符包括:</p>
 <table>
 <thead>
@@ -1227,6 +1235,9 @@
 
 <h3 id="3-模糊匹配"><a href="#3-模糊匹配" class="headerlink" title="3.模糊匹配"></a>3.模糊匹配</h3><p>​        <code>REGEXP</code> 或 <code>RLIKE</code>为正在式匹配，以后再单独讲解。这里只讲解<code>LIKE</code></p>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#判断是否满足模糊条件的语法  值 LIKE 模糊条件。模糊条件中用%代替多个字符，用_代表一个字符</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># % 与 _ 的区别</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="string">&#x27;abcd&#x27;</span> <span class="keyword">LIKE</span> <span class="string">&#x27;ab%&#x27;</span> , <span class="string">&#x27;abcd&#x27;</span> <span class="keyword">LIKE</span> <span class="string">&#x27;ab_&#x27;</span>, <span class="string">&#x27;abcd&#x27;</span> <span class="keyword">LIKE</span> <span class="string">&#x27;ab__&#x27;</span>;</span><br><span class="line">+<span class="comment">-------------------+-------------------+--------------------+</span></span><br><span class="line">| &#x27;abcd&#x27; LIKE &#x27;ab%&#x27; | &#x27;abcd&#x27; LIKE &#x27;ab_&#x27; | &#x27;abcd&#x27; LIKE &#x27;ab__&#x27; |</span><br><span class="line">+<span class="comment">-------------------+-------------------+--------------------+</span></span><br><span class="line">|                 1 |                 0 |                  1 |</span><br><span class="line">+<span class="comment">-------------------+-------------------+--------------------+</span></span><br><span class="line"><span class="comment">#可以混合使用</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="string">&#x27;abcd&#x27;</span> <span class="keyword">LIKE</span> <span class="string">&#x27;a%d&#x27;</span> ,  <span class="string">&#x27;abcd&#x27;</span> <span class="keyword">LIKE</span> <span class="string">&#x27;_b%&#x27;</span>;</span><br><span class="line">+<span class="comment">-------------------+-------------------+</span></span><br><span class="line">| &#x27;abcd&#x27; LIKE &#x27;a%d&#x27; | &#x27;abcd&#x27; LIKE &#x27;_b%&#x27; |</span><br><span class="line">+<span class="comment">-------------------+-------------------+</span></span><br><span class="line">|                 1 |                 1 |</span><br><span class="line">+<span class="comment">-------------------+-------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#值或模糊条件为NULL时返回NULL</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="literal">NULL</span> <span class="keyword">LIKE</span> <span class="literal">NULL</span> , <span class="literal">NULL</span> <span class="keyword">LIKE</span> <span class="number">1</span> , <span class="number">1</span> <span class="keyword">LIKE</span> <span class="literal">NULL</span>;</span><br><span class="line">+<span class="comment">----------------+-------------+-------------+</span></span><br><span class="line">| NULL LIKE NULL | NULL LIKE 1 | 1 LIKE NULL |</span><br><span class="line">+<span class="comment">----------------+-------------+-------------+</span></span><br><span class="line">|           NULL |        NULL |        NULL |</span><br><span class="line">+<span class="comment">----------------+-------------+-------------+</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-NULL值比较"><a href="#4-NULL值比较" class="headerlink" title="4.NULL值比较"></a>4.NULL值比较</h3><p>​    <strong>涉及NULL判断</strong>时一般使用以下<strong>三种</strong>方式：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#安全等于 &lt;=&gt; 可以严格比较NULL值</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="literal">NULL</span> = <span class="literal">NULL</span>, <span class="literal">NULL</span>&lt;=&gt;<span class="literal">NULL</span>, <span class="literal">NULL</span>&lt;=&gt;<span class="number">1</span>;</span><br><span class="line">+<span class="comment">-------------+-------------+----------+</span></span><br><span class="line">| NULL = NULL | NULL&lt;=&gt;NULL | NULL&lt;=&gt;1 |</span><br><span class="line">+<span class="comment">-------------+-------------+----------+</span></span><br><span class="line">|        NULL |           1 |        0 |</span><br><span class="line">+<span class="comment">-------------+-------------+----------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#判断值是否为NULL</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="literal">NULL</span> <span class="keyword">IS</span> <span class="literal">NULL</span> , <span class="literal">NULL</span> <span class="keyword">IS</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>;</span><br><span class="line">+<span class="comment">--------------+------------------+</span></span><br><span class="line">| NULL IS NULL | NULL IS NOT NULL |</span><br><span class="line">+<span class="comment">--------------+------------------+</span></span><br><span class="line">|            1 |                0 |</span><br><span class="line">+<span class="comment">--------------+------------------+</span></span><br></pre></td></tr></table></figure>
 
 <h2 id="逻辑运算符"><a href="#逻辑运算符" class="headerlink" title="逻辑运算符"></a>逻辑运算符</h2><p>​    逻辑运算符用来判断表达式的真假。如果表达式是真，结果返回 1。如果表达式是假，结果返回 0。</p>
 <table>
@@ -1514,6 +1525,280 @@
         <tag>markdown</tag>
         <tag>Typora</tag>
         <tag>常用软件</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MySQL基础之SQL语法(DDL)</title>
+    <url>/2020/08/20/MySQL%E5%9F%BA%E7%A1%80%E4%B9%8BSQL%E8%AF%AD%E6%B3%95(DDL)/</url>
+    <content><![CDATA[<h2 id="SQL的分类"><a href="#SQL的分类" class="headerlink" title="SQL的分类"></a>SQL的分类</h2><p>​    根据SQL语句的<strong>作用</strong>将SQL语句分为<strong>三大类：</strong></p>
+<ul>
+<li>DDL —  数据定义语言（Data Define Language）</li>
+<li>DML — 数据操纵语言（Data Manipulation Language）</li>
+<li>DCL —  数据控制语言（Data Control Language）</li>
+</ul>
+<p>本文主要讲解DDL，DDL语句一般作用于<strong>数据库和表</strong>，包含<code>CREATE（创建）</code>，<code>ALTER（修改）</code>，<code>DROP（删除）</code>，<code>TRUNCATE（截断）</code>，<code>RENAME（重命名）</code>；</p>
+<a id="more"></a>
+
+<p>​                                                                                                                        <strong><em>使用MySQL5.7演示</em></strong></p>
+<h2 id="数据库相关"><a href="#数据库相关" class="headerlink" title="数据库相关"></a>数据库相关</h2><h3 id="1-查看当前数据库清单"><a href="#1-查看当前数据库清单" class="headerlink" title="1.查看当前数据库清单"></a>1.查看当前数据库清单</h3><p>格式：<code>SHOW DATEBASES;</code></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#查看mysql中的数据库</span></span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">DATABASES</span>;</span><br><span class="line">+<span class="comment">--------------------+</span></span><br><span class="line">| Database           |</span><br><span class="line">+<span class="comment">--------------------+</span></span><br><span class="line">| information_schema |</span><br><span class="line">| mysql              |</span><br><span class="line">| performance_schema |</span><br><span class="line">| sys                |</span><br><span class="line">| test               |</span><br><span class="line">+<span class="comment">--------------------+</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-使用某个数据库"><a href="#2-使用某个数据库" class="headerlink" title="2.使用某个数据库"></a>2.使用某个数据库</h3><p>使用数据库后的操作默认在这个数据库下进行</p>
+<p>格式： <code>USE 数据库名;</code></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#使用test数据库</span></span><br><span class="line"><span class="keyword">use</span> <span class="keyword">test</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-创建数据库"><a href="#3-创建数据库" class="headerlink" title="3.创建数据库"></a>3.创建数据库</h3><p>格式：<code>CREATE DATABASE 数据库名；</code></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#创建一个名为test2的数据库</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">DATABASE</span> test2;</span><br><span class="line"></span><br><span class="line"><span class="comment">#查看所有数据库进行验证</span></span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">DATABASES</span>;</span><br><span class="line">+<span class="comment">--------------------+</span></span><br><span class="line">| Database           |</span><br><span class="line">+<span class="comment">--------------------+</span></span><br><span class="line">| information_schema |</span><br><span class="line">| mysql              |</span><br><span class="line">| performance_schema |</span><br><span class="line">| sys                |</span><br><span class="line">| test               |</span><br><span class="line">| test2              |</span><br><span class="line">+<span class="comment">--------------------+</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-删除数据库"><a href="#4-删除数据库" class="headerlink" title="4.删除数据库"></a>4.删除数据库</h3><p>格式：<code>DROP DATABASE 数据库名；</code></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#删除刚才创建的名为test2的数据库</span></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">DATABASE</span> test2;</span><br><span class="line"></span><br><span class="line"><span class="comment">#查看所有数据库进行验证</span></span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">DATABASES</span>;</span><br><span class="line">+<span class="comment">--------------------+</span></span><br><span class="line">| Database           |</span><br><span class="line">+<span class="comment">--------------------+</span></span><br><span class="line">| information_schema |</span><br><span class="line">| mysql              |</span><br><span class="line">| performance_schema |</span><br><span class="line">| sys                |</span><br><span class="line">| test               |</span><br><span class="line">+<span class="comment">--------------------+</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="表相关"><a href="#表相关" class="headerlink" title="表相关"></a>表相关</h2><h3 id="1-查看数据库的所有表清单"><a href="#1-查看数据库的所有表清单" class="headerlink" title="1.查看数据库的所有表清单"></a>1.查看数据库的所有表清单</h3><p>格式：<code>SHOW TABLES FROM 数据库名;</code></p>
+<p>若已经使用（USE）数据库，可以使用<code>SHOW TABLES</code>来查看这个数据库的所有表清单。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#查看test数据库中的表清单</span></span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">TABLES</span> <span class="keyword">FROM</span> <span class="keyword">test</span>;</span><br><span class="line">+<span class="comment">----------------+</span></span><br><span class="line">| Tables_in_test |</span><br><span class="line">+<span class="comment">----------------+</span></span><br><span class="line">| test_table     |</span><br><span class="line">+<span class="comment">----------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#使用数据库情况下查看表清单</span></span><br><span class="line"><span class="keyword">USE</span> <span class="keyword">test</span>;</span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">TABLES</span>;</span><br><span class="line">+<span class="comment">----------------+</span></span><br><span class="line">| Tables_in_test |</span><br><span class="line">+<span class="comment">----------------+</span></span><br><span class="line">| test_table     |</span><br><span class="line">+<span class="comment">----------------+</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-创建表"><a href="#2-创建表" class="headerlink" title="2.创建表"></a>2.创建表</h3><p>格式：<code>CREATE TABLE 数据库名.表名(字段名1 数据类型，字段名2 数据类型，...字段名n 数据类型);</code></p>
+<p>若已经使用（USE）数据库，若想将表创建在这个数据库下，可以省略<code>数据库名.</code>。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#在test库中创建名为t_stu的表，包含4个字段。因为之前使用过数据库所以省略test.</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> test.t_stu(</span><br><span class="line">            <span class="keyword">sid</span> <span class="built_in">INT</span>,</span><br><span class="line">            sname <span class="built_in">VARCHAR</span>(<span class="number">20</span>),</span><br><span class="line">            gender <span class="built_in">CHAR</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;男&#x27;</span>,</span><br><span class="line">            birthday <span class="built_in">DATE</span></span><br><span class="line">            );</span><br><span class="line"></span><br><span class="line"><span class="comment">#查看表清单进行验证</span></span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">TABLES</span>;</span><br><span class="line">+<span class="comment">----------------+</span></span><br><span class="line">| Tables_in_test |</span><br><span class="line">+<span class="comment">----------------+</span></span><br><span class="line">| t_stu          |</span><br><span class="line">| test_table     |</span><br><span class="line">+<span class="comment">----------------+</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-查看表结构"><a href="#3-查看表结构" class="headerlink" title="3.查看表结构"></a>3.查看表结构</h3><p>格式：<code>DESC 数据库名.表明;</code></p>
+<p>已经使用（USE）数据库的情况下，若想查看在这个数据库下表的结构，可以省略<code>数据库名.</code>。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#查看刚才创建的t_stu表的表结构</span></span><br><span class="line">DESC t_stu;</span><br><span class="line">+<span class="comment">----------+-------------+------+-----+---------+-------+</span></span><br><span class="line">| Field    | Type        | Null | Key | Default | Extra |</span><br><span class="line">+<span class="comment">----------+-------------+------+-----+---------+-------+</span></span><br><span class="line">| sid      | int(11)     | YES  |     | NULL    |       |</span><br><span class="line">| sname    | varchar(20) | YES  |     | NULL    |       |</span><br><span class="line">| gender   | char(1)     | YES  |     | NULL    |       |</span><br><span class="line">| birthday | date        | YES  |     | NULL    |       |</span><br><span class="line">+<span class="comment">----------+-------------+------+-----+---------+-------+</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-修改表名称"><a href="#4-修改表名称" class="headerlink" title="4.修改表名称"></a>4.修改表名称</h3><p><strong>通常情况：</strong></p>
+<p>​    在已经使用（USE）数据库的情况下使用一下两种格式均可修改表名称：</p>
+<ul>
+<li><code>RENAME TABLE 旧表名 TO 新表名;</code></li>
+<li><code>ALTER TABLE 旧表名 RENAME 新表名;</code></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#通常情况</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#将上面创建的t_stu表改名为student</span></span><br><span class="line"><span class="keyword">RENAME</span> <span class="keyword">TABLE</span> t_stu <span class="keyword">TO</span> student;</span><br><span class="line"></span><br><span class="line"><span class="comment">#查看表清单进行验证</span></span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">TABLES</span>;</span><br><span class="line">+<span class="comment">----------------+</span></span><br><span class="line">| Tables_in_test |</span><br><span class="line">+<span class="comment">----------------+</span></span><br><span class="line">| student        |</span><br><span class="line">| test_table     |</span><br><span class="line">+<span class="comment">----------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#使用另一种方式将表名改回t_stu</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> student <span class="keyword">RENAME</span> t_stu;</span><br><span class="line"></span><br><span class="line"><span class="comment">#效果相同</span></span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">TABLES</span>;</span><br><span class="line">+<span class="comment">----------------+</span></span><br><span class="line">| Tables_in_test |</span><br><span class="line">+<span class="comment">----------------+</span></span><br><span class="line">| t_stu          |</span><br><span class="line">| test_table     |</span><br><span class="line">+<span class="comment">----------------+</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>特殊情况：</strong></p>
+<p>​    <code>RENAME TABLE 数据库名.旧表名 TO 数据库名.新表名;</code></p>
+<p>​    若新旧表名前为同一个数据库则等价于上面两种方式。但若为不同的数据库，执行语句后会将重命名后的表    移动到新表明前的数据库当中。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#特殊情况</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#创建一个名为test2的数据库，当前为空</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">DATABASE</span> test2;</span><br><span class="line"></span><br><span class="line"><span class="comment">#重命名时将test中的t_stu表移动到test2中</span></span><br><span class="line"><span class="keyword">RENAME</span> <span class="keyword">TABLE</span> test.t_stu <span class="keyword">TO</span> test2.student;</span><br><span class="line"></span><br><span class="line"><span class="comment">#查看两个数据库的表清单进行验证。</span></span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">TABLES</span> <span class="keyword">FROM</span> <span class="keyword">test</span>;</span><br><span class="line">+<span class="comment">----------------+</span></span><br><span class="line">| Tables_in_test |</span><br><span class="line">+<span class="comment">----------------+</span></span><br><span class="line">| test_table     |</span><br><span class="line">+<span class="comment">----------------+</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">TABLES</span> <span class="keyword">FROM</span> test2;</span><br><span class="line">+<span class="comment">-----------------+</span></span><br><span class="line">| Tables_in_test2 |</span><br><span class="line">+<span class="comment">-----------------+</span></span><br><span class="line">| student         |</span><br><span class="line">+<span class="comment">-----------------+</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="5-修改表结构"><a href="#5-修改表结构" class="headerlink" title="5.修改表结构"></a>5.修改表结构</h3><ul>
+<li><p><strong>增加字段</strong></p>
+<p>格式：<code>ALTER TABLE 表名 ADD [COLUMN] 新字段名 数据类型 [添加位置]</code></p>
+<p><code>COLUMN</code>可以<strong>省略</strong>不写，而添加位置有<strong>两种</strong>写法：</p>
+<ol>
+<li><p><code>FIRST</code>,表示将新字段增加到表的第一列。</p>
+</li>
+<li><p><code>AFTER 字段名</code>，表示将新字段增加到该字段后。</p>
+<p><strong>若省略添加位置则默认添加到表的最后一列。</strong></p>
+</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#为方便演示先将t_stu表从test2中还原</span></span><br><span class="line"><span class="keyword">RENAME</span> <span class="keyword">TABLE</span> test2.student <span class="keyword">TO</span> test.t_stu;</span><br><span class="line"></span><br><span class="line"><span class="comment">#新增abc三个字段在t_stu的不同位置</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> t_stu <span class="keyword">ADD</span> a <span class="built_in">int</span>;<span class="comment">#默认添加到表最后一列</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> t_stu <span class="keyword">ADD</span> b <span class="keyword">double</span> <span class="keyword">FIRST</span>;<span class="comment">#第一列</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> t_stu <span class="keyword">ADD</span> c <span class="built_in">char</span> <span class="keyword">AFTER</span> sname;<span class="comment">#sanme字段的后一列</span></span><br><span class="line"><span class="comment">#查询表结构验证</span></span><br><span class="line">DESC t_stu;</span><br><span class="line">+<span class="comment">----------+-------------+------+-----+---------+-------+</span></span><br><span class="line">| Field    | Type        | Null | Key | Default | Extra |</span><br><span class="line">+<span class="comment">----------+-------------+------+-----+---------+-------+</span></span><br><span class="line">| b        | double      | YES  |     | NULL    |       |</span><br><span class="line">| sid      | int(11)     | YES  |     | NULL    |       |</span><br><span class="line">| sname    | varchar(20) | YES  |     | NULL    |       |</span><br><span class="line">| c        | char(1)     | YES  |     | NULL    |       |</span><br><span class="line">| gender   | char(1)     | YES  |     | NULL    |       |</span><br><span class="line">| birthday | date        | YES  |     | NULL    |       |</span><br><span class="line">| a        | int(11)     | YES  |     | NULL    |       |</span><br><span class="line">+<span class="comment">----------+-------------+------+-----+---------+-------+</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>修改字段类型或位置</strong></p>
+<p>格式：<code>ALTER TABLE 表名 MODIFY [COLUMN] 字段名 新的数据类型 [添加位置]</code></p>
+<p><code>COLUMN</code>可以<strong>省略</strong>不写，添加位置写法和上面一致，<strong>不写则保持不变</strong>。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#修改字段a的类型为int(6)，位置在sid字段后一列。</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> t_stu <span class="keyword">MODIFY</span> a <span class="built_in">int</span>(<span class="number">6</span>) <span class="keyword">AFTER</span> <span class="keyword">sid</span>;</span><br><span class="line"><span class="comment">#查看表结构验证</span></span><br><span class="line">DESC t_stu;</span><br><span class="line">+<span class="comment">----------+-------------+------+-----+---------+-------+</span></span><br><span class="line">| Field    | Type        | Null | Key | Default | Extra |</span><br><span class="line">+<span class="comment">----------+-------------+------+-----+---------+-------+</span></span><br><span class="line">| b        | double      | YES  |     | NULL    |       |</span><br><span class="line">| sid      | int(11)     | YES  |     | NULL    |       |</span><br><span class="line">| a        | int(6)      | YES  |     | NULL    |       |</span><br><span class="line">| sname    | varchar(20) | YES  |     | NULL    |       |</span><br><span class="line">| c        | char(1)     | YES  |     | NULL    |       |</span><br><span class="line">| gender   | char(1)     | YES  |     | NULL    |       |</span><br><span class="line">| birthday | date        | YES  |     | NULL    |       |</span><br><span class="line">+<span class="comment">----------+-------------+------+-----+---------+-------+</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>修改字段名称</strong></p>
+<p>格式：<code>ALTER TABLE 表名 CHANGE [COLUMN] 旧字段名 新字段名 数据类型</code></p>
+<p><code>COLUMN</code>可以<strong>省略</strong>不写,数据类型不可省略，若与原来不一致则会同时修改该字段的数据类型。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#将字段a的名字改为d 数据类型改为CHAR</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> t_stu  <span class="keyword">CHANGE</span> a d <span class="built_in">CHAR</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">#查看表结构验证</span></span><br><span class="line">DESC t_stu;</span><br><span class="line">+<span class="comment">----------+-------------+------+-----+---------+-------+</span></span><br><span class="line">| Field    | Type        | Null | Key | Default | Extra |</span><br><span class="line">+<span class="comment">----------+-------------+------+-----+---------+-------+</span></span><br><span class="line">| b        | double      | YES  |     | NULL    |       |</span><br><span class="line">| sid      | int(11)     | YES  |     | NULL    |       |</span><br><span class="line">| d        | char(1)     | YES  |     | NULL    |       |</span><br><span class="line">| sname    | varchar(20) | YES  |     | NULL    |       |</span><br><span class="line">| c        | char(1)     | YES  |     | NULL    |       |</span><br><span class="line">| gender   | char(1)     | YES  |     | NULL    |       |</span><br><span class="line">| birthday | date        | YES  |     | NULL    |       |</span><br><span class="line">+<span class="comment">----------+-------------+------+-----+---------+-------+</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>删除字段</strong></p>
+<p>格式：<code>ALTER TABLE 表名 DROP [COLUMN] 字段名;</code></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#删除字段b</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> t_stu <span class="keyword">DROP</span> b；</span><br><span class="line"></span><br><span class="line"><span class="comment">#查看表结构验证</span></span><br><span class="line"><span class="keyword">DESC</span> t_stu;</span><br><span class="line">+<span class="comment">----------+-------------+------+-----+---------+-------+</span></span><br><span class="line">| Field    | Type        | Null | Key | Default | Extra |</span><br><span class="line">+<span class="comment">----------+-------------+------+-----+---------+-------+</span></span><br><span class="line">| sid      | int(11)     | YES  |     | NULL    |       |</span><br><span class="line">| d        | char(1)     | YES  |     | NULL    |       |</span><br><span class="line">| sname    | varchar(20) | YES  |     | NULL    |       |</span><br><span class="line">| c        | char(1)     | YES  |     | NULL    |       |</span><br><span class="line">| gender   | char(1)     | YES  |     | NULL    |       |</span><br><span class="line">| birthday | date        | YES  |     | NULL    |       |</span><br><span class="line">+<span class="comment">----------+-------------+------+-----+---------+-------+</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="6-删除表"><a href="#6-删除表" class="headerlink" title="6.删除表"></a>6.删除表</h3><p>​    格式：<code>DROP TABLE 数据库名.表名</code> </p>
+<p>​    已经使用（USE）数据库的情况下，若想删除在这个数据库下的表，可以省略<code>数据库名.</code>。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#查看test中已有的表</span></span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">TABLES</span>;</span><br><span class="line">+<span class="comment">----------------+</span></span><br><span class="line">| Tables_in_test |</span><br><span class="line">+<span class="comment">----------------+</span></span><br><span class="line">| t_stu          |</span><br><span class="line">| test_table     |</span><br><span class="line">+<span class="comment">----------------+</span></span><br><span class="line"><span class="comment">#删除表test_table</span></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> test_table;</span><br><span class="line"></span><br><span class="line"><span class="comment">#查看表清单进行验证</span></span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">TABLES</span>;</span><br><span class="line">+<span class="comment">----------------+</span></span><br><span class="line">| Tables_in_test |</span><br><span class="line">+<span class="comment">----------------+</span></span><br><span class="line">| t_stu          |</span><br><span class="line">+<span class="comment">----------------+</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="约束"><a href="#约束" class="headerlink" title="约束"></a>约束</h2><p>​    约束是<strong>防止</strong>数据库中<strong>存在不符合语义规定的数据</strong>和<strong>防止因错误信息的输入输出</strong>造成无效操作或错误信息而提出的。简单的说就是原来保证<strong>数据完整性</strong>。保证数据是精确的、可靠的。</p>
+<p><strong>数据的完整性要从以下四个方面考虑：</strong></p>
+<ul>
+<li><p><strong>实体完整性（Entity Integrity）</strong>：例如，同一个表中，不能存在两条完全相同无法区分的记录</p>
+</li>
+<li><p><strong>域完整性（Domain Integrity）</strong>：例如：年龄范围0-120，性别范围“男/女”</p>
+</li>
+<li><p><strong>引用完整性（Referential Integrity）</strong>：例如：员工所在部门，在部门表中要能找到这个部门</p>
+</li>
+<li><p><strong>用户自定义完整性（User-defined Integrity）</strong>：例如：用户名唯一、密码不能为空等。</p>
+<p><strong>MySQL中有以下几种类型的约束</strong></p>
+</li>
+</ul>
+<h3 id="1-主键约束（PRIMARY-KEY）"><a href="#1-主键约束（PRIMARY-KEY）" class="headerlink" title="1.主键约束（PRIMARY KEY）"></a>1.主键约束（PRIMARY KEY）</h3><p><strong>主键约束的特点：</strong></p>
+<ul>
+<li><p>主键列中的值必须是唯一的，且不能为NULL。</p>
+</li>
+<li><p>每张表中只能存在一个主键约束。</p>
+</li>
+<li><p>主键约束名为PRIMARY。</p>
+</li>
+<li><p>创建主键会自动创建对应的索引，同样删除主键对应的索引也会删除。</p>
+</li>
+<li><p>主键约束分为单列主键约束和复合主键约束两种。</p>
+<blockquote>
+<p>单列主键约束要求主键中的只唯一，而复合主键的值要求的是复合主键的几个字段值的组合需要唯一</p>
+</blockquote>
+</li>
+</ul>
+<p><strong>建表时使用主键约束：</strong></p>
+<p>​    <strong>方式一：</strong>在需要添加主键约束的数据类型后增加关键字<code>PRIMARY KEY</code></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> [数据库名.]表名(</span><br><span class="line">    字段名<span class="number">1</span> 数据类型,</span><br><span class="line">    字段名<span class="number">2</span> 数据类型 PRIMARY <span class="keyword">KEY</span>,</span><br><span class="line">    字段名<span class="number">3</span> 数据类型,</span><br><span class="line">    ....</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>​    <strong>方式二：</strong>在定义表字段的最后增加<code>PRIMARY KEY(字段列表)</code></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> [数据库名.]表名(</span><br><span class="line">    字段名<span class="number">1</span> 数据类型,</span><br><span class="line">    字段名<span class="number">2</span> 数据类型,</span><br><span class="line">    字段名<span class="number">3</span> 数据类型,</span><br><span class="line">    ....</span><br><span class="line">    PRIMARY <span class="keyword">KEY</span>(字段列表)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>​        <strong>方式一只能用来定义单列表主键，方式二两种类型均可定义</strong>。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#定义一个表，将id字段设为主键</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> test_primary(</span><br><span class="line">    <span class="keyword">id</span> <span class="built_in">INT</span> PRIMARY <span class="keyword">KEY</span>,</span><br><span class="line">    <span class="keyword">name</span> <span class="built_in">VARCHAR</span>(<span class="number">20</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">#尝试添加两个相同的值到主键列中</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> test_primary <span class="keyword">VALUES</span>(<span class="number">1</span>,<span class="string">&#x27;张三&#x27;</span>),(<span class="number">1</span>,<span class="string">&#x27;李四&#x27;</span>);</span><br><span class="line">ERROR 1062 (23000): Duplicate entry &#x27;1&#x27; for key &#x27;PRIMARY&#x27;<span class="comment">#报错</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#复合主键演示，定义一个成绩表，将姓名（name）和课程编号（cid）设为复合主键</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> test_primarys(</span><br><span class="line">    <span class="keyword">name</span> <span class="built_in">VARCHAR</span>(<span class="number">20</span>),</span><br><span class="line">    cid <span class="built_in">INT</span>,</span><br><span class="line">    score <span class="keyword">DOUBLE</span>,</span><br><span class="line">    PRIMARY <span class="keyword">KEY</span>(<span class="keyword">name</span>,<span class="keyword">id</span>)</span><br><span class="line">);</span><br><span class="line"><span class="comment">#添加数据</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> test_primarys <span class="keyword">VALUES</span></span><br><span class="line">(<span class="string">&#x27;张三&#x27;</span>,<span class="number">1001</span>,<span class="number">89.7</span>),(<span class="string">&#x27;张三&#x27;</span>,<span class="number">1002</span>,<span class="number">67.5</span>),(<span class="string">&#x27;李四&#x27;</span>,<span class="number">1001</span>,<span class="number">86.3</span>),(<span class="string">&#x27;李四&#x27;</span>,<span class="number">1002</span>,<span class="number">67.5</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">#name与cid单行均有重复，但组合无重复，符合主键约束的条件。</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> test_primarys;</span><br><span class="line">+<span class="comment">--------+------+-------+</span></span><br><span class="line">| name   | cid  | score |</span><br><span class="line">+<span class="comment">--------+------+-------+</span></span><br><span class="line">| 张三   | 1001 |  89.7 |</span><br><span class="line">| 张三   | 1002 |  67.5 |</span><br><span class="line">| 李四   | 1001 |  86.3 |</span><br><span class="line">| 李四   | 1002 |  67.5 |</span><br><span class="line">+<span class="comment">--------+------+-------+</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>建表后添加主键约束：</strong></p>
+<p>​    格式：<code>ALTER TABLE [数据库名.]表名 ADD PRIMARY KEY(字段列表)</code>。</p>
+<p>​    <strong>若该字段列中的值不满足唯一且不为NULL的条件则添加失败。</strong></p>
+<p><strong>删除主键约束：</strong></p>
+<p>​        格式：<code>ALTER TABLE [数据库名.]表名 DROP PRIMARY KEY</code>。</p>
+<h3 id="2-唯一键约束（UNIQUE-KEY）"><a href="#2-唯一键约束（UNIQUE-KEY）" class="headerlink" title="2.唯一键约束（UNIQUE KEY）"></a>2.唯一键约束（UNIQUE KEY）</h3><p>​    唯一键约束和主键约束有许多相同的地方，主要关注他们的差异。</p>
+<p>​    <strong>唯一键约束的特点：</strong></p>
+<ul>
+<li>主键列中的值必须是唯一的，但可以为NULL。</li>
+<li>每张表中可以存在多个唯一键约束。</li>
+<li>主键约束名可以自定义，默认为字段名。</li>
+<li>创建主键会自动创建对应的索引，删除时是通过删除索引的方式删除唯一键。</li>
+<li>唯一键约束分也为单列唯一键约束和复合唯一键约束两种。</li>
+</ul>
+<p><strong>建表时使用唯一键约束：</strong></p>
+<p>​    <strong>方式一：</strong>在需要添加唯一键约束的数据类型后增加关键字<code>    UNIQUE KEY</code></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> [数据库名.]表名(</span><br><span class="line">    字段名<span class="number">1</span> 数据类型,</span><br><span class="line">    字段名<span class="number">2</span> 数据类型 <span class="keyword">UNIQUE</span> <span class="keyword">KEY</span>,</span><br><span class="line">    字段名<span class="number">3</span> 数据类型,</span><br><span class="line">    ....</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>​    <strong>方式二：</strong>在定义表字段的最后增加<code>UNIQUE KEY(字段列表)</code></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> [数据库名.]表名(</span><br><span class="line">    字段名<span class="number">1</span> 数据类型,</span><br><span class="line">    字段名<span class="number">2</span> 数据类型,</span><br><span class="line">    字段名<span class="number">3</span> 数据类型,</span><br><span class="line">    ....</span><br><span class="line">    <span class="keyword">UNIQUE</span> <span class="keyword">KEY</span>(字段列表)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>​    <strong>方式一只能用来定义单列表唯一键，方式二两种类型均可定义</strong>。</p>
+<p><strong>建表后添加主键约束：</strong></p>
+<p>​    格式：<code>ALTER TABLE [数据库名.]表名 ADD UNIQUE KEY(字段列表)</code>。</p>
+<p>​    <strong>若该字段列中的值不唯一则添加失败。</strong></p>
+<p><strong>删除主键约束：</strong></p>
+<p>​    删除方式与主键不相同，唯一键是通过删除对应的索引来删除的。</p>
+<p>​    格式：<code>ALTER TABLE [数据库名.]表名 DROP INDEX 索引名</code>。</p>
+<p>​    如果忘记索引名可以通过<code>SHOW INDEX FROM [数据库名.]表名</code>来查询</p>
+<h3 id="3-非空约束（NOT-NULL）"><a href="#3-非空约束（NOT-NULL）" class="headerlink" title="3.非空约束（NOT NULL）"></a>3.非空约束（NOT NULL）</h3><p>​    限制字段的值不能为NULL</p>
+<p><strong>非空约束的特点：</strong></p>
+<ul>
+<li>非空约束列中的值不能为NULL。</li>
+<li>非空约束只能定义在单个字段中。</li>
+<li>每张表中只能存在多个非空约束。</li>
+<li>非空约束要求该字段必须包含值否则无法新增或更新数据。</li>
+</ul>
+<p><strong>建表时使用非空约束：</strong></p>
+<p>​    在需要添加非空约束的数据类型后增加关键字<code>NOT NULL</code></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> [数据库名.]表名(</span><br><span class="line">    字段名<span class="number">1</span> 数据类型,</span><br><span class="line">    字段名<span class="number">2</span> 数据类型 <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">    字段名<span class="number">3</span> 数据类型,</span><br><span class="line">    ....</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#定义一个表，将id字段设为非空</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> test_notnull(</span><br><span class="line">    <span class="keyword">id</span> <span class="built_in">INT</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">    <span class="keyword">name</span> <span class="built_in">VARCHAR</span>(<span class="number">20</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">#尝试插入NULL值</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> test_notnull <span class="keyword">VALUES</span>(<span class="number">1</span>,<span class="string">&#x27;张三&#x27;</span>);</span><br><span class="line"><span class="comment">#错误提示id不能为NULL</span></span><br><span class="line">ERROR 1048 (23000): Column &#x27;id&#x27; cannot be null</span><br><span class="line"></span><br><span class="line"><span class="comment">#只插入name值</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> test_notnull(<span class="keyword">name</span>) <span class="keyword">VALUES</span>(<span class="string">&#x27;张三&#x27;</span>);</span><br><span class="line"><span class="comment">#错误提示id没有默认值</span></span><br><span class="line">ERROR 1364 (HY000): Field &#x27;id&#x27; doesn&#x27;t have a default value</span><br></pre></td></tr></table></figure>
+
+<p><strong>建表后添加非空约束：</strong></p>
+<p>​    格式：<code>ALTER TABLE [数据库名.]表名 MODIFY 字段名 数据类型 NOT NULL</code>。</p>
+<p>​    <strong>若该字段列中存在NULL添加失败。</strong></p>
+<p><strong>删除非空约束：</strong></p>
+<p>​    格式：<code>ALTER TABLE [数据库名.]表名 MODIFY 字段名 数据类型</code>。</p>
+<h3 id="4-默认值约束（DEFAULT-）"><a href="#4-默认值约束（DEFAULT-）" class="headerlink" title="4.默认值约束（DEFAULT ）"></a>4.默认值约束（DEFAULT ）</h3><p>​    用于给字段增加默认值。</p>
+<p><strong>默认值约束的特点：</strong></p>
+<ul>
+<li>默认值约束只能定义在单个字段中。</li>
+<li>每张表中只能存在多个默认值约束。</li>
+<li>新增数据时若没有指定该字段的数值会按照默认值处理。</li>
+</ul>
+<p><strong>建表时使用默认值约束：</strong></p>
+<p>​    在需要添加默认值约束的数据类型后增加关键字<code>DEFAULT 默认值</code></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> [数据库名.]表名(</span><br><span class="line">    字段名<span class="number">1</span> 数据类型,</span><br><span class="line">    字段名<span class="number">2</span> 数据类型 <span class="keyword">DEFAULT</span> 默认值,</span><br><span class="line">    字段名<span class="number">3</span> 数据类型,</span><br><span class="line">    ....</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#定义一个表，将name字段的默认值设为&quot;无名&quot;</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> test_default(</span><br><span class="line">    <span class="keyword">id</span> <span class="built_in">INT</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">    <span class="keyword">name</span> <span class="built_in">VARCHAR</span>(<span class="number">20</span>) <span class="keyword">DEFAULT</span> <span class="string">&#x27;无名&#x27;</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">#设置了默认值不代表赋值时可以省略</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> test_default <span class="keyword">VALUES</span>(<span class="number">1</span>);</span><br><span class="line">ERROR 1136 (21S01): Column count doesn&#x27;t match value count at row 1        &#x27;</span><br><span class="line"></span><br><span class="line"><span class="comment">#而是在未赋值时赋默认值，而不是NULL。</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> test_default(<span class="keyword">id</span>) <span class="keyword">VALUES</span>(<span class="number">1</span>);</span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> test_default;</span><br><span class="line">+<span class="comment">----+--------+</span></span><br><span class="line">| id | name   |</span><br><span class="line">+<span class="comment">----+--------+</span></span><br><span class="line">|  1 | 无名   |</span><br><span class="line">+<span class="comment">----+--------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#如果想在新增时可以使用DEFAULT代表默认值</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> test_default <span class="keyword">VALUES</span>(<span class="number">2</span>,<span class="keyword">DEFAULT</span>);</span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> test_default;</span><br><span class="line">+<span class="comment">----+--------+</span></span><br><span class="line">| id | name   |</span><br><span class="line">+<span class="comment">----+--------+</span></span><br><span class="line">|  1 | 无名   |</span><br><span class="line">|  2 | 无名   |</span><br><span class="line">+<span class="comment">----+--------+</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>建表后添加非空约束：</strong></p>
+<p>​    格式：<code>ALTER TABLE [数据库名.]表名 MODIFY 字段名 数据类型 DEFAULT 默认值</code>。</p>
+<p>​    需要注意的是如果字段本身有非空约束需要在修改中提现，否则相当于删除非空约束。</p>
+<p>​    格式：<code>ALTER TABLE [数据库名.]表名 MODIFY 字段名 数据类型 DEFAULT 默认值 NOT NULL</code> 。</p>
+<p><strong>删除非空约束：</strong></p>
+<p>​    格式：<code>ALTER TABLE [数据库名.]表名 MODIFY 字段名 数据类型</code>。</p>
+<p>​    同理的，如果同时存在非空约束</p>
+<p>​    格式：<code>ALTER TABLE [数据库名.]表名 MODIFY 字段名 数据类型 NOT NULL</code>。</p>
+<h3 id="5-自增约束（AUTO-INCREMENT）"><a href="#5-自增约束（AUTO-INCREMENT）" class="headerlink" title="5.自增约束（AUTO_INCREMENT）"></a>5.自增约束（AUTO_INCREMENT）</h3><p>​    用于使字段值自动增长。</p>
+<p><strong>自增约束的特点：</strong></p>
+<ul>
+<li>一个表只能有<strong>一个</strong>自增约束。</li>
+<li>自增约束的列必须是<strong>键列</strong>（主键列，唯一键列，外键列），并且要求<strong>非空</strong>。</li>
+<li>自增列必须是整数类型</li>
+<li>InnoDB（MySQL默认引擎）表的自动增长列可以手动插入，但是插入的值如果是空或者0，则实际插入的将是自动增长后的值。</li>
+</ul>
+<p><strong>建表时使用自增约束：</strong></p>
+<p>​    在需要添加自增约束的数据类型后增加关键字<code>AUTO_INCREMENT</code></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> [数据库名.]表名(</span><br><span class="line">    字段名<span class="number">1</span> 数据类型,</span><br><span class="line">    字段名<span class="number">2</span> 数据类型 [xx <span class="keyword">KEY</span>] AUTO_INCREMENT,</span><br><span class="line">    字段名<span class="number">3</span> 数据类型,</span><br><span class="line">    ....</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#定义一个表，将id字段设置为主键并自增</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> test_auto(</span><br><span class="line">    <span class="keyword">id</span> <span class="built_in">INT</span> PRIMARY <span class="keyword">KEY</span> AUTO_INCREMENT,</span><br><span class="line">    <span class="keyword">name</span> <span class="built_in">VARCHAR</span>(<span class="number">20</span>) </span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">#未给id赋值自动从1开始自增</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> test_auto(<span class="keyword">name</span>) <span class="keyword">VALUES</span>(<span class="string">&#x27;未给id赋值&#x27;</span>),(<span class="string">&#x27;未给id赋值&#x27;</span>);</span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> test_auto;</span><br><span class="line">+<span class="comment">----+----------------+</span></span><br><span class="line">| id | name           |</span><br><span class="line">+<span class="comment">----+----------------+</span></span><br><span class="line">|  1 | 未给id赋值     |</span><br><span class="line">|  2 | 未给id赋值     |</span><br><span class="line">+<span class="comment">----+----------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#给id赋值为0或NULL会按照自增值处理</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> test_auto <span class="keyword">VALUES</span>(<span class="number">0</span>,<span class="string">&#x27;给id赋值0&#x27;</span>),(<span class="literal">NULL</span>,<span class="string">&#x27;给id赋值NULL&#x27;</span>);</span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> test_auto;</span><br><span class="line">+<span class="comment">----+-----------------+</span></span><br><span class="line">| id | name            |</span><br><span class="line">+<span class="comment">----+-----------------+</span></span><br><span class="line">|  1 | 未给id赋值      |</span><br><span class="line">|  2 | 未给id赋值      |</span><br><span class="line">|  3 | 给id赋值0       |</span><br><span class="line">|  4 | 给id赋值NULL    |</span><br><span class="line">+<span class="comment">----+-----------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#若给id赋值一个大于当前自增约束的</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> test_auto <span class="keyword">VALUES</span>(<span class="number">10</span>,<span class="string">&#x27;给id赋值10&#x27;</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> test_auto(<span class="keyword">name</span>) <span class="keyword">VALUES</span>(<span class="string">&#x27;未给id赋值&#x27;</span>);</span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> test_auto;</span><br><span class="line">+<span class="comment">----+-----------------+</span></span><br><span class="line">| id | name            |</span><br><span class="line">+<span class="comment">----+-----------------+</span></span><br><span class="line">|  1 | 未给id赋值      |</span><br><span class="line">|  2 | 未给id赋值      |</span><br><span class="line">|  3 | 给id赋值0       |</span><br><span class="line">|  4 | 给id赋值NULL    |</span><br><span class="line">| 10 | 给id赋值10      |</span><br><span class="line">| 11 | 未给id赋值      |</span><br><span class="line">+<span class="comment">----+-----------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#若给id赋值小于当前值 可以赋值成功，但不会改变当前的自增值。</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> test_auto <span class="keyword">VALUES</span>(<span class="number">6</span>,<span class="string">&#x27;当前自增值为11,给id赋值6&#x27;</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> test_auto(<span class="keyword">name</span>) <span class="keyword">VALUES</span>(<span class="string">&#x27;未给id赋值&#x27;</span>);</span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> test_auto;</span><br><span class="line">+<span class="comment">----+-----------------------------------+</span></span><br><span class="line">| id | name                              |</span><br><span class="line">+<span class="comment">----+-----------------------------------+</span></span><br><span class="line">|  1 | 未给id赋值                        |</span><br><span class="line">|  2 | 未给id赋值                        |</span><br><span class="line">|  3 | 给id赋值0                         |</span><br><span class="line">|  4 | 给id赋值NULL                      |</span><br><span class="line">|  6 | 当前自增值为11,给id赋值6          |</span><br><span class="line">| 10 | 给id赋值10                        |</span><br><span class="line">| 11 | 未给id赋值                        |</span><br><span class="line">| 12 | 未给id赋值                        |</span><br><span class="line">+<span class="comment">----+-----------------------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#对于负数也是一样的情况</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> test_auto <span class="keyword">VALUES</span>(<span class="number">-3</span>,<span class="string">&#x27;当前自增值为12,给id赋值-3&#x27;</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> test_auto(<span class="keyword">name</span>) <span class="keyword">VALUES</span>(<span class="string">&#x27;未给id赋值&#x27;</span>);</span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> test_auto;</span><br><span class="line">+<span class="comment">----+------------------------------------+</span></span><br><span class="line">| id | name                               |</span><br><span class="line">+<span class="comment">----+------------------------------------+</span></span><br><span class="line">| -3 | 当前自增值为12,给id赋值-3          |</span><br><span class="line">|  1 | 未给id赋值                         |</span><br><span class="line">|  2 | 未给id赋值                         |</span><br><span class="line">|  3 | 给id赋值0                          |</span><br><span class="line">|  4 | 给id赋值NULL                       |</span><br><span class="line">|  6 | 当前自增值为11,给id赋值6           |</span><br><span class="line">| 10 | 给id赋值10                         |</span><br><span class="line">| 11 | 未给id赋值                         |</span><br><span class="line">| 12 | 未给id赋值                         |</span><br><span class="line">| 13 | 未给id赋值                         |</span><br><span class="line">+<span class="comment">----+------------------------------------+</span></span><br></pre></td></tr></table></figure>
+
+<p>​        <strong><em>以上测试仅为了解自增约束的特性，实际开发当中不建议进行过多操作</em></strong></p>
+<p><strong>建表后添加自增约束：</strong></p>
+<p>​    格式：<code>ALTER TABLE [数据库名.]表名 MODIFY 字段名 数据类型 AUTO_INCREMENT</code>。</p>
+<p><strong>删除自增约束：</strong></p>
+<p>​    格式：<code>ALTER TABLE [数据库名.]表名 MODIFY 字段名 数据类型</code>。</p>
+<h3 id="6-检查约束（CHECK）"><a href="#6-检查约束（CHECK）" class="headerlink" title="6.检查约束（CHECK）"></a>6.检查约束（CHECK）</h3><p>​    用于新增或修改数据时限制数据的范围，<strong>MySQL暂不支持检查约束。</strong></p>
+<p>​    可以在语句中使用但不会生效,只做一个简单演示。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#定义一个表，限定id需要大于等于0</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> test_check(</span><br><span class="line">    <span class="keyword">id</span> <span class="built_in">INT</span>,</span><br><span class="line">    <span class="keyword">CHECK</span>(<span class="keyword">id</span>&gt;=<span class="number">0</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">#建表不会报错,但依然可以成功插入负数</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> test_check <span class="keyword">VALUES</span>(<span class="number">-1</span>);</span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> test_check;</span><br><span class="line">+<span class="comment">------+</span></span><br><span class="line">| id   |</span><br><span class="line">+<span class="comment">------+</span></span><br><span class="line">|   -1 |</span><br><span class="line">+<span class="comment">------+</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="7-外键约束（FOREIGN-KEY）"><a href="#7-外键约束（FOREIGN-KEY）" class="headerlink" title="7.外键约束（FOREIGN KEY）"></a>7.外键约束（FOREIGN KEY）</h3><p>​    外键约束是<strong>构建于</strong>一个表的两个字段或是两个表的两个字段之间的<strong>参照关系</strong>。用来保证一个或两个表之间的<strong>参照完整性。</strong>在参照关系中<strong>被参考方</strong>称为<strong>父表/主表</strong>，<strong>参考方</strong>称为<strong>子表/从表</strong>，外键约束<strong>建立语句写在子表/从表中</strong>。</p>
+<p>​    <strong>外键约束的特点：</strong></p>
+<ul>
+<li>一个表可以建立<strong>多个</strong>外键约束</li>
+<li>从表的外键列，在主表中引用的只能是<strong>键列（主键，唯一键，外键）</strong>。</li>
+<li>从表的外键列与主表被参照的列<strong>名字可以不相同</strong>，但是数<strong>据类型必须类似</strong>（数值类型的长度以及有无符号等需要一致，字符串长度可以不一致）。</li>
+<li>在创建外键约束时，如果不给外键约束名称，默认名不是列名，而是<strong>自动产生一个外键名</strong>（例如 student_ibfk_1;），也可以指定外键约束名。</li>
+<li>当创建外键约束时，系统默认会在所在的列上建立对应的普通索引。但是索引名是列名，不是外键的约束名。</li>
+<li>删除外键时，关于外键列上的普通索引需要单独删除。</li>
+</ul>
+<p><strong>建表时使用自增约束：</strong></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> [数据库名.]从表名(</span><br><span class="line">    字段名<span class="number">1</span> 数据类型,</span><br><span class="line">    字段名<span class="number">2</span> 数据类型,</span><br><span class="line">    字段名<span class="number">3</span> 数据类型,</span><br><span class="line">    ....</span><br><span class="line">    <span class="keyword">FOREIGN</span> <span class="keyword">KEY</span> (从表字段) <span class="keyword">REFERENCES</span> 主表名(主表字段)</span><br><span class="line">    [<span class="keyword">ON</span> <span class="keyword">UPDATE</span> 外键约束等级] [<span class="keyword">ON</span> <span class="keyword">DELETE</span> 外键约束等级]</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p><strong>外键约束是针对双方的</strong></p>
+<ul>
+<li><p>添加了外键约束后，主表的<strong>修改和删除</strong>受约束</p>
+</li>
+<li><p>添加了外键约束后，从表的<strong>添加和修改</strong>受约束</p>
+</li>
+</ul>
+<p><strong>约束等级分为以下五种：</strong></p>
+<ul>
+<li><p><strong>CASCADE方式：</strong></p>
+<p>在父表上UPDATE/DELETE记录时，<strong>同步</strong>UPDATE/DELETE到子表的匹配记录 。</p>
+</li>
+<li><p><strong>SET NULL方式：</strong></p>
+<p>在父表上UPDATE/DELETE记录时，将子表上匹配记录的列<strong>设为NULL</strong>，但是要注意子表的外键列<strong>不能为NOT NULL</strong>。  </p>
+</li>
+<li><p><strong>NO ACTION方式：</strong></p>
+<p>如果子表中有匹配的记录,则<strong>不允许</strong>对父表对应候选键进行<strong>UPDATE/DELETE操作</strong>。若创建外键时未指定约束等级则默认为NO ACTION。</p>
+</li>
+<li><p><strong>RESTRICT方式：</strong></p>
+<p>同NO ACTION, 都是<strong>立即检查外键约束</strong>。</p>
+</li>
+<li><p><strong>SET DEFAULT方式：</strong></p>
+<p>父表有变更时,子表将外键列设置成一个默认的值，但<strong>Innodb不能识别</strong>。</p>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#创建部门表作为主表并插入两条数据</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> department(</span><br><span class="line">    did <span class="built_in">INT</span> PRIMARY <span class="keyword">KEY</span>, <span class="comment">#部门id</span></span><br><span class="line">    dname <span class="built_in">VARCHAR</span>(<span class="number">20</span>) <span class="comment">#部门名称</span></span><br><span class="line">);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> department <span class="keyword">VALUES</span>(<span class="number">1001</span>,<span class="string">&#x27;研发部&#x27;</span>),(<span class="number">1002</span>,<span class="string">&#x27;产品部&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">#创建员工表作为从表，所属部门id（staff.did）参考于部门id（department.did）</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> staff(</span><br><span class="line">    <span class="keyword">sid</span> <span class="built_in">INT</span>, <span class="comment">#员工id</span></span><br><span class="line">    did <span class="built_in">INT</span>, <span class="comment">#所示部门id</span></span><br><span class="line">    sname <span class="built_in">VARCHAR</span>(<span class="number">10</span>),<span class="comment">#员工姓名</span></span><br><span class="line">    <span class="keyword">FOREIGN</span> <span class="keyword">KEY</span> (did) <span class="keyword">REFERENCES</span> department(did)</span><br><span class="line">    <span class="keyword">ON</span> <span class="keyword">UPDATE</span> <span class="keyword">CASCADE</span> <span class="keyword">ON</span> <span class="keyword">DELETE</span> <span class="keyword">SET</span> <span class="literal">NULL</span></span><br><span class="line">);</span><br><span class="line"><span class="comment">#插入一个没有匹配的部门id，报错</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> staff <span class="keyword">VALUES</span>(<span class="number">1</span>,<span class="number">10086</span>,<span class="string">&#x27;A&#x27;</span>);</span><br><span class="line">ERROR 1452 (23000): Cannot add or <span class="keyword">update</span> a <span class="keyword">child</span> <span class="keyword">row</span>:....</span><br><span class="line"></span><br><span class="line"><span class="comment">#正常插入几条数据</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> staff <span class="keyword">VALUES</span>(<span class="number">1</span>,<span class="number">1001</span>,<span class="string">&#x27;A&#x27;</span>),(<span class="number">2</span>,<span class="number">1002</span>,<span class="string">&#x27;B&#x27;</span>),(<span class="number">3</span>,<span class="number">1002</span>,<span class="string">&#x27;C&#x27;</span>);</span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> staff;</span><br><span class="line">+<span class="comment">------+------+-------+</span></span><br><span class="line">| sid  | did  | sname |</span><br><span class="line">+<span class="comment">------+------+-------+</span></span><br><span class="line">|    1 | 1001 | A     |</span><br><span class="line">|    2 | 1002 | B     |</span><br><span class="line">|    3 | 1002 | C     |</span><br><span class="line">+<span class="comment">------+------+-------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#删除1001部门，将1002部门的编号改为1005</span></span><br><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> department <span class="keyword">WHERE</span> did = <span class="number">1001</span>;</span><br><span class="line"><span class="keyword">UPDATE</span> department <span class="keyword">SET</span> did = <span class="number">1005</span> <span class="keyword">WHERE</span> did = <span class="number">1002</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">#由于DELETE约束等级为SET NULL 删除1001部门后，员工表中属于该部门的did变为NULL值</span></span><br><span class="line"><span class="comment">#UPDATE等级为CASCADE，将1002部门编号修改为1005后员工表中内容同步修改。</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> staff;</span><br><span class="line">+<span class="comment">------+------+-------+</span></span><br><span class="line">| sid  | did  | sname |</span><br><span class="line">+<span class="comment">------+------+-------+</span></span><br><span class="line">|    1 | NULL | A     |</span><br><span class="line">|    2 | 1005 | B     |</span><br><span class="line">|    3 | 1005 | C     |</span><br><span class="line">+<span class="comment">------+------+-------+</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>建表后添加自增约束：</strong></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">格式：<span class="keyword">ALTER</span> <span class="keyword">TABLE</span> [数据库名.]表名 <span class="keyword">ADD</span> [<span class="keyword">CONSTRAINT</span> 约束名]</span><br><span class="line">    <span class="keyword">FOREIGN</span> <span class="keyword">KEY</span> (从表字段) <span class="keyword">REFERENCES</span> 主表名(主表字段)</span><br><span class="line">    [<span class="keyword">ON</span> <span class="keyword">UPDATE</span> 外键约束等级] [<span class="keyword">ON</span> <span class="keyword">DELETE</span> 外键约束等级]。</span><br></pre></td></tr></table></figure>
+<p><strong>删除自增约束：</strong></p>
+<p><code>ALTER TABLE 表名称 DROP FOREIGN KEY 外键约束名;</code></p>
+<p><strong>查看约束名:</strong></p>
+<p><code> SELECT * FROM information_schema.table_constraints WHERE table_name = &#39;表名称&#39;;</code><br><strong>删除外键约束不会删除对应的索引，如果需要删除索引，需要用</strong></p>
+<p><code>ALTER TABLE 表名称 DROP INDEX 索引名;</code><br><strong>查看索引名</strong></p>
+<p><code> show index from 表名称;</code></p>
+]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>SQL</tag>
+        <tag>MySQL</tag>
+        <tag>MySQL基础</tag>
+        <tag>SQL语法</tag>
       </tags>
   </entry>
 </search>
