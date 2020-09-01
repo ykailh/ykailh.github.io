@@ -1,6 +1,143 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Java基础之包装类</title>
+    <url>/2020/08/08/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%8C%85%E8%A3%85%E7%B1%BB/</url>
+    <content><![CDATA[<h1 id="什么是包装类"><a href="#什么是包装类" class="headerlink" title="什么是包装类"></a>什么是包装类</h1><p>​    Java作为面向对象的编程语言在设计之初依然延续了C语言的8种基本数据类型，但在不断的更新中设计了很多针对对象的API和新的特性（例如泛型），不支持基本数据类型。为了解决这个问题，Java为每一个基本数据类型提供了包装类。</p>
+<a id="more"></a>
+
+<table>
+<thead>
+<tr>
+<th>基本数据类型</th>
+<th>包装类（java.lang.）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>byte</td>
+<td>Byte</td>
+</tr>
+<tr>
+<td>short</td>
+<td>Short</td>
+</tr>
+<tr>
+<td>int</td>
+<td>Integer</td>
+</tr>
+<tr>
+<td>long</td>
+<td>Long</td>
+</tr>
+<tr>
+<td>float</td>
+<td>Float</td>
+</tr>
+<tr>
+<td>double</td>
+<td>Double</td>
+</tr>
+<tr>
+<td>char</td>
+<td>Character</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>Boolean</td>
+</tr>
+</tbody></table>
+<h1 id="装箱与拆箱"><a href="#装箱与拆箱" class="headerlink" title="装箱与拆箱"></a>装箱与拆箱</h1><p>​    装箱和拆箱实际上就是<strong>基本数据类型和它的包装类之间的转换</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer num1 = <span class="keyword">new</span> Integer(<span class="number">1</span>);    <span class="comment">//基本数据类型转为包装类也叫做手动装箱</span></span><br><span class="line"><span class="keyword">int</span> num2 = num1.intValue();        <span class="comment">//包装类转换为基本数据类型，也叫做手动拆箱</span></span><br></pre></td></tr></table></figure>
+
+<p>​    在J<strong>DK1.5</strong>之后为了方便使用等目的提供了<strong>自动装箱与自动拆箱</strong>。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//包装类中的自动装箱拆箱机制</span></span><br><span class="line">Integer  num1 = <span class="number">1</span>;        <span class="comment">//自动装箱</span></span><br><span class="line"><span class="comment">//这行代码实际等同于    Integer  num1 = Integer.valueOf(1);</span></span><br><span class="line"><span class="comment">//这个于new Integer(1)有所区别 下文会详细说明</span></span><br><span class="line"><span class="keyword">int</span> num2 = num1;        <span class="comment">//自动拆箱</span></span><br></pre></td></tr></table></figure>
+
+<p>​    需要注意的是只在与<strong>对应的基本数据类型和包装类之间</strong>才能实现自动装箱与拆箱。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Double d = <span class="number">1</span>;<span class="comment">//错误的，1是int类型</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="包装类对象的缓存问题"><a href="#包装类对象的缓存问题" class="headerlink" title="包装类对象的缓存问题"></a>包装类对象的缓存问题</h1><p>​    为了引出这个问题首先做以下测试</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer i = <span class="number">1</span>;</span><br><span class="line">Integer j = <span class="number">1</span>;</span><br><span class="line">System.out.println(i == j);<span class="comment">//true</span></span><br><span class="line"></span><br><span class="line">Integer i = <span class="number">128</span>;</span><br><span class="line">Integer j = <span class="number">128</span>;</span><br><span class="line">System.out.println(i == j);<span class="comment">//false</span></span><br></pre></td></tr></table></figure>
+
+<p>​    为什么改变了在包装类的值会影响结果，这就涉及到了包装类对象的缓存问题。对于对象而言，<code>==</code>所比较的是两个对象的地址值，上面的代码就说明了<strong>在一定的范围内相同值的包装类指向的是同一个对象</strong>。每个包装类的缓存范围如下：</p>
+<table>
+<thead>
+<tr>
+<th>包装类</th>
+<th>缓存对象</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Byte</td>
+<td>-128~127</td>
+</tr>
+<tr>
+<td>Short</td>
+<td>-128~127</td>
+</tr>
+<tr>
+<td>Integer</td>
+<td>-128~127</td>
+</tr>
+<tr>
+<td>Long</td>
+<td>-128~127</td>
+</tr>
+<tr>
+<td>Float</td>
+<td>没有</td>
+</tr>
+<tr>
+<td>Double</td>
+<td>没有</td>
+</tr>
+<tr>
+<td>Character</td>
+<td>0~127</td>
+</tr>
+<tr>
+<td>Boolean</td>
+<td>true和false</td>
+</tr>
+</tbody></table>
+<p>​    <strong>以Integer为例</strong>，上面也提到过自动装箱时是调用<code>Integer.valueOf()</code>方法来获取Integer对象的，查看这个方法的源码。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Integer <span class="title">valueOf</span><span class="params">(<span class="keyword">int</span> i)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (i &gt;= IntegerCache.low &amp;&amp; i &lt;= IntegerCache.high)</span><br><span class="line">        <span class="keyword">return</span> IntegerCache.cache[i + (-IntegerCache.low)];</span><br><span class="line">    <span class="comment">//若在某一个范围内直接返回一个cache数组中的Integer对象。</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Integer(i);</span><br><span class="line">   <span class="comment">//若不在这个范围则创建一个Integer对象返回</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再找到<code>IntegerCache</code> 这是Integer的一个内部类</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">IntegerCache</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> low = -<span class="number">128</span>;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> high;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> Integer cache[];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="comment">// high value may be configured by property</span></span><br><span class="line">        <span class="keyword">int</span> h = <span class="number">127</span>;</span><br><span class="line">        String integerCacheHighPropValue =</span><br><span class="line">            sun.misc.VM.getSavedProperty(<span class="string">&quot;java.lang.Integer.IntegerCache.high&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span> (integerCacheHighPropValue != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">int</span> i = parseInt(integerCacheHighPropValue);</span><br><span class="line">                i = Math.max(i, <span class="number">127</span>);</span><br><span class="line">                <span class="comment">// Maximum array size is Integer.MAX_VALUE</span></span><br><span class="line">                h = Math.min(i, Integer.MAX_VALUE - (-low) -<span class="number">1</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span>( NumberFormatException nfe) &#123;</span><br><span class="line">                <span class="comment">// If the property cannot be parsed into an int, ignore it.</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        high = h;</span><br><span class="line"></span><br><span class="line">        cache = <span class="keyword">new</span> Integer[(high - low) + <span class="number">1</span>];</span><br><span class="line">        <span class="keyword">int</span> j = low;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; cache.length; k++)</span><br><span class="line">            cache[k] = <span class="keyword">new</span> Integer(j++);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// range [-128, 127] must be interned (JLS7 5.1.7)</span></span><br><span class="line">        <span class="keyword">assert</span> IntegerCache.high &gt;= <span class="number">127</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">IntegerCache</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    可以发现在Integer类初始化时会创建一个叫cache的数组，里面存放的是low至high范围的Integer类常量，这就是上面提到的缓存对象。</p>
+<p>这就解释了为什么在一定范围内使用<code>==</code>比较两个包装类对象会返回turn。</p>
+<p>再做几个比较实验：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer i = <span class="keyword">new</span> Integer(<span class="number">1</span>);<span class="comment">//新new的在堆中</span></span><br><span class="line">Integer j = <span class="number">1</span>;<span class="comment">//这个用的是缓冲的常量对象，在方法区</span></span><br><span class="line">System.out.println(i == j);<span class="comment">//false</span></span><br><span class="line">System.out.println(i.equals(j));<span class="comment">//true</span></span><br><span class="line"></span><br><span class="line">Integer i = <span class="keyword">new</span> Integer(<span class="number">1</span>);</span><br><span class="line"><span class="keyword">int</span> j = <span class="number">1</span>;</span><br><span class="line">System.out.println(i == j);<span class="comment">//true</span></span><br><span class="line">System.out.println(i.equals(j));<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<p>​    new出来的对象在堆当中，不指向常量对象，这就是<strong>new与valueOf()的区别</strong>，<code>valueOf()</code>只在超出缓存范围时才会创建一个新的对象，所以在实际使用过程中建议直接使用<code>valueOf()</code>。</p>
+<p>​    而与基本数据类型比较（包括计算）时会<strong>先拆箱</strong>再按照基本数据类型的规则比较，所以为了避免歧义，如果是判断值是否相等时建议同一使用<code>equals()</code>方法。</p>
+<h1 id="API演示"><a href="#API演示" class="headerlink" title="API演示"></a>API演示</h1><p>​    由于包装类的存在，许多处理基本数据类型的方法都可以定义在包装类中。下面进行一些<strong>举例</strong>。</p>
+<h2 id="1-把字符串转为基本数据类型"><a href="#1-把字符串转为基本数据类型" class="headerlink" title="1.把字符串转为基本数据类型"></a>1.把字符串转为基本数据类型</h2><p>​    <code>parsxxx()</code>方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = Integer.parseInt(<span class="string">&quot;整数的字符串&quot;</span>);</span><br><span class="line"><span class="keyword">double</span> a = Double.parseDouble(<span class="string">&quot;小数的字符串&quot;</span>);</span><br><span class="line"><span class="keyword">boolean</span> b = Boolean.parseBoolean(<span class="string">&quot;true或false&quot;</span>);</span><br><span class="line"></span><br><span class="line">System.out.println(Double.parseDouble(<span class="string">&quot;1.2&quot;</span>));<span class="comment">//1.2</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-数据类型的最大最小值"><a href="#2-数据类型的最大最小值" class="headerlink" title="2.数据类型的最大最小值"></a>2.数据类型的最大最小值</h2><p>​    <code>MAX_VALUE</code>和<code>MIN_VALUE</code></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer.MAX_VALUE和Integer.MIN_VALUE</span><br><span class="line">Long.MAX_VALUE和Long.MIN_VALUE</span><br><span class="line">Double.MAX_VALUE和Double.MIN_VALUE</span><br><span class="line">    </span><br><span class="line">System.out.println(Integer.MAX_VALUE);<span class="comment">//2147483647</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="3-转进制"><a href="#3-转进制" class="headerlink" title="3.转进制"></a>3.转进制</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer.toBinaryString(<span class="keyword">int</span> i) <span class="comment">//转为2进制</span></span><br><span class="line">Integer.toOctalString(<span class="keyword">int</span> i)  <span class="comment">//转为8进制</span></span><br><span class="line">Integer.toHexString(<span class="keyword">int</span> i)   <span class="comment">//转为16进制</span></span><br><span class="line"></span><br><span class="line">System.out.println(Integer.toBinaryString(<span class="number">15</span>));<span class="comment">//1111</span></span><br><span class="line">System.out.println(Integer.toOctalString(<span class="number">15</span>));<span class="comment">//17</span></span><br><span class="line">System.out.println(Integer.toHexString(<span class="number">15</span>));<span class="comment">//f</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>Java基础</tag>
+        <tag>包装类</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java基础之多线程</title>
     <url>/2020/08/10/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%A4%9A%E7%BA%BF%E7%A8%8B/</url>
     <content><![CDATA[<h1 id="相关的概念"><a href="#相关的概念" class="headerlink" title="相关的概念"></a>相关的概念</h1><ol>
@@ -164,143 +301,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Java基础之包装类</title>
-    <url>/2020/08/08/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%8C%85%E8%A3%85%E7%B1%BB/</url>
-    <content><![CDATA[<h1 id="什么是包装类"><a href="#什么是包装类" class="headerlink" title="什么是包装类"></a>什么是包装类</h1><p>​    Java作为面向对象的编程语言在设计之初依然延续了C语言的8种基本数据类型，但在不断的更新中设计了很多针对对象的API和新的特性（例如泛型），不支持基本数据类型。为了解决这个问题，Java为每一个基本数据类型提供了包装类。</p>
-<a id="more"></a>
-
-<table>
-<thead>
-<tr>
-<th>基本数据类型</th>
-<th>包装类（java.lang.）</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>byte</td>
-<td>Byte</td>
-</tr>
-<tr>
-<td>short</td>
-<td>Short</td>
-</tr>
-<tr>
-<td>int</td>
-<td>Integer</td>
-</tr>
-<tr>
-<td>long</td>
-<td>Long</td>
-</tr>
-<tr>
-<td>float</td>
-<td>Float</td>
-</tr>
-<tr>
-<td>double</td>
-<td>Double</td>
-</tr>
-<tr>
-<td>char</td>
-<td>Character</td>
-</tr>
-<tr>
-<td>boolean</td>
-<td>Boolean</td>
-</tr>
-</tbody></table>
-<h1 id="装箱与拆箱"><a href="#装箱与拆箱" class="headerlink" title="装箱与拆箱"></a>装箱与拆箱</h1><p>​    装箱和拆箱实际上就是<strong>基本数据类型和它的包装类之间的转换</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer num1 = <span class="keyword">new</span> Integer(<span class="number">1</span>);    <span class="comment">//基本数据类型转为包装类也叫做手动装箱</span></span><br><span class="line"><span class="keyword">int</span> num2 = num1.intValue();        <span class="comment">//包装类转换为基本数据类型，也叫做手动拆箱</span></span><br></pre></td></tr></table></figure>
-
-<p>​    在J<strong>DK1.5</strong>之后为了方便使用等目的提供了<strong>自动装箱与自动拆箱</strong>。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//包装类中的自动装箱拆箱机制</span></span><br><span class="line">Integer  num1 = <span class="number">1</span>;        <span class="comment">//自动装箱</span></span><br><span class="line"><span class="comment">//这行代码实际等同于    Integer  num1 = Integer.valueOf(1);</span></span><br><span class="line"><span class="comment">//这个于new Integer(1)有所区别 下文会详细说明</span></span><br><span class="line"><span class="keyword">int</span> num2 = num1;        <span class="comment">//自动拆箱</span></span><br></pre></td></tr></table></figure>
-
-<p>​    需要注意的是只在与<strong>对应的基本数据类型和包装类之间</strong>才能实现自动装箱与拆箱。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Double d = <span class="number">1</span>;<span class="comment">//错误的，1是int类型</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="包装类对象的缓存问题"><a href="#包装类对象的缓存问题" class="headerlink" title="包装类对象的缓存问题"></a>包装类对象的缓存问题</h1><p>​    为了引出这个问题首先做以下测试</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer i = <span class="number">1</span>;</span><br><span class="line">Integer j = <span class="number">1</span>;</span><br><span class="line">System.out.println(i == j);<span class="comment">//true</span></span><br><span class="line"></span><br><span class="line">Integer i = <span class="number">128</span>;</span><br><span class="line">Integer j = <span class="number">128</span>;</span><br><span class="line">System.out.println(i == j);<span class="comment">//false</span></span><br></pre></td></tr></table></figure>
-
-<p>​    为什么改变了在包装类的值会影响结果，这就涉及到了包装类对象的缓存问题。对于对象而言，<code>==</code>所比较的是两个对象的地址值，上面的代码就说明了<strong>在一定的范围内相同值的包装类指向的是同一个对象</strong>。每个包装类的缓存范围如下：</p>
-<table>
-<thead>
-<tr>
-<th>包装类</th>
-<th>缓存对象</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Byte</td>
-<td>-128~127</td>
-</tr>
-<tr>
-<td>Short</td>
-<td>-128~127</td>
-</tr>
-<tr>
-<td>Integer</td>
-<td>-128~127</td>
-</tr>
-<tr>
-<td>Long</td>
-<td>-128~127</td>
-</tr>
-<tr>
-<td>Float</td>
-<td>没有</td>
-</tr>
-<tr>
-<td>Double</td>
-<td>没有</td>
-</tr>
-<tr>
-<td>Character</td>
-<td>0~127</td>
-</tr>
-<tr>
-<td>Boolean</td>
-<td>true和false</td>
-</tr>
-</tbody></table>
-<p>​    <strong>以Integer为例</strong>，上面也提到过自动装箱时是调用<code>Integer.valueOf()</code>方法来获取Integer对象的，查看这个方法的源码。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Integer <span class="title">valueOf</span><span class="params">(<span class="keyword">int</span> i)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (i &gt;= IntegerCache.low &amp;&amp; i &lt;= IntegerCache.high)</span><br><span class="line">        <span class="keyword">return</span> IntegerCache.cache[i + (-IntegerCache.low)];</span><br><span class="line">    <span class="comment">//若在某一个范围内直接返回一个cache数组中的Integer对象。</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Integer(i);</span><br><span class="line">   <span class="comment">//若不在这个范围则创建一个Integer对象返回</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>再找到<code>IntegerCache</code> 这是Integer的一个内部类</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">IntegerCache</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> low = -<span class="number">128</span>;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> high;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> Integer cache[];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="comment">// high value may be configured by property</span></span><br><span class="line">        <span class="keyword">int</span> h = <span class="number">127</span>;</span><br><span class="line">        String integerCacheHighPropValue =</span><br><span class="line">            sun.misc.VM.getSavedProperty(<span class="string">&quot;java.lang.Integer.IntegerCache.high&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span> (integerCacheHighPropValue != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">int</span> i = parseInt(integerCacheHighPropValue);</span><br><span class="line">                i = Math.max(i, <span class="number">127</span>);</span><br><span class="line">                <span class="comment">// Maximum array size is Integer.MAX_VALUE</span></span><br><span class="line">                h = Math.min(i, Integer.MAX_VALUE - (-low) -<span class="number">1</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span>( NumberFormatException nfe) &#123;</span><br><span class="line">                <span class="comment">// If the property cannot be parsed into an int, ignore it.</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        high = h;</span><br><span class="line"></span><br><span class="line">        cache = <span class="keyword">new</span> Integer[(high - low) + <span class="number">1</span>];</span><br><span class="line">        <span class="keyword">int</span> j = low;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; cache.length; k++)</span><br><span class="line">            cache[k] = <span class="keyword">new</span> Integer(j++);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// range [-128, 127] must be interned (JLS7 5.1.7)</span></span><br><span class="line">        <span class="keyword">assert</span> IntegerCache.high &gt;= <span class="number">127</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">IntegerCache</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>​    可以发现在Integer类初始化时会创建一个叫cache的数组，里面存放的是low至high范围的Integer类常量，这就是上面提到的缓存对象。</p>
-<p>这就解释了为什么在一定范围内使用<code>==</code>比较两个包装类对象会返回turn。</p>
-<p>再做几个比较实验：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer i = <span class="keyword">new</span> Integer(<span class="number">1</span>);<span class="comment">//新new的在堆中</span></span><br><span class="line">Integer j = <span class="number">1</span>;<span class="comment">//这个用的是缓冲的常量对象，在方法区</span></span><br><span class="line">System.out.println(i == j);<span class="comment">//false</span></span><br><span class="line">System.out.println(i.equals(j));<span class="comment">//true</span></span><br><span class="line"></span><br><span class="line">Integer i = <span class="keyword">new</span> Integer(<span class="number">1</span>);</span><br><span class="line"><span class="keyword">int</span> j = <span class="number">1</span>;</span><br><span class="line">System.out.println(i == j);<span class="comment">//true</span></span><br><span class="line">System.out.println(i.equals(j));<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
-
-<p>​    new出来的对象在堆当中，不指向常量对象，这就是<strong>new与valueOf()的区别</strong>，<code>valueOf()</code>只在超出缓存范围时才会创建一个新的对象，所以在实际使用过程中建议直接使用<code>valueOf()</code>。</p>
-<p>​    而与基本数据类型比较（包括计算）时会<strong>先拆箱</strong>再按照基本数据类型的规则比较，所以为了避免歧义，如果是判断值是否相等时建议同一使用<code>equals()</code>方法。</p>
-<h1 id="API演示"><a href="#API演示" class="headerlink" title="API演示"></a>API演示</h1><p>​    由于包装类的存在，许多处理基本数据类型的方法都可以定义在包装类中。下面进行一些<strong>举例</strong>。</p>
-<h2 id="1-把字符串转为基本数据类型"><a href="#1-把字符串转为基本数据类型" class="headerlink" title="1.把字符串转为基本数据类型"></a>1.把字符串转为基本数据类型</h2><p>​    <code>parsxxx()</code>方法</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = Integer.parseInt(<span class="string">&quot;整数的字符串&quot;</span>);</span><br><span class="line"><span class="keyword">double</span> a = Double.parseDouble(<span class="string">&quot;小数的字符串&quot;</span>);</span><br><span class="line"><span class="keyword">boolean</span> b = Boolean.parseBoolean(<span class="string">&quot;true或false&quot;</span>);</span><br><span class="line"></span><br><span class="line">System.out.println(Double.parseDouble(<span class="string">&quot;1.2&quot;</span>));<span class="comment">//1.2</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="2-数据类型的最大最小值"><a href="#2-数据类型的最大最小值" class="headerlink" title="2.数据类型的最大最小值"></a>2.数据类型的最大最小值</h2><p>​    <code>MAX_VALUE</code>和<code>MIN_VALUE</code></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer.MAX_VALUE和Integer.MIN_VALUE</span><br><span class="line">Long.MAX_VALUE和Long.MIN_VALUE</span><br><span class="line">Double.MAX_VALUE和Double.MIN_VALUE</span><br><span class="line">    </span><br><span class="line">System.out.println(Integer.MAX_VALUE);<span class="comment">//2147483647</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="3-转进制"><a href="#3-转进制" class="headerlink" title="3.转进制"></a>3.转进制</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer.toBinaryString(<span class="keyword">int</span> i) <span class="comment">//转为2进制</span></span><br><span class="line">Integer.toOctalString(<span class="keyword">int</span> i)  <span class="comment">//转为8进制</span></span><br><span class="line">Integer.toHexString(<span class="keyword">int</span> i)   <span class="comment">//转为16进制</span></span><br><span class="line"></span><br><span class="line">System.out.println(Integer.toBinaryString(<span class="number">15</span>));<span class="comment">//1111</span></span><br><span class="line">System.out.println(Integer.toOctalString(<span class="number">15</span>));<span class="comment">//17</span></span><br><span class="line">System.out.println(Integer.toHexString(<span class="number">15</span>));<span class="comment">//f</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-]]></content>
-      <categories>
-        <category>Java</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>Java基础</tag>
-        <tag>包装类</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Java基础之字符串</title>
     <url>/2020/08/09/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%AD%97%E7%AC%A6%E4%B8%B2/</url>
     <content><![CDATA[<h1 id="字符串的特点"><a href="#字符串的特点" class="headerlink" title="字符串的特点"></a>字符串的特点</h1><p>​        <strong><em>以下说明及演示基于JDK1.8版本</em></strong></p>
@@ -390,109 +390,6 @@
         <tag>Java基础</tag>
         <tag>字符串</tag>
         <tag>String</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Java基础之异常</title>
-    <url>/2020/08/07/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%BC%82%E5%B8%B8/</url>
-    <content><![CDATA[<h1 id="什么是异常"><a href="#什么是异常" class="headerlink" title="什么是异常"></a>什么是异常</h1><p>​    在一些情况下，由于<strong>非程序本身</strong>问题，例如:配置问题、错误输入、磁盘空间不足等等所导致的程序无法正常运行。</p>
-<a id="more"></a>
-
-<p><strong>例如：</strong></p>
-<p>​    试图获取一个int类型</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestException</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Scanner input = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        <span class="keyword">int</span> num = input.nextInt();</span><br><span class="line">        input.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>​    运行后输入‘a’，由于没有正常的获取到int类型，程序发生异常。</p>
-<p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%BC%82%E5%B8%B8/%E5%BC%82%E5%B8%B8%E6%BC%94%E7%A4%BA.png" alt="异常演示"></p>
-<p><strong>而下面两个情况也是程序无法正常运行，但是是程序本身的问题，不属于异常。</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestException</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        System.out.println(num);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//未定义num的情况下使用num，属于语法错误。不属于异常</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestException</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        System.out.println(getsum(<span class="number">1</span>,<span class="number">1</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//getsum方法用于返回两个int类型的和</span></span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getsum</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> a-b;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//运行结果为0，而不是预期是2，属于程序逻辑错误。不属于异常</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="Java如何处理异常"><a href="#Java如何处理异常" class="headerlink" title="Java如何处理异常"></a>Java如何处理异常</h1><p>​    当程序运行到某一处时发生了异常，程序会暂停运行查看产生异常的原因，并根据此原因生成一个<strong>“异常对象”</strong>然后向外<strong>“抛”</strong>，此时若此处有<strong>try…catch</strong>结构去<strong>“捕获”</strong>这个异常，则程序继续运行。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestException</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Scanner input = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;请输入一个整数&quot;</span>);</span><br><span class="line">            <span class="keyword">int</span> num = input.nextInt();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;输入有误&quot;</span>);</span><br><span class="line">        &#125;<span class="comment">//try..catch语法下文有详解，这里可以理解为“捕获”异常</span></span><br><span class="line">        System.out.println(<span class="string">&quot;其他代码&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>运行结果：</strong></p>
-<p>​    <strong>”捕获“</strong>异常后继续执行其他代码</p>
-<p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%BC%82%E5%B8%B8/%E5%BC%82%E5%B8%B8%E6%8D%95%E8%8E%B7%E6%BC%94%E7%A4%BA.png" alt="异常捕获演示"></p>
-<p>若不能<strong>“捕获”</strong>这个异常则会继续<strong>“抛”</strong>给上一级调用者，直到被<strong>“捕获”</strong>，程序在被<strong>“捕获”</strong>处继续运行。最终上抛至JVM则程序<strong>”崩溃“</strong>。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestException</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            testPao();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;上级捕获到异常&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">&quot;main中的其他代码&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">testPao</span><span class="params">()</span></span>&#123;</span><br><span class="line">        Scanner input = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        System.out.println(<span class="string">&quot;请输入一个整数&quot;</span>);</span><br><span class="line">        <span class="keyword">int</span> num = input.nextInt();</span><br><span class="line">        System.out.println(<span class="string">&quot;其他代码&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>运行结果：</strong></p>
-<p>​    <img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%BC%82%E5%B8%B8/%E5%BC%82%E5%B8%B8%E4%B8%8A%E6%8A%9B%E6%BC%94%E7%A4%BA.png" alt="异常上抛演示"></p>
-<p>若不做<strong>“捕获”</strong>出来<strong>“上抛”</strong>至JVM，程序<strong>“崩溃”</strong></p>
-<h1 id="异常的体系结构"><a href="#异常的体系结构" class="headerlink" title="异常的体系结构"></a>异常的体系结构</h1><p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%BC%82%E5%B8%B8/%E5%BC%82%E5%B8%B8%E7%9A%84%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84.png" alt="异常的体系结构"></p>
-<p>​    所有异常相关的类都有一个公共父类：java.lang.Throwable，Throwable分为两大派别Error和Exception。</p>
-<p><strong>Error：</strong>是程序中无法处理的错误，表示运行应用程序中出现了严重的错误。</p>
-<p>​    此类错误一般表示代码运行时JVM出现问题。通常有Virtual MachineError（虚拟机运行错误）、NoClassDefFoundError（类定义错误）等。比如说当jvm耗完可用内存时，将出现OutOfMemoryError。此类错误发生时，JVM将终止线程。非代码性错误。因此，当此类错误发生时，应用<strong>不应该去处理此类错误</strong>。而是通过代码优化、硬件升级等方式解决。</p>
-<p><strong>Exception：</strong>程序本身可以捕获并且可以处理的异常。</p>
-<p>Exception又分为两大类，运行时异常（也叫不受检异常）和编译时异常（也叫受检异常或非运行时异常）。</p>
-<p><strong>运行时异常：</strong>均为<strong>RuntimeException</strong>或它子类的对象。</p>
-<p>​    表示JVM在运行期间可能出现的错误。编译器不会检查此类异常，并且不要求处理异常。在程序中可以选择捕获处理，但此错误一般是由程序逻辑错误引起的，所有<strong>不建议进行捕获处理。</strong></p>
-<p><strong>编译时异常：</strong>Exception中<strong>除RuntimeException极其子类之外</strong>的异常。</p>
-<p>​    编译器会检查此类异常，如果程序中出现此类异常，比如说IOException，必须对该异常进行处理，要么使用try-catch捕获，要么使用throws语句抛出，否则编译不通过。</p>
-<h1 id="捕获异常语法"><a href="#捕获异常语法" class="headerlink" title="捕获异常语法"></a>捕获异常语法</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">可能发生异常的代码</span><br><span class="line">&#125;<span class="keyword">catch</span>(异常类型  异常名e)&#123;</span><br><span class="line">    处理异常的代码（一般都是打印异常的信息的语句）</span><br><span class="line">&#125;<span class="keyword">catch</span>(异常类型  异常名e)&#123;</span><br><span class="line">    处理异常的代码（一般都是打印异常的信息的语句）</span><br><span class="line">&#125;。。。</span><br><span class="line"><span class="keyword">finally</span>&#123;</span><br><span class="line">    无论<span class="keyword">try</span>中是否有异常，也不管<span class="keyword">catch</span>是否可以捕获异常，也不管<span class="keyword">try</span>和<span class="keyword">catch</span>中是不是有<span class="keyword">return</span>，都要执行的部分</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="1-执行特点"><a href="#1-执行特点" class="headerlink" title="1.执行特点"></a>1.执行特点</h2><ul>
-<li><p>如果try中的代码没有异常，那么try中的代码会正常执行，catch部分就不执行，finally中会执行</p>
-</li>
-<li><p>如果try中的代码有异常，那么try中发生异常的代码的后面就不执行了，找对应的匹配的catch分支执行，        finally中会执行</p>
-</li>
-</ul>
-<h2 id="2-注意事项"><a href="#2-注意事项" class="headerlink" title="2.注意事项"></a>2.注意事项</h2><ul>
-<li>catch 中的异常名通常都命名为e，<strong>非强制</strong>要求。</li>
-<li>捕获异常时是从上到下执行，一旦<strong>前面的catch捕获到异常后面的catch就不会执行</strong>（类似于if…else if的选择分支结构），所以<strong>要将范围较大的异常类型的catch放到范围较小的catch底下</strong>（一般情况下范围较大的异常类型是范围较小的父类)，否则会导致范围较小的catch永远无法执行，此时编译器也会报错。</li>
-</ul>
-<p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%BC%82%E5%B8%B8/catch%E9%A1%BA%E5%BA%8F.png" alt="catch顺序"></p>
-<ul>
-<li>try…catch…finally存在return时，在非finally的地方遇到return时，会先把此时需要return的值放到<strong>“操作数栈”</strong>中然后再去执行finally中的代码，然后最终执行return。</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestTryCatchFinally</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">            System.out.println(testTryReturn());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">testTryReturn</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> i ;</span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            i = <span class="number">1</span>;</span><br><span class="line">            System.out.println(<span class="string">&quot;执行try，此时i = &quot;</span>+i);</span><br><span class="line">            <span class="keyword">int</span> a = <span class="number">1</span>/<span class="number">0</span>;<span class="comment">//发生异常</span></span><br><span class="line">            <span class="keyword">return</span> i;</span><br><span class="line">        &#125;<span class="keyword">catch</span>(Exception e) &#123;</span><br><span class="line">            i = <span class="number">2</span>;</span><br><span class="line">            System.out.println(<span class="string">&quot;执行catch，此时i = &quot;</span>+i);</span><br><span class="line">            <span class="keyword">return</span> i;</span><br><span class="line">        &#125;<span class="keyword">finally</span>&#123;</span><br><span class="line">            i = <span class="number">3</span>;</span><br><span class="line">            System.out.println(<span class="string">&quot;执行finally，此时i = &quot;</span>+i);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>执行结果：</strong></p>
-<p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%BC%82%E5%B8%B8/return%E4%B8%8Etry.png" alt="return与try"></p>
-<ul>
-<li>若return存在于finally时，try和catch中的return没有机会执行。在实际开发中finally一般用于关闭资源等操作，不允许在finally中写return语句（编译器也会发出警告）。</li>
-</ul>
-<h1 id="其他语法"><a href="#其他语法" class="headerlink" title="其他语法"></a>其他语法</h1><h2 id="1-throws"><a href="#1-throws" class="headerlink" title="1.throws"></a>1.throws</h2><p>​    用于告知调用者此方法可能抛出的异常</p>
-<p><strong>使用格式：</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">【修饰符】 返回值类型  方法名(【形参列表】) <span class="keyword">throws</span> 异常列表&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>注意事项：</strong></p>
-<ul>
-<li>子类重写父类方法时，throws的异常列表范围不能大于父类，原因是保证多态引用时能正确捕获异常</li>
-</ul>
-<h2 id="2-throw"><a href="#2-throw" class="headerlink" title="2.throw"></a>2.throw</h2><p>​    用于手动抛出异常</p>
-<p><strong>使用格式：</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">throw</span> 异常对象;</span><br><span class="line"></span><br><span class="line"><span class="comment">//例如：</span></span><br><span class="line"><span class="keyword">throw</span> <span class="keyword">new</span> AccountException(<span class="string">&quot;异常信息&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<p><strong>注意事项：</strong></p>
-<ul>
-<li><p>throw抛出来的异常对象，和JVM抛出来的异常对象一样，也要用try..catch处理或者throws。</p>
-<p>如果是运行时异常，编译器不会强制要求你处理，如果是编译时异常，那么编译器会强制要求你处理。</p>
-</li>
-</ul>
-<h1 id="自定义异常"><a href="#自定义异常" class="headerlink" title="自定义异常"></a>自定义异常</h1><p>​    创建自定义异常的方式为创建一个类并继承Throwable或它的子类，在实际开发中通常是继承RuntimeException或Exception来自定义运行时异常或编译时异常。</p>
-<p>​    <strong>建议在自定义异常时至少保留无参构造和异常信息message使用的有参构造</strong></p>
-<p><strong>示例：</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//自定义一个编译时异常</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestCustomException</span> <span class="keyword">extends</span> <span class="title">Exception</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TestCustomException</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TestCustomException</span><span class="params">(String message)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(message);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>​    自定义异常只能手动通过throw抛出。</p>
-<h1 id="关于异常的几个方法"><a href="#关于异常的几个方法" class="headerlink" title="关于异常的几个方法"></a>关于异常的几个方法</h1><p><strong>printStackTrace()：</strong></p>
-<p>打印异常对象的详细信息，包括异常类型，message，堆栈跟踪信息。</p>
-<p><strong>e.getMessage()：</strong></p>
-<p>只是获取异常的message信息</p>
-<p><strong>关于异常信息的打印：</strong></p>
-<p>用System.err打印和用e.printStackTrace()都是会标记红色的突出。</p>
-<p>用System.out打印，当成普通信息打印。</p>
-<p>这两个打印是两个独立的线程，顺序是不能精确控制的。</p>
-]]></content>
-      <categories>
-        <category>Java</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>Java基础</tag>
-        <tag>异常</tag>
       </tags>
   </entry>
   <entry>
@@ -826,6 +723,109 @@
         <tag>Java</tag>
         <tag>Java基础</tag>
         <tag>注解</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java基础之异常</title>
+    <url>/2020/08/07/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%BC%82%E5%B8%B8/</url>
+    <content><![CDATA[<h1 id="什么是异常"><a href="#什么是异常" class="headerlink" title="什么是异常"></a>什么是异常</h1><p>​    在一些情况下，由于<strong>非程序本身</strong>问题，例如:配置问题、错误输入、磁盘空间不足等等所导致的程序无法正常运行。</p>
+<a id="more"></a>
+
+<p><strong>例如：</strong></p>
+<p>​    试图获取一个int类型</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestException</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Scanner input = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        <span class="keyword">int</span> num = input.nextInt();</span><br><span class="line">        input.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    运行后输入‘a’，由于没有正常的获取到int类型，程序发生异常。</p>
+<p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%BC%82%E5%B8%B8/%E5%BC%82%E5%B8%B8%E6%BC%94%E7%A4%BA.png" alt="异常演示"></p>
+<p><strong>而下面两个情况也是程序无法正常运行，但是是程序本身的问题，不属于异常。</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestException</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        System.out.println(num);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//未定义num的情况下使用num，属于语法错误。不属于异常</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestException</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        System.out.println(getsum(<span class="number">1</span>,<span class="number">1</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//getsum方法用于返回两个int类型的和</span></span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getsum</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> a-b;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//运行结果为0，而不是预期是2，属于程序逻辑错误。不属于异常</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="Java如何处理异常"><a href="#Java如何处理异常" class="headerlink" title="Java如何处理异常"></a>Java如何处理异常</h1><p>​    当程序运行到某一处时发生了异常，程序会暂停运行查看产生异常的原因，并根据此原因生成一个<strong>“异常对象”</strong>然后向外<strong>“抛”</strong>，此时若此处有<strong>try…catch</strong>结构去<strong>“捕获”</strong>这个异常，则程序继续运行。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestException</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Scanner input = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;请输入一个整数&quot;</span>);</span><br><span class="line">            <span class="keyword">int</span> num = input.nextInt();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;输入有误&quot;</span>);</span><br><span class="line">        &#125;<span class="comment">//try..catch语法下文有详解，这里可以理解为“捕获”异常</span></span><br><span class="line">        System.out.println(<span class="string">&quot;其他代码&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>运行结果：</strong></p>
+<p>​    <strong>”捕获“</strong>异常后继续执行其他代码</p>
+<p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%BC%82%E5%B8%B8/%E5%BC%82%E5%B8%B8%E6%8D%95%E8%8E%B7%E6%BC%94%E7%A4%BA.png" alt="异常捕获演示"></p>
+<p>若不能<strong>“捕获”</strong>这个异常则会继续<strong>“抛”</strong>给上一级调用者，直到被<strong>“捕获”</strong>，程序在被<strong>“捕获”</strong>处继续运行。最终上抛至JVM则程序<strong>”崩溃“</strong>。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestException</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            testPao();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;上级捕获到异常&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">&quot;main中的其他代码&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">testPao</span><span class="params">()</span></span>&#123;</span><br><span class="line">        Scanner input = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        System.out.println(<span class="string">&quot;请输入一个整数&quot;</span>);</span><br><span class="line">        <span class="keyword">int</span> num = input.nextInt();</span><br><span class="line">        System.out.println(<span class="string">&quot;其他代码&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>运行结果：</strong></p>
+<p>​    <img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%BC%82%E5%B8%B8/%E5%BC%82%E5%B8%B8%E4%B8%8A%E6%8A%9B%E6%BC%94%E7%A4%BA.png" alt="异常上抛演示"></p>
+<p>若不做<strong>“捕获”</strong>出来<strong>“上抛”</strong>至JVM，程序<strong>“崩溃”</strong></p>
+<h1 id="异常的体系结构"><a href="#异常的体系结构" class="headerlink" title="异常的体系结构"></a>异常的体系结构</h1><p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%BC%82%E5%B8%B8/%E5%BC%82%E5%B8%B8%E7%9A%84%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84.png" alt="异常的体系结构"></p>
+<p>​    所有异常相关的类都有一个公共父类：java.lang.Throwable，Throwable分为两大派别Error和Exception。</p>
+<p><strong>Error：</strong>是程序中无法处理的错误，表示运行应用程序中出现了严重的错误。</p>
+<p>​    此类错误一般表示代码运行时JVM出现问题。通常有Virtual MachineError（虚拟机运行错误）、NoClassDefFoundError（类定义错误）等。比如说当jvm耗完可用内存时，将出现OutOfMemoryError。此类错误发生时，JVM将终止线程。非代码性错误。因此，当此类错误发生时，应用<strong>不应该去处理此类错误</strong>。而是通过代码优化、硬件升级等方式解决。</p>
+<p><strong>Exception：</strong>程序本身可以捕获并且可以处理的异常。</p>
+<p>Exception又分为两大类，运行时异常（也叫不受检异常）和编译时异常（也叫受检异常或非运行时异常）。</p>
+<p><strong>运行时异常：</strong>均为<strong>RuntimeException</strong>或它子类的对象。</p>
+<p>​    表示JVM在运行期间可能出现的错误。编译器不会检查此类异常，并且不要求处理异常。在程序中可以选择捕获处理，但此错误一般是由程序逻辑错误引起的，所有<strong>不建议进行捕获处理。</strong></p>
+<p><strong>编译时异常：</strong>Exception中<strong>除RuntimeException极其子类之外</strong>的异常。</p>
+<p>​    编译器会检查此类异常，如果程序中出现此类异常，比如说IOException，必须对该异常进行处理，要么使用try-catch捕获，要么使用throws语句抛出，否则编译不通过。</p>
+<h1 id="捕获异常语法"><a href="#捕获异常语法" class="headerlink" title="捕获异常语法"></a>捕获异常语法</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">可能发生异常的代码</span><br><span class="line">&#125;<span class="keyword">catch</span>(异常类型  异常名e)&#123;</span><br><span class="line">    处理异常的代码（一般都是打印异常的信息的语句）</span><br><span class="line">&#125;<span class="keyword">catch</span>(异常类型  异常名e)&#123;</span><br><span class="line">    处理异常的代码（一般都是打印异常的信息的语句）</span><br><span class="line">&#125;。。。</span><br><span class="line"><span class="keyword">finally</span>&#123;</span><br><span class="line">    无论<span class="keyword">try</span>中是否有异常，也不管<span class="keyword">catch</span>是否可以捕获异常，也不管<span class="keyword">try</span>和<span class="keyword">catch</span>中是不是有<span class="keyword">return</span>，都要执行的部分</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="1-执行特点"><a href="#1-执行特点" class="headerlink" title="1.执行特点"></a>1.执行特点</h2><ul>
+<li><p>如果try中的代码没有异常，那么try中的代码会正常执行，catch部分就不执行，finally中会执行</p>
+</li>
+<li><p>如果try中的代码有异常，那么try中发生异常的代码的后面就不执行了，找对应的匹配的catch分支执行，        finally中会执行</p>
+</li>
+</ul>
+<h2 id="2-注意事项"><a href="#2-注意事项" class="headerlink" title="2.注意事项"></a>2.注意事项</h2><ul>
+<li>catch 中的异常名通常都命名为e，<strong>非强制</strong>要求。</li>
+<li>捕获异常时是从上到下执行，一旦<strong>前面的catch捕获到异常后面的catch就不会执行</strong>（类似于if…else if的选择分支结构），所以<strong>要将范围较大的异常类型的catch放到范围较小的catch底下</strong>（一般情况下范围较大的异常类型是范围较小的父类)，否则会导致范围较小的catch永远无法执行，此时编译器也会报错。</li>
+</ul>
+<p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%BC%82%E5%B8%B8/catch%E9%A1%BA%E5%BA%8F.png" alt="catch顺序"></p>
+<ul>
+<li>try…catch…finally存在return时，在非finally的地方遇到return时，会先把此时需要return的值放到<strong>“操作数栈”</strong>中然后再去执行finally中的代码，然后最终执行return。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestTryCatchFinally</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">            System.out.println(testTryReturn());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">testTryReturn</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> i ;</span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            i = <span class="number">1</span>;</span><br><span class="line">            System.out.println(<span class="string">&quot;执行try，此时i = &quot;</span>+i);</span><br><span class="line">            <span class="keyword">int</span> a = <span class="number">1</span>/<span class="number">0</span>;<span class="comment">//发生异常</span></span><br><span class="line">            <span class="keyword">return</span> i;</span><br><span class="line">        &#125;<span class="keyword">catch</span>(Exception e) &#123;</span><br><span class="line">            i = <span class="number">2</span>;</span><br><span class="line">            System.out.println(<span class="string">&quot;执行catch，此时i = &quot;</span>+i);</span><br><span class="line">            <span class="keyword">return</span> i;</span><br><span class="line">        &#125;<span class="keyword">finally</span>&#123;</span><br><span class="line">            i = <span class="number">3</span>;</span><br><span class="line">            System.out.println(<span class="string">&quot;执行finally，此时i = &quot;</span>+i);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>执行结果：</strong></p>
+<p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%BC%82%E5%B8%B8/return%E4%B8%8Etry.png" alt="return与try"></p>
+<ul>
+<li>若return存在于finally时，try和catch中的return没有机会执行。在实际开发中finally一般用于关闭资源等操作，不允许在finally中写return语句（编译器也会发出警告）。</li>
+</ul>
+<h1 id="其他语法"><a href="#其他语法" class="headerlink" title="其他语法"></a>其他语法</h1><h2 id="1-throws"><a href="#1-throws" class="headerlink" title="1.throws"></a>1.throws</h2><p>​    用于告知调用者此方法可能抛出的异常</p>
+<p><strong>使用格式：</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">【修饰符】 返回值类型  方法名(【形参列表】) <span class="keyword">throws</span> 异常列表&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意事项：</strong></p>
+<ul>
+<li>子类重写父类方法时，throws的异常列表范围不能大于父类，原因是保证多态引用时能正确捕获异常</li>
+</ul>
+<h2 id="2-throw"><a href="#2-throw" class="headerlink" title="2.throw"></a>2.throw</h2><p>​    用于手动抛出异常</p>
+<p><strong>使用格式：</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">throw</span> 异常对象;</span><br><span class="line"></span><br><span class="line"><span class="comment">//例如：</span></span><br><span class="line"><span class="keyword">throw</span> <span class="keyword">new</span> AccountException(<span class="string">&quot;异常信息&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意事项：</strong></p>
+<ul>
+<li><p>throw抛出来的异常对象，和JVM抛出来的异常对象一样，也要用try..catch处理或者throws。</p>
+<p>如果是运行时异常，编译器不会强制要求你处理，如果是编译时异常，那么编译器会强制要求你处理。</p>
+</li>
+</ul>
+<h1 id="自定义异常"><a href="#自定义异常" class="headerlink" title="自定义异常"></a>自定义异常</h1><p>​    创建自定义异常的方式为创建一个类并继承Throwable或它的子类，在实际开发中通常是继承RuntimeException或Exception来自定义运行时异常或编译时异常。</p>
+<p>​    <strong>建议在自定义异常时至少保留无参构造和异常信息message使用的有参构造</strong></p>
+<p><strong>示例：</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//自定义一个编译时异常</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestCustomException</span> <span class="keyword">extends</span> <span class="title">Exception</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TestCustomException</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TestCustomException</span><span class="params">(String message)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(message);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    自定义异常只能手动通过throw抛出。</p>
+<h1 id="关于异常的几个方法"><a href="#关于异常的几个方法" class="headerlink" title="关于异常的几个方法"></a>关于异常的几个方法</h1><p><strong>printStackTrace()：</strong></p>
+<p>打印异常对象的详细信息，包括异常类型，message，堆栈跟踪信息。</p>
+<p><strong>e.getMessage()：</strong></p>
+<p>只是获取异常的message信息</p>
+<p><strong>关于异常信息的打印：</strong></p>
+<p>用System.err打印和用e.printStackTrace()都是会标记红色的突出。</p>
+<p>用System.out打印，当成普通信息打印。</p>
+<p>这两个打印是两个独立的线程，顺序是不能精确控制的。</p>
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>Java基础</tag>
+        <tag>异常</tag>
       </tags>
   </entry>
   <entry>
@@ -1536,7 +1536,7 @@
 <li>DML — 数据操纵语言（Data Manipulation Language）</li>
 <li>DCL —  数据控制语言（Data Control Language）</li>
 </ul>
-<p>本文主要讲解DDL，DDL语句一般作用于<strong>数据库和表</strong>，包含<code>CREATE（创建）</code>，<code>ALTER（修改）</code>，<code>DROP（删除）</code>，<code>TRUNCATE（截断）</code>，<code>RENAME（重命名）</code>；</p>
+<p><strong>本文主要讲解DDL</strong>，DDL语句一般作用于<strong>数据库和表</strong>，包含<code>CREATE（创建）</code>，<code>ALTER（修改）</code>，<code>DROP（删除）</code>，<code>TRUNCATE（截断）</code>，<code>RENAME（重命名）</code>；</p>
 <a id="more"></a>
 
 <p>​                                                                                                                        <strong><em>使用MySQL5.7演示</em></strong></p>
@@ -1799,6 +1799,880 @@
         <tag>MySQL</tag>
         <tag>MySQL基础</tag>
         <tag>SQL语法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MySQL基础之函数</title>
+    <url>/2020/08/21/MySQL%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%87%BD%E6%95%B0/</url>
+    <content><![CDATA[<p>​    MySQL函数主要分为<strong>单行函数</strong>以及<strong>分组函数</strong>两种，其中单行函数又以作用对象不同分为字符串函数、数值函数等。以下按照类型进行演示。</p>
+<a id="more"></a>
+
+<p>​                                                                                                                        <strong><em>使用MySQL5.7演示</em></strong></p>
+<h2 id="单行函数"><a href="#单行函数" class="headerlink" title="单行函数"></a>单行函数</h2><p>​    单行函数<strong>只对一行进行变换，每行返回一个结果</strong>，它的<strong>参数</strong>可以是一字段或一个表达式或一个值，可以<strong>嵌套使用</strong>。</p>
+<h3 id="字符串函数"><a href="#字符串函数" class="headerlink" title="字符串函数"></a>字符串函数</h3><h4 id="1-查看ASCII-码、字符数、字节数"><a href="#1-查看ASCII-码、字符数、字节数" class="headerlink" title="1.查看ASCII 码、字符数、字节数"></a>1.查看ASCII 码、字符数、字节数</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ASCII(s)</td>
+<td>返回字符串 s 的第一个字符的 ASCII 码。</td>
+</tr>
+<tr>
+<td>CHAR_LENGTH(s) / CHARACTER_LENGTH(s)</td>
+<td>返回字符串 s 的字符数</td>
+</tr>
+<tr>
+<td>LENGTH(s)</td>
+<td>返回字符串 s 的字节数，与字符集有关</td>
+</tr>
+</tbody></table>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#ASCII(s) ,返回&quot;ykailh&quot;第一个字母的 ASCII 码</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">ASCII</span>(<span class="string">&#x27;ykailh&#x27;</span>);</span><br><span class="line">+<span class="comment">-----------------+</span></span><br><span class="line">| ASCII(&#x27;ykailh&#x27;) |</span><br><span class="line">+<span class="comment">-----------------+</span></span><br><span class="line">|             121 |</span><br><span class="line">+<span class="comment">-----------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#CHAR_LENGTH(s)/CHARACTER_LENGTH(s)，返回&quot;张三&quot;的字符数</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">CHAR_LENGTH</span>(<span class="string">&#x27;张三&#x27;</span>),<span class="keyword">CHARACTER_LENGTH</span>(<span class="string">&#x27;张三&#x27;</span>);</span><br><span class="line">+<span class="comment">-----------------------+----------------------------+</span></span><br><span class="line">| CHAR_LENGTH(&#x27;张三&#x27;)   | CHARACTER_LENGTH(&#x27;张三&#x27;)   |</span><br><span class="line">+<span class="comment">-----------------------+----------------------------+</span></span><br><span class="line">|                     2 |                          2 |</span><br><span class="line">+<span class="comment">-----------------------+----------------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#LENGTH(s)，返回&quot;张三&quot;的字节数（UTF-8字符集）</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">LENGTH</span>(<span class="string">&#x27;张三&#x27;</span>);</span><br><span class="line">+<span class="comment">------------------+</span></span><br><span class="line">| LENGTH(&#x27;张三&#x27;)   |</span><br><span class="line">+<span class="comment">------------------+</span></span><br><span class="line">|                6 |</span><br><span class="line">+<span class="comment">------------------+</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="2-字符串的拼接"><a href="#2-字符串的拼接" class="headerlink" title="2.字符串的拼接"></a>2.字符串的拼接</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CONCAT(s1,s2…sn)</td>
+<td>字符串 s1,s2 等多个字符串合并为一个字符串</td>
+</tr>
+<tr>
+<td>CONCAT_WS(x, s1,s2…sn)</td>
+<td>同 CONCAT(s1,s2,…) 函数，但是每个字符串之间要加上 x，x 可以是分隔符</td>
+</tr>
+<tr>
+<td>LPAD(s1,len,s2)</td>
+<td>在字符串 s1 的开始处填充字符串 s2，使字符串长度达到 len，若len小于s1的长度则裁剪掉超出len长度的部分。</td>
+</tr>
+<tr>
+<td>RPAD(s1,len,s2)</td>
+<td>在字符串 s1 的结尾处添加字符串 s2，使字符串的长度达到 len，若len小于s1的长度则裁剪掉超出len长度的部分。</td>
+</tr>
+</tbody></table>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#CONCAT(s1,s2...sn)，拼接&#x27;hello&#x27;和&#x27;world&#x27;。</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">CONCAT</span>(<span class="string">&#x27;hello&#x27;</span>,<span class="string">&#x27;world&#x27;</span>);</span><br><span class="line">+<span class="comment">-------------------------+</span></span><br><span class="line">| CONCAT(&#x27;hello&#x27;,&#x27;world&#x27;) |</span><br><span class="line">+<span class="comment">-------------------------+</span></span><br><span class="line">| helloworld              |</span><br><span class="line">+<span class="comment">-------------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#CONCAT_WS(x, s1,s2...sn)，拼接&#x27;ykailh&#x27;、&#x27;gethub&#x27;、&#x27;io&#x27;并以&#x27;.&#x27;作为间隔。</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">CONCAT_WS</span>(<span class="string">&#x27;.&#x27;</span>,<span class="string">&#x27;ykailh&#x27;</span>,<span class="string">&#x27;gethub&#x27;</span>,<span class="string">&#x27;io&#x27;</span>);</span><br><span class="line">+<span class="comment">---------------------------------------+</span></span><br><span class="line">| CONCAT_WS(&#x27;.&#x27;,&#x27;ykailh&#x27;,&#x27;gethub&#x27;,&#x27;io&#x27;) |</span><br><span class="line">+<span class="comment">---------------------------------------+</span></span><br><span class="line">| ykailh.gethub.io                      |</span><br><span class="line">+<span class="comment">---------------------------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#LPAD(s1,len,s2) ,在&#x27;abc&#x27;前拼接&#x27;x&#x27;直到字符串的长度为6以及2.</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">LPAD</span>(<span class="string">&#x27;abc&#x27;</span>,<span class="number">6</span>,<span class="string">&#x27;x&#x27;</span>),<span class="keyword">LPAD</span>(<span class="string">&#x27;abc&#x27;</span>,<span class="number">2</span>,<span class="string">&#x27;x&#x27;</span>);</span><br><span class="line">+<span class="comment">-------------------+-------------------+</span></span><br><span class="line">| LPAD(&#x27;abc&#x27;,6,&#x27;x&#x27;) | LPAD(&#x27;abc&#x27;,2,&#x27;x&#x27;) |</span><br><span class="line">+<span class="comment">-------------------+-------------------+</span></span><br><span class="line">| xxxabc            | ab                |</span><br><span class="line">+<span class="comment">-------------------+-------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#RPAD(s1,len,s2),在&#x27;abc&#x27;前拼接&#x27;x&#x27;直到字符串的长度为6以及2.</span></span><br><span class="line"><span class="keyword">SELECT</span> RPAD(<span class="string">&#x27;abc&#x27;</span>,<span class="number">6</span>,<span class="string">&#x27;x&#x27;</span>),RPAD(<span class="string">&#x27;abc&#x27;</span>,<span class="number">2</span>,<span class="string">&#x27;x&#x27;</span>);</span><br><span class="line">+<span class="comment">-------------------+-------------------+</span></span><br><span class="line">| RPAD(&#x27;abc&#x27;,6,&#x27;x&#x27;) | RPAD(&#x27;abc&#x27;,2,&#x27;x&#x27;) |</span><br><span class="line">+<span class="comment">-------------------+-------------------+</span></span><br><span class="line">| abcxxx            | ab                |</span><br><span class="line">+<span class="comment">-------------------+-------------------+</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="3-子字符串的位置"><a href="#3-子字符串的位置" class="headerlink" title="3.子字符串的位置"></a>3.子字符串的位置</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>FIELD(s,s1,s2…)</td>
+<td>返回第一个字符串 s 在字符串列表(s1,s2…)中的位置,没有则返回0</td>
+</tr>
+<tr>
+<td>FIND_IN_SET(s1,s2)</td>
+<td>返回在字符串s2中与s1匹配的字符串的位置,s2中需以<code>,</code>作为字符串的间隔</td>
+</tr>
+<tr>
+<td>LOCATE(s1,s)</td>
+<td>从字符串 s 中获取 s1 的开始位置，无匹配则返回0</td>
+</tr>
+<tr>
+<td>POSITION(s1 IN s)</td>
+<td>从字符串 s 中获取 s1 的开始位置,效果与LOCATE(s1,s)相同</td>
+</tr>
+</tbody></table>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#FIELD(s,s1,s2...)，返回&#x27;b&#x27;在&#x27;a&#x27;、&#x27;b&#x27;、&#x27;c&#x27;中的位置以及在&#x27;a&#x27;, &#x27;ab&#x27;, &#x27;c&#x27;,&#x27;d&#x27;中的位置。</span></span><br><span class="line"><span class="keyword">SELECT</span>  <span class="keyword">FIELD</span>(<span class="string">&#x27;b&#x27;</span>, <span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;b&#x27;</span>, <span class="string">&#x27;c&#x27;</span>),<span class="keyword">FIELD</span>(<span class="string">&#x27;b&#x27;</span>, <span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;ab&#x27;</span>, <span class="string">&#x27;c&#x27;</span>,<span class="string">&#x27;d&#x27;</span>);</span><br><span class="line">+<span class="comment">---------------------------+--------------------------------+</span></span><br><span class="line">| FIELD(&#x27;b&#x27;, &#x27;a&#x27;, &#x27;b&#x27;, &#x27;c&#x27;) | FIELD(&#x27;b&#x27;, &#x27;a&#x27;, &#x27;ab&#x27;, &#x27;c&#x27;,&#x27;d&#x27;) |</span><br><span class="line">+<span class="comment">---------------------------+--------------------------------+</span></span><br><span class="line">|                         2 |                              0 |</span><br><span class="line">+<span class="comment">---------------------------+--------------------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#FIND_IN_SET(s1,s2)，返回&#x27;b&#x27;在&#x27;a,b,c&#x27;中的位置以及在&#x27;abc&#x27;中的位置。</span></span><br><span class="line"><span class="keyword">SELECT</span> FIND_IN_SET(<span class="string">&#x27;b&#x27;</span>,<span class="string">&#x27;a,b,c&#x27;</span>),FIND_IN_SET(<span class="string">&#x27;b&#x27;</span>,<span class="string">&#x27;abc&#x27;</span>);</span><br><span class="line">+<span class="comment">--------------------------+------------------------+</span></span><br><span class="line">| FIND_IN_SET(&#x27;b&#x27;,&#x27;a,b,c&#x27;) | FIND_IN_SET(&#x27;b&#x27;,&#x27;abc&#x27;) |</span><br><span class="line">+<span class="comment">--------------------------+------------------------+</span></span><br><span class="line">|                        2 |                      0 |</span><br><span class="line">+<span class="comment">--------------------------+------------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#LOCATE(s1,s)/POSITION(s1 IN s)，获取&#x27;bc&#x27;在&#x27;abcd&#x27;中以及&#x27;ac&#x27;在&#x27;abcd&#x27;中开始的位置。</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">LOCATE</span>(<span class="string">&#x27;bc&#x27;</span>,<span class="string">&#x27;abcd&#x27;</span>),<span class="keyword">LOCATE</span>(<span class="string">&#x27;ac&#x27;</span>,<span class="string">&#x27;abcd&#x27;</span>),<span class="keyword">POSITION</span>(<span class="string">&#x27;bc&#x27;</span> <span class="keyword">IN</span> <span class="string">&#x27;abcd&#x27;</span>);</span><br><span class="line">+<span class="comment">---------------------+---------------------+--------------------------+</span></span><br><span class="line">| LOCATE(&#x27;bc&#x27;,&#x27;abcd&#x27;) | LOCATE(&#x27;ac&#x27;,&#x27;abcd&#x27;) | POSITION(&#x27;bc&#x27; IN &#x27;abcd&#x27;) |</span><br><span class="line">+<span class="comment">---------------------+---------------------+--------------------------+</span></span><br><span class="line">|                   2 |                   0 |                        2 |</span><br><span class="line">+<span class="comment">---------------------+---------------------+--------------------------+</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="4-获取子字符串"><a href="#4-获取子字符串" class="headerlink" title="4.获取子字符串"></a>4.获取子字符串</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>LEFT(s,n)</td>
+<td>返回字符串 s 的前 n 个字符</td>
+</tr>
+<tr>
+<td>RIGHT(s,n)</td>
+<td>返回字符串 s 的后 n 个字符</td>
+</tr>
+<tr>
+<td>MID(s,n,len)</td>
+<td>从字符串 s 的 n 位置截取长度为 len 的子字符串，若从n开始到s结束长度不满足len则按实际长度存储，不会补空格。</td>
+</tr>
+<tr>
+<td>SUBSTR(s, start, length)</td>
+<td>从字符串 s 的 start 位置截取长度为 length 的子字符串，同 MID(s,n,len)</td>
+</tr>
+<tr>
+<td>SUBSTRING(s, start, length)</td>
+<td>从字符串 s 的 start 位置截取长度为 length 的子字符串，同 SUBSTRING(s,n,len)</td>
+</tr>
+<tr>
+<td>SUBSTRING_INDEX(s, delimiter, number)</td>
+<td>返回从字符串 s 的第 number 个出现的分隔符 delimiter 之后的子串。 如果 number 是正数，返回第 number 个字符左边的字符串。 如果 number 是负数，返回第(number 的绝对值(从右边数))个字符右边的字符串。</td>
+</tr>
+</tbody></table>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#LEFT(s,n)，返回&#x27;ykailh&#x27;的前两个字符</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">LEFT</span>(<span class="string">&#x27;ykailh&#x27;</span>,<span class="number">2</span>);</span><br><span class="line">+<span class="comment">------------------+</span></span><br><span class="line">| LEFT(&#x27;ykailh&#x27;,2) |</span><br><span class="line">+<span class="comment">------------------+</span></span><br><span class="line">| yk               |</span><br><span class="line">+<span class="comment">------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#RIGHT(s,n)，获取&#x27;abcd&#x27;中的后2个字符</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">RIGHT</span>(<span class="string">&#x27;abcd&#x27;</span>,<span class="number">2</span>);</span><br><span class="line">+<span class="comment">-----------------+</span></span><br><span class="line">| RIGHT(&#x27;abcd&#x27;,2) |</span><br><span class="line">+<span class="comment">-----------------+</span></span><br><span class="line">| cd              |</span><br><span class="line">+<span class="comment">-----------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#MID(s,n,len)/SUBSTR(s, start, length)/SUBSTRING(s, start, length)</span></span><br><span class="line"><span class="comment">#截取&#x27;ykailh&#x27;第1个字符开始，长度为4的字符串。</span></span><br><span class="line"><span class="comment">#截取&#x27;ykailh&#x27;第5个字符开始，长度为4的字符串，若从5开始不足长度4则按照实际保存，不会补空格。</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">MID</span>(<span class="string">&#x27;ykailh&#x27;</span>, <span class="number">1</span>, <span class="number">4</span>),<span class="keyword">SUBSTR</span>(<span class="string">&#x27;ykailh&#x27;</span>, <span class="number">5</span>, <span class="number">4</span>),<span class="keyword">CHAR_LENGTH</span>(<span class="keyword">SUBSTRING</span>(<span class="string">&#x27;ykailh&#x27;</span>, <span class="number">8</span>, <span class="number">4</span>));</span><br><span class="line">+<span class="comment">---------------------+------------------------+----------------------------------------+</span></span><br><span class="line">| MID(&#x27;ykailh&#x27;, 1, 4) | SUBSTR(&#x27;ykailh&#x27;, 5, 4) | CHAR_LENGTH(SUBSTRING(&#x27;ykailh&#x27;, 8, 4)) |</span><br><span class="line">+<span class="comment">---------------------+------------------------+----------------------------------------+</span></span><br><span class="line">| ykai                | lh                     |                                      0 |</span><br><span class="line">+<span class="comment">---------------------+------------------------+----------------------------------------+</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#SUBSTRING_INDEX(s, delimiter, number)，</span></span><br><span class="line"><span class="comment">#分别返回&#x27;a*b*c&#x27;第一个&#x27;*&#x27;号左边的字符，倒数第一个&#x27;*&#x27;号右边的字符</span></span><br><span class="line"><span class="keyword">SELECT</span> SUBSTRING_INDEX(<span class="string">&#x27;a*b*c&#x27;</span>,<span class="string">&#x27;*&#x27;</span>,<span class="number">1</span>),SUBSTRING_INDEX(<span class="string">&#x27;a*b*c&#x27;</span>,<span class="string">&#x27;*&#x27;</span>,<span class="number">-1</span>);</span><br><span class="line">+<span class="comment">--------------------------------+---------------------------------+</span></span><br><span class="line">| SUBSTRING_INDEX(&#x27;a*b*c&#x27;,&#x27;*&#x27;,1) | SUBSTRING_INDEX(&#x27;a*b*c&#x27;,&#x27;*&#x27;,-1) |</span><br><span class="line">+<span class="comment">--------------------------------+---------------------------------+</span></span><br><span class="line">| a                              | c                               |</span><br><span class="line">+<span class="comment">--------------------------------+---------------------------------+</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="5-字符串的替换"><a href="#5-字符串的替换" class="headerlink" title="5.字符串的替换"></a>5.字符串的替换</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>INSERT(s1,x,len,s2)</td>
+<td>字符串 s2 替换 s1 的 x 位置开始长度为 len 的字符串</td>
+</tr>
+<tr>
+<td>LCASE(s) / LOWER(s)</td>
+<td>将字符串 s 的所有字母变成小写字母</td>
+</tr>
+<tr>
+<td>UCASE(s) / UPPER(s)</td>
+<td>将字符串 s 的所有字母变成大写字母</td>
+</tr>
+<tr>
+<td>REPLACE(s,s1,s2)</td>
+<td>将字符串 s2 替代字符串 s 中的字符串 s1</td>
+</tr>
+</tbody></table>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#INSERT(s1,x,len,s2)，用&#x27;abc&#x27;替换&#x27;123456789&#x27;中的部分</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">INSERT</span>(<span class="string">&#x27;123456789&#x27;</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="string">&#x27;abc&#x27;</span>),<span class="keyword">INSERT</span>(<span class="string">&#x27;123456789&#x27;</span>,<span class="number">1</span>,<span class="number">6</span>,<span class="string">&#x27;abc&#x27;</span>);</span><br><span class="line">+<span class="comment">-------------------------------+-------------------------------+</span></span><br><span class="line">| <span class="keyword">INSERT</span>(<span class="string">&#x27;123456789&#x27;</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="string">&#x27;abc&#x27;</span>) | <span class="keyword">INSERT</span>(<span class="string">&#x27;123456789&#x27;</span>,<span class="number">1</span>,<span class="number">6</span>,<span class="string">&#x27;abc&#x27;</span>) |</span><br><span class="line">+<span class="comment">-------------------------------+-------------------------------+</span></span><br><span class="line">| abc23456789                   | abc789                        |</span><br><span class="line">+<span class="comment">-------------------------------+-------------------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#LCASE(s)/LOWER(s)，将&#x27;aBCd&#x27;全部变为小写字母</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">LCASE</span>(<span class="string">&#x27;aBCd&#x27;</span>),<span class="keyword">LOWER</span>(<span class="string">&#x27;aBCd&#x27;</span>);</span><br><span class="line">+<span class="comment">---------------+---------------+</span></span><br><span class="line">| LCASE(&#x27;aBCd&#x27;) | LOWER(&#x27;aBCd&#x27;) |</span><br><span class="line">+<span class="comment">---------------+---------------+</span></span><br><span class="line">| abcd          | abcd          |</span><br><span class="line">+<span class="comment">---------------+---------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#UCASE(s)/UPPER(s)，将&#x27;aBCd&#x27;全部变为大写字母</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">UCASE</span>(<span class="string">&#x27;aBCd&#x27;</span>),<span class="keyword">UPPER</span>(<span class="string">&#x27;aBCd&#x27;</span>);</span><br><span class="line">+<span class="comment">---------------+---------------+</span></span><br><span class="line">| UCASE(&#x27;aBCd&#x27;) | UPPER(&#x27;aBCd&#x27;) |</span><br><span class="line">+<span class="comment">---------------+---------------+</span></span><br><span class="line">| ABCD          | ABCD          |</span><br><span class="line">+<span class="comment">---------------+---------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#REPLACE(s,s1,s2) 将&#x27;123321&#x27;中的&#x27;2&#x27;替换为&#x27;b&#x27;</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">REPLACE</span>(<span class="string">&#x27;123321&#x27;</span>,<span class="string">&#x27;2&#x27;</span>,<span class="string">&#x27;b&#x27;</span>);</span><br><span class="line">+<span class="comment">---------------------------+</span></span><br><span class="line">| <span class="keyword">REPLACE</span>(<span class="string">&#x27;123321&#x27;</span>,<span class="string">&#x27;2&#x27;</span>,<span class="string">&#x27;b&#x27;</span>) |</span><br><span class="line">+<span class="comment">---------------------------+</span></span><br><span class="line">| <span class="number">1</span>b33b1                    |</span><br><span class="line">+<span class="comment">---------------------------+</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="6-获取空格、删除两端空格、字符串"><a href="#6-获取空格、删除两端空格、字符串" class="headerlink" title="6.获取空格、删除两端空格、字符串"></a>6.获取空格、删除两端空格、字符串</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SPACE(n)</td>
+<td>返回 n 个空格</td>
+</tr>
+<tr>
+<td>LTRIM(s)</td>
+<td>去掉字符串 s 开始处的空格</td>
+</tr>
+<tr>
+<td>RTRIM(s)</td>
+<td>去掉字符串 s 结尾处的空格</td>
+</tr>
+<tr>
+<td>TRIM(s)</td>
+<td>去掉字符串 s 开始和结尾处的空格</td>
+</tr>
+<tr>
+<td>TRIM(【BOTH 、LEADING、TRAILING】s1 FROM s)</td>
+<td>去掉字符串s开始与结尾/开始/结尾的s1</td>
+</tr>
+</tbody></table>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#SPACE(n)，在&#x27;a&#x27;&#x27;b&#x27;之间拼接5个空格。</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">CONCAT</span>(<span class="string">&#x27;a&#x27;</span>,<span class="keyword">SPACE</span>(<span class="number">5</span>),<span class="string">&#x27;b&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">#LTRIM(s)，去掉&#x27;  ykailh  &#x27;开头处的空格</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">LTRIM</span>(<span class="string">&#x27;  ykailh  &#x27;</span>),<span class="keyword">CHAR_LENGTH</span>(<span class="keyword">LTRIM</span>(<span class="string">&#x27;  ykailh  &#x27;</span>));</span><br><span class="line">+<span class="comment">---------------------+----------------------------------+</span></span><br><span class="line">| LTRIM(&#x27;  ykailh  &#x27;) | CHAR_LENGTH(LTRIM(&#x27;  ykailh  &#x27;)) |</span><br><span class="line">+<span class="comment">---------------------+----------------------------------+</span></span><br><span class="line">| ykailh              |                                8 |</span><br><span class="line">+<span class="comment">---------------------+----------------------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#RTRIM(s)，去掉&#x27;  ykailh  &#x27;结尾处的空格</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">RTRIM</span>(<span class="string">&#x27;  ykailh  &#x27;</span>),<span class="keyword">CHAR_LENGTH</span>(<span class="keyword">RTRIM</span>(<span class="string">&#x27;  ykailh  &#x27;</span>));</span><br><span class="line">+<span class="comment">---------------------+----------------------------------+</span></span><br><span class="line">| RTRIM(&#x27;  ykailh  &#x27;) | CHAR_LENGTH(RTRIM(&#x27;  ykailh  &#x27;)) |</span><br><span class="line">+<span class="comment">---------------------+----------------------------------+</span></span><br><span class="line">|   ykailh            |                                8 |</span><br><span class="line">+<span class="comment">---------------------+----------------------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#TRIM(s)，去掉&#x27;  ykailh  &#x27;开头和结尾处的空格</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">TRIM</span>(<span class="string">&#x27;  ykailh  &#x27;</span>),<span class="keyword">CHAR_LENGTH</span>(<span class="keyword">TRIM</span>(<span class="string">&#x27;  ykailh  &#x27;</span>));</span><br><span class="line">+<span class="comment">--------------------+---------------------------------+</span></span><br><span class="line">| TRIM(&#x27;  ykailh  &#x27;) | CHAR_LENGTH(TRIM(&#x27;  ykailh  &#x27;)) |</span><br><span class="line">+<span class="comment">--------------------+---------------------------------+</span></span><br><span class="line">| ykailh             |                               6 |</span><br><span class="line">+<span class="comment">--------------------+---------------------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#TRIM([BOTH 、LEADING、TRAILING] s1 FROM s),去掉&#x27;##ykailh##&#x27;开头和结尾/开头/结尾的&#x27;#&#x27;号</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">TRIM</span>(<span class="keyword">BOTH</span> <span class="string">&#x27;#&#x27;</span> <span class="keyword">FROM</span> <span class="string">&#x27;##ykailh##&#x27;</span>),<span class="keyword">TRIM</span>(<span class="string">&#x27;#&#x27;</span> <span class="keyword">FROM</span> <span class="string">&#x27;##ykailh##&#x27;</span>);<span class="comment">#可以省略`BOTH`</span></span><br><span class="line">+<span class="comment">----------------------------------+-----------------------------+</span></span><br><span class="line">| TRIM(BOTH &#x27;<span class="comment">#&#x27; FROM &#x27;##ykailh##&#x27;) | TRIM(&#x27;#&#x27; FROM &#x27;##ykailh##&#x27;) |</span></span><br><span class="line">+<span class="comment">----------------------------------+-----------------------------+</span></span><br><span class="line">| ykailh                           | ykailh                      |</span><br><span class="line">+<span class="comment">----------------------------------+-----------------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">TRIM</span>(<span class="keyword">LEADING</span> <span class="string">&#x27;#&#x27;</span> <span class="keyword">FROM</span> <span class="string">&#x27;##ykailh##&#x27;</span>),<span class="keyword">TRIM</span>(TRAILING <span class="string">&#x27;#&#x27;</span> <span class="keyword">FROM</span> <span class="string">&#x27;##ykailh##&#x27;</span>);</span><br><span class="line">+<span class="comment">-------------------------------------+--------------------------------------+</span></span><br><span class="line">| TRIM(LEADING &#x27;<span class="comment">#&#x27; FROM &#x27;##ykailh##&#x27;) | TRIM(TRAILING &#x27;#&#x27; FROM &#x27;##ykailh##&#x27;) |</span></span><br><span class="line">+<span class="comment">-------------------------------------+--------------------------------------+</span></span><br><span class="line">| ykailh<span class="comment">##                            | ##ykailh                             |</span></span><br><span class="line">+<span class="comment">-------------------------------------+--------------------------------------+</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="7-字符串的重复、翻转、比较"><a href="#7-字符串的重复、翻转、比较" class="headerlink" title="7.字符串的重复、翻转、比较"></a>7.字符串的重复、翻转、比较</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>REPEAT(s,n)</td>
+<td>将字符串 s 重复 n 次</td>
+</tr>
+<tr>
+<td>REVERSE(s)</td>
+<td>将字符串s的顺序反过来</td>
+</tr>
+<tr>
+<td>STRCMP(s1,s2)</td>
+<td>比较字符串 s1 和 s2，如果 s1 与 s2 相等返回 0 ，如果 s1&gt;s2 返回 1，如果 s1&lt;s2 返回 -1</td>
+</tr>
+</tbody></table>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#REPEAT(s,n)，将&#x27;abc&#x27;重复3次</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">REPEAT</span>(<span class="string">&#x27;abc&#x27;</span>,<span class="number">3</span>);</span><br><span class="line">+<span class="comment">-----------------+</span></span><br><span class="line">| REPEAT(&#x27;abc&#x27;,3) |</span><br><span class="line">+<span class="comment">-----------------+</span></span><br><span class="line">| abcabcabc       |</span><br><span class="line">+<span class="comment">-----------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#REVERSE(s)，将&#x27;abc&#x27;进行翻转</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">REVERSE</span>(<span class="string">&#x27;abc&#x27;</span>);</span><br><span class="line">+<span class="comment">----------------+</span></span><br><span class="line">| REVERSE(&#x27;abc&#x27;) |</span><br><span class="line">+<span class="comment">----------------+</span></span><br><span class="line">| cba            |</span><br><span class="line">+<span class="comment">----------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#STRCMP(s1,s2)，分别比较&#x27;a&#x27;与&#x27;b&#x27;、&#x27;a&#x27;,&#x27;b&#x27;与&#x27;a&#x27;的大小</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">STRCMP</span>(<span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;b&#x27;</span>),<span class="keyword">STRCMP</span>(<span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;a&#x27;</span>),<span class="keyword">STRCMP</span>(<span class="string">&#x27;b&#x27;</span>, <span class="string">&#x27;a&#x27;</span>); </span><br><span class="line">+<span class="comment">------------------+------------------+------------------+</span></span><br><span class="line">| STRCMP(&#x27;a&#x27;, &#x27;b&#x27;) | STRCMP(&#x27;a&#x27;, &#x27;a&#x27;) | STRCMP(&#x27;b&#x27;, &#x27;a&#x27;) |</span><br><span class="line">+<span class="comment">------------------+------------------+------------------+</span></span><br><span class="line">|               -1 |                0 |                1 |</span><br><span class="line">+<span class="comment">------------------+------------------+------------------+</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="数值函数"><a href="#数值函数" class="headerlink" title="数值函数"></a>数值函数</h3><h4 id="1-幂相关"><a href="#1-幂相关" class="headerlink" title="1.幂相关"></a>1.幂相关</h4><table>
+<thead>
+<tr>
+<th align="left">函数</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">EXP(x)</td>
+<td align="left">返回 e 的 x 次方</td>
+</tr>
+<tr>
+<td align="left">POW(x,y) / POWER(x,y)</td>
+<td align="left">返回 x 的 y 次方</td>
+</tr>
+<tr>
+<td align="left">SQRT(x)</td>
+<td align="left">返回x的平方根</td>
+</tr>
+</tbody></table>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#EXP(x)，获取e的3次方</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">EXP</span>(<span class="number">3</span>);</span><br><span class="line">+<span class="comment">--------------------+</span></span><br><span class="line">| EXP(3)             |</span><br><span class="line">+<span class="comment">--------------------+</span></span><br><span class="line">| 20.085536923187668 |</span><br><span class="line">+<span class="comment">--------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#POW(x,y) / POWER(x,y) ，获取2的3次方，3的3次方</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">POW</span>(<span class="number">2</span>,<span class="number">3</span>),<span class="keyword">POWER</span>(<span class="number">3</span>,<span class="number">3</span>);</span><br><span class="line">+<span class="comment">----------+------------+</span></span><br><span class="line">| POW(2,3) | POWER(3,3) |</span><br><span class="line">+<span class="comment">----------+------------+</span></span><br><span class="line">|        8 |         27 |</span><br><span class="line">+<span class="comment">----------+------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#SQRT(x)，获取2的平方根,3的平方根</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">SQRT</span>(<span class="number">2</span>),<span class="keyword">SQRT</span>(<span class="number">3</span>);</span><br><span class="line">+<span class="comment">--------------------+--------------------+</span></span><br><span class="line">| SQRT(2)            | SQRT(3)            |</span><br><span class="line">+<span class="comment">--------------------+--------------------+</span></span><br><span class="line">| 1.4142135623730951 | 1.7320508075688772 |</span><br><span class="line">+<span class="comment">--------------------+--------------------+</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="2-对数相关"><a href="#2-对数相关" class="headerlink" title="2.对数相关"></a>2.对数相关</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>LN(x) / LOG(x)</td>
+<td>返回x的自然对数，以 e 为底。</td>
+</tr>
+<tr>
+<td>LOG(base, x)</td>
+<td>返回x的自然对数，以base为底。</td>
+</tr>
+<tr>
+<td>LOG10(x)</td>
+<td>返回以 10 为底的对数</td>
+</tr>
+<tr>
+<td>LOG2(x)</td>
+<td>返回以 2 为底的对数</td>
+</tr>
+</tbody></table>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#返回以e为底1的对数，4为底4的对数，10为底100的对数，2为底8的对数。</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">LN</span>(<span class="number">1</span>),<span class="keyword">LOG</span>(<span class="number">4</span>,<span class="number">4</span>),<span class="keyword">LOG10</span>(<span class="number">100</span>),<span class="keyword">LOG2</span>(<span class="number">8</span>);</span><br><span class="line">+<span class="comment">-------+----------+------------+---------+</span></span><br><span class="line">| LN(1) | LOG(4,4) | LOG10(100) | LOG2(8) |</span><br><span class="line">+<span class="comment">-------+----------+------------+---------+</span></span><br><span class="line">|     0 |        1 |          2 |       3 |</span><br><span class="line">+<span class="comment">-------+----------+------------+---------+</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="3-绝对值、最值、近值"><a href="#3-绝对值、最值、近值" class="headerlink" title="3.绝对值、最值、近值"></a>3.绝对值、最值、近值</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ABS(x)</td>
+<td>返回 x 的绝对值</td>
+</tr>
+<tr>
+<td>GREATEST(expr1, expr2, expr3, …)</td>
+<td>返回列表中的最大值</td>
+</tr>
+<tr>
+<td>LEAST(expr1, expr2, expr3, …)</td>
+<td>返回列表中的最小值</td>
+</tr>
+<tr>
+<td>CEIL(x) / CEILING(x)</td>
+<td>返回大于或等于 x 的最小整数（向上取整）</td>
+</tr>
+<tr>
+<td>FLOOR(x)</td>
+<td>返回小于或等于 x 的最大整数（向下取整）</td>
+</tr>
+<tr>
+<td>ROUND(x)</td>
+<td>返回离 x 最近的整数（只考虑十分位的四舍五入）</td>
+</tr>
+</tbody></table>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#ABS(x)，返回-1,0,1，NULL的绝对值</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">ABS</span>(<span class="number">-1</span>),<span class="keyword">ABS</span>(<span class="number">0</span>),<span class="keyword">ABS</span>(<span class="number">1</span>),<span class="keyword">ABS</span>(<span class="literal">NULL</span>);</span><br><span class="line">+<span class="comment">---------+--------+--------+-----------+</span></span><br><span class="line">| ABS(-1) | ABS(0) | ABS(1) | ABS(NULL) |</span><br><span class="line">+<span class="comment">---------+--------+--------+-----------+</span></span><br><span class="line">|       1 |      0 |      1 |      NULL |</span><br><span class="line">+<span class="comment">---------+--------+--------+-----------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#获取1,6,8,0中的最大值与最小值</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">GREATEST</span>(<span class="number">1</span>, <span class="number">6</span>, <span class="number">8</span>, <span class="number">0</span>),<span class="keyword">LEAST</span>(<span class="number">1</span>, <span class="number">6</span>, <span class="number">8</span>, <span class="number">0</span>);</span><br><span class="line">+<span class="comment">----------------------+-------------------+</span></span><br><span class="line">| GREATEST(1, 6, 8, 0) | LEAST(1, 6, 8, 0) |</span><br><span class="line">+<span class="comment">----------------------+-------------------+</span></span><br><span class="line">|                    8 |                 0 |</span><br><span class="line">+<span class="comment">----------------------+-------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#分别相当于向上取整、向下取整和只考虑十分位的四舍五入</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">CEIL</span>(<span class="number">1.68</span>),<span class="keyword">CEILING</span>(<span class="number">1.32</span>),<span class="keyword">FLOOR</span>(<span class="number">1.68</span>),<span class="keyword">ROUND</span>(<span class="number">1.68</span>),<span class="keyword">ROUND</span>(<span class="number">1.32</span>);</span><br><span class="line">+<span class="comment">------------+---------------+-------------+-------------+-------------+</span></span><br><span class="line">| CEIL(1.68) | CEILING(1.32) | FLOOR(1.68) | ROUND(1.68) | ROUND(1.32) |</span><br><span class="line">+<span class="comment">------------+---------------+-------------+-------------+-------------+</span></span><br><span class="line">|          2 |             2 |           1 |           2 |           1 |</span><br><span class="line">+<span class="comment">------------+---------------+-------------+-------------+-------------+</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="4-取余、取符号、截取、随机数、格式化、圆周率"><a href="#4-取余、取符号、截取、随机数、格式化、圆周率" class="headerlink" title="4.取余、取符号、截取、随机数、格式化、圆周率"></a>4.取余、取符号、截取、随机数、格式化、圆周率</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MOD(x,y)</td>
+<td>返回 x 除以 y 以后的余数</td>
+</tr>
+<tr>
+<td>SIGN(x)</td>
+<td>返回 x 的符号，x 是负数、0、正数分别返回 -1、0 和 1</td>
+</tr>
+<tr>
+<td>TRUNCATE(x,y)</td>
+<td>返回数值 x 保留到小数点后 y 位的值（与 ROUND 最大的区别是不会进行四舍五入）</td>
+</tr>
+<tr>
+<td>RAND()</td>
+<td>返回 0 到 1 的随机数</td>
+</tr>
+<tr>
+<td>FORMAT(x,n)</td>
+<td>函数可以将数字 x 进行格式化 “#,###.##”, 将 x 保留到小数点后 n 位，最后一位四舍五入。</td>
+</tr>
+<tr>
+<td>PI()</td>
+<td>返回圆周率(3.141593）</td>
+</tr>
+</tbody></table>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#MOD(x,y)，获取5和2、-3和2、-3和-2相除的余数，</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">MOD</span>(<span class="number">5</span>,<span class="number">2</span>),<span class="keyword">MOD</span>(<span class="number">-3</span>,<span class="number">2</span>),<span class="keyword">MOD</span>(<span class="number">-3</span>,<span class="number">-2</span>);</span><br><span class="line">+<span class="comment">----------+-----------+------------+</span></span><br><span class="line">| MOD(5,2) | MOD(-3,2) | MOD(-3,-2) |</span><br><span class="line">+<span class="comment">----------+-----------+------------+</span></span><br><span class="line">|        1 |        -1 |         -1 |</span><br><span class="line">+<span class="comment">----------+-----------+------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#SIGN(x)，获取-6,0,8，NULL的符号</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">SIGN</span>(<span class="number">-6</span>),<span class="keyword">SIGN</span>(<span class="number">0</span>),<span class="keyword">SIGN</span>(<span class="number">8</span>),<span class="keyword">SIGN</span>(<span class="literal">NULL</span>);</span><br><span class="line">+<span class="comment">----------+---------+---------+------------+</span></span><br><span class="line">| SIGN(-6) | SIGN(0) | SIGN(8) | SIGN(NULL) |</span><br><span class="line">+<span class="comment">----------+---------+---------+------------+</span></span><br><span class="line">|       -1 |       0 |       1 |       NULL |</span><br><span class="line">+<span class="comment">----------+---------+---------+------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#TRUNCATE(x,y)，获取1.123、1.126截取两位小数后的值</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">TRUNCATE</span>(<span class="number">1.123</span>,<span class="number">2</span>),<span class="keyword">TRUNCATE</span>(<span class="number">1.126</span>,<span class="number">2</span>);</span><br><span class="line">+<span class="comment">-------------------+-------------------+</span></span><br><span class="line">| <span class="keyword">TRUNCATE</span>(<span class="number">1.123</span>,<span class="number">2</span>) | <span class="keyword">TRUNCATE</span>(<span class="number">1.126</span>,<span class="number">2</span>) |</span><br><span class="line">+<span class="comment">-------------------+-------------------+</span></span><br><span class="line">|              <span class="number">1.12</span> |              <span class="number">1.12</span> |</span><br><span class="line">+<span class="comment">-------------------+-------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#RAND()，获取一个0-1的随机数，获取一个0-100的随机整数</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">RAND</span>(),<span class="keyword">RAND</span>() * <span class="number">100</span> <span class="keyword">DIV</span> <span class="number">1</span>;</span><br><span class="line">+<span class="comment">--------------------+--------------------+</span></span><br><span class="line">| RAND()             | RAND() * 100 DIV 1 |</span><br><span class="line">+<span class="comment">--------------------+--------------------+</span></span><br><span class="line">| 0.4843776090856433 |                 84 |</span><br><span class="line">+<span class="comment">--------------------+--------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#FORMAT(x,n)，将123456789.666格式化为&quot;#,###.##&quot;</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">FORMAT</span>(<span class="number">123456789.666</span>, <span class="number">2</span>);</span><br><span class="line">+<span class="comment">--------------------------+</span></span><br><span class="line">| FORMAT(123456789.666, 2) |</span><br><span class="line">+<span class="comment">--------------------------+</span></span><br><span class="line">| 123,456,789.67           |</span><br><span class="line">+<span class="comment">--------------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#PI()，获取圆周率</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">PI</span>();</span><br><span class="line">+<span class="comment">----------+</span></span><br><span class="line">| PI()     |</span><br><span class="line">+<span class="comment">----------+</span></span><br><span class="line">| 3.141593 |</span><br><span class="line">+<span class="comment">----------+</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="5-三角函数相关"><a href="#5-三角函数相关" class="headerlink" title="5.三角函数相关"></a>5.三角函数相关</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>描述</th>
+<th>实例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SIN(x)</td>
+<td>求正弦值(参数是弧度)</td>
+<td><code>SELECT SIN(RADIANS(30)); -- 0.5</code></td>
+</tr>
+<tr>
+<td>COS(x)</td>
+<td>求余弦值(参数是弧度)</td>
+<td><code>SELECT COS(2); -- -0.4161468365471424</code></td>
+</tr>
+<tr>
+<td>TAN(x)</td>
+<td>求正切值(参数是弧度)</td>
+<td><code>SELECT TAN(1.75);  -- -5.52037992250933</code></td>
+</tr>
+<tr>
+<td>COT(x)</td>
+<td>求余切值(参数是弧度)</td>
+<td><code>SELECT COT(6);  -- -3.436353004180128</code></td>
+</tr>
+<tr>
+<td>ASIN(x)</td>
+<td>求反正弦值(参数是弧度)</td>
+<td><code>SELECT ASIN(0.25); -- 0.25268025514207865</code></td>
+</tr>
+<tr>
+<td>ACOS(x)</td>
+<td>求反余弦值(参数是弧度)</td>
+<td><code>SELECT ACOS(0.25); -- 1.318116071652818</code></td>
+</tr>
+<tr>
+<td>ATAN(x)</td>
+<td>求反正切值(参数是弧度)</td>
+<td><code>SELECT ATAN(2.5); -- 1.1902899496825317</code></td>
+</tr>
+<tr>
+<td>ATAN2(n, m)</td>
+<td>求反正切值(参数是弧度)</td>
+<td><code>SELECT ATAN2(-0.8, 2); -- -0.3805063771123649</code></td>
+</tr>
+<tr>
+<td>DEGREES(x)</td>
+<td>将弧度转换为角度</td>
+<td><code>SELECT DEGREES(3.1415926535898) -- 180</code></td>
+</tr>
+<tr>
+<td>RADIANS(x)</td>
+<td>将角度转换为弧度</td>
+<td><code>SELECT RADIANS(180) -- 3.1415926535898</code></td>
+</tr>
+</tbody></table>
+<h3 id="日期函数"><a href="#日期函数" class="headerlink" title="日期函数"></a>日期函数</h3><h4 id="1-系统时间"><a href="#1-系统时间" class="headerlink" title="1.系统时间"></a>1.系统时间</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>NOW()  / SYSDATE() / CURRENT_TIMESTAMP()/ LOCALTIME() / LOCALTIMESTAMP()</td>
+<td>返回当前日期和时间</td>
+</tr>
+<tr>
+<td>CURDATE() / CURRENT_DATE()</td>
+<td>返回当前日期</td>
+</tr>
+<tr>
+<td>CURTIME() / CURRENT_TIME()</td>
+<td>返回当前时间</td>
+</tr>
+</tbody></table>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#返回当前日期和时间</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">NOW</span>(),<span class="keyword">SYSDATE</span>(),<span class="keyword">CURRENT_TIMESTAMP</span>();</span><br><span class="line">+<span class="comment">---------------------+---------------------+---------------------+</span></span><br><span class="line">| NOW()               | SYSDATE()           | CURRENT_TIMESTAMP() |</span><br><span class="line">+<span class="comment">---------------------+---------------------+---------------------+</span></span><br><span class="line">| 2020-08-21 20:41:34 | 2020-08-21 20:41:34 | 2020-08-21 20:41:34 |</span><br><span class="line">+<span class="comment">---------------------+---------------------+---------------------+</span></span><br><span class="line"><span class="comment">#返回当前日期</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">CURDATE</span>(),<span class="keyword">CURRENT_DATE</span>();</span><br><span class="line">+<span class="comment">------------+----------------+</span></span><br><span class="line">| CURDATE()  | CURRENT_DATE() |</span><br><span class="line">+<span class="comment">------------+----------------+</span></span><br><span class="line">| 2020-08-21 | 2020-08-21     |</span><br><span class="line">+<span class="comment">------------+----------------+</span></span><br><span class="line"><span class="comment">#返回当前时间</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">CURTIME</span>(),<span class="keyword">CURRENT_TIME</span>();</span><br><span class="line">+<span class="comment">-----------+----------------+</span></span><br><span class="line">| CURTIME() | CURRENT_TIME() |</span><br><span class="line">+<span class="comment">-----------+----------------+</span></span><br><span class="line">| 20:43:42  | 20:43:42       |</span><br><span class="line">+<span class="comment">-----------+----------------+</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="2-提取日期信息"><a href="#2-提取日期信息" class="headerlink" title="2.提取日期信息"></a>2.提取日期信息</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DATE(d)</td>
+<td>从日期或日期时间表达式中提取日期值</td>
+</tr>
+<tr>
+<td>LAST_DAY(d)</td>
+<td>返回给给定日期的那一月份的最后一天</td>
+</tr>
+<tr>
+<td>TIME(d)</td>
+<td>提取传入表达式的时间部分</td>
+</tr>
+<tr>
+<td>YEAR(d)</td>
+<td>返回年份</td>
+</tr>
+<tr>
+<td>QUARTER(d)</td>
+<td>返回日期d是第几季节，返回 1 到 4</td>
+</tr>
+<tr>
+<td>MONTH(d)</td>
+<td>返回日期d中的月份值，1 到 12</td>
+</tr>
+<tr>
+<td>MONTHNAME(d)</td>
+<td>返回日期当中的月份名称，如 November</td>
+</tr>
+<tr>
+<td>WEEK(d)</td>
+<td>计算日期 d 是本年的第几个星期，范围是 0 到 53(默认一周从周日开始)</td>
+</tr>
+<tr>
+<td>WEEKOFYEAR(d)</td>
+<td>计算日期 d 是本年的第几个星期，范围是 0 到 53(默认一周从周1开始)</td>
+</tr>
+<tr>
+<td>YEARWEEK(date, [mode])</td>
+<td>返回年份及第几周（0到53），mode 可以设置一周的开始默认为周日， 0 表示周天，1表示周一，以此类推</td>
+</tr>
+<tr>
+<td>DAYOFYEAR(d)</td>
+<td>返回日期值 d 为本年第几天</td>
+</tr>
+<tr>
+<td>DAY(d)/DAYOFMONTH(d)</td>
+<td>返回日期值 d 为本月第几天</td>
+</tr>
+<tr>
+<td>DAYNAME(d)</td>
+<td>返回日期 d 是星期几，如 Monday,Tuesday</td>
+</tr>
+<tr>
+<td>DAYOFWEEK(d)</td>
+<td>日期 d 今天是星期几，1 星期日，2 星期一，以此类推</td>
+</tr>
+<tr>
+<td>WEEKDAY(d)</td>
+<td>日期 d 是星期几，0 表示星期一，1 表示星期二</td>
+</tr>
+<tr>
+<td>HOUR(t)</td>
+<td>返回 t 中的小时值</td>
+</tr>
+<tr>
+<td>MINUTE(t)</td>
+<td>返回 t 中的分钟值</td>
+</tr>
+<tr>
+<td>SECOND(t)</td>
+<td>返回 t 中的秒钟值</td>
+</tr>
+<tr>
+<td>MICROSECOND(date)</td>
+<td>返回日期参数所对应的微秒数</td>
+</tr>
+<tr>
+<td>EXTRACT(type FROM d)</td>
+<td>从日期 d 中获取指定的值，type 指定返回的值。</td>
+</tr>
+</tbody></table>
+<ul>
+<li><code>EXTRACT(type FROM d)</code>中<code>type</code>可取的值：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MICROSECOND</td>
+<td>返回日期中的微秒</td>
+</tr>
+<tr>
+<td>SECOND</td>
+<td>返回日期中的秒</td>
+</tr>
+<tr>
+<td>MINUTE</td>
+<td>返回日期中的分</td>
+</tr>
+<tr>
+<td>HOUR</td>
+<td>返回日期中的时</td>
+</tr>
+<tr>
+<td>DAY</td>
+<td>返回日期中的天</td>
+</tr>
+<tr>
+<td>WEEK</td>
+<td>返回日期为当年的第几周</td>
+</tr>
+<tr>
+<td>MONTH</td>
+<td>返回日期中的月</td>
+</tr>
+<tr>
+<td>QUARTER</td>
+<td>返回日期中的季度</td>
+</tr>
+<tr>
+<td>YEAR</td>
+<td>返回日期中的年</td>
+</tr>
+<tr>
+<td>SECOND_MICROSECOND</td>
+<td>返回日期中的秒和微秒</td>
+</tr>
+<tr>
+<td>MINUTE_MICROSECOND</td>
+<td>返回日期中的分和微秒</td>
+</tr>
+<tr>
+<td>MINUTE_SECOND</td>
+<td>返回日期中的分和微秒</td>
+</tr>
+<tr>
+<td>HOUR_MICROSECOND</td>
+<td>返回日期中的小时和微秒</td>
+</tr>
+<tr>
+<td>HOUR_SECOND</td>
+<td>返回日期中的小时和秒</td>
+</tr>
+<tr>
+<td>HOUR_MINUTE</td>
+<td>返回日期中的小时和分</td>
+</tr>
+<tr>
+<td>DAY_MICROSECOND</td>
+<td>返回日期中的日和微秒</td>
+</tr>
+<tr>
+<td>DAY_SECOND</td>
+<td>返回日期中的日和秒</td>
+</tr>
+<tr>
+<td>DAY_MINUTE</td>
+<td>返回日期中的日和分</td>
+</tr>
+<tr>
+<td>DAY_HOUR</td>
+<td>返回日期中的日和时</td>
+</tr>
+<tr>
+<td>YEAR_MONTH</td>
+<td>返回日期中的年和月</td>
+</tr>
+</tbody></table>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#日期和时间</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">DATE</span>(<span class="string">&#x27;2020-08-21 20:41:34&#x27;</span>),<span class="keyword">LAST_DAY</span>(<span class="string">&#x27;2020-08-21 20:41:34&#x27;</span>),<span class="built_in">TIME</span>(<span class="string">&#x27;2020-08-21 20:41:34&#x27;</span>);</span><br><span class="line">+<span class="comment">-----------------------------+---------------------------------+-----------------------------+</span></span><br><span class="line">| DATE(&#x27;2020-08-21 20:41:34&#x27;) | LAST_DAY(&#x27;2020-08-21 20:41:34&#x27;) | TIME(&#x27;2020-08-21 20:41:34&#x27;) |</span><br><span class="line">+<span class="comment">-----------------------------+---------------------------------+-----------------------------+</span></span><br><span class="line">| 2020-08-21                  | 2020-08-31                      | 20:41:34                    |</span><br><span class="line">+<span class="comment">-----------------------------+---------------------------------+-----------------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#年、季度</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">YEAR</span>(<span class="string">&#x27;2020-08-21 20:41:34&#x27;</span>),<span class="keyword">QUARTER</span>(<span class="string">&#x27;2020-08-21 20:41:34&#x27;</span>);</span><br><span class="line">+<span class="comment">-----------------------------+--------------------------------+</span></span><br><span class="line">| YEAR(&#x27;2020-08-21 20:41:34&#x27;) | QUARTER(&#x27;2020-08-21 20:41:34&#x27;) |</span><br><span class="line">+<span class="comment">-----------------------------+--------------------------------+</span></span><br><span class="line">|                        2020 |                              3 |</span><br><span class="line">+<span class="comment">-----------------------------+--------------------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#月</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">MONTH</span>(<span class="string">&#x27;2020-08-21 20:41:34&#x27;</span>),MONTHNAME(<span class="string">&#x27;2020-08-21 20:41:34&#x27;</span>);</span><br><span class="line">+<span class="comment">------------------------------+----------------------------------+</span></span><br><span class="line">| MONTH(&#x27;2020-08-21 20:41:34&#x27;) | MONTHNAME(&#x27;2020-08-21 20:41:34&#x27;) |</span><br><span class="line">+<span class="comment">------------------------------+----------------------------------+</span></span><br><span class="line">|                            8 | August                           |</span><br><span class="line">+<span class="comment">------------------------------+----------------------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#周</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">WEEK</span>(<span class="string">&#x27;2020-08-21 20:41:34&#x27;</span>),<span class="keyword">WEEKOFYEAR</span>(<span class="string">&#x27;2020-08-21 20:41:34&#x27;</span>),<span class="keyword">YEARWEEK</span>(<span class="string">&#x27;2020-08-21 20:41:34&#x27;</span>,<span class="number">1</span>);</span><br><span class="line">+<span class="comment">-----------------------------+-----------------------------------+-----------------------------------+</span></span><br><span class="line">| WEEK(&#x27;2020-08-21 20:41:34&#x27;) | WEEKOFYEAR(&#x27;2020-08-21 20:41:34&#x27;) | YEARWEEK(&#x27;2020-08-21 20:41:34&#x27;,1) |</span><br><span class="line">+<span class="comment">-----------------------------+-----------------------------------+-----------------------------------+</span></span><br><span class="line">|                          33 |                                34 |                            202034 |</span><br><span class="line">+<span class="comment">-----------------------------+-----------------------------------+-----------------------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#日</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">DAYOFYEAR</span>(<span class="string">&#x27;2020-08-21 20:41:34&#x27;</span>),<span class="keyword">DAY</span>(<span class="string">&#x27;2020-08-21 20:41:34&#x27;</span>),<span class="keyword">DAYOFMONTH</span>(<span class="string">&#x27;2020-08-21 20:41:34&#x27;</span>);</span><br><span class="line">+<span class="comment">----------------------------------+----------------------------+-----------------------------------+</span></span><br><span class="line">| DAYOFYEAR(&#x27;2020-08-21 20:41:34&#x27;) | DAY(&#x27;2020-08-21 20:41:34&#x27;) | DAYOFMONTH(&#x27;2020-08-21 20:41:34&#x27;) |</span><br><span class="line">+<span class="comment">----------------------------------+----------------------------+-----------------------------------+</span></span><br><span class="line">|                              234 |                         21 |                                21 |</span><br><span class="line">+<span class="comment">----------------------------------+----------------------------+-----------------------------------+</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#星期</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">DAYNAME</span>(<span class="string">&#x27;2020-08-21 20:41:34&#x27;</span>),<span class="keyword">DAYOFWEEK</span>(<span class="string">&#x27;2020-08-21 20:41:34&#x27;</span>),<span class="keyword">WEEKDAY</span>(<span class="string">&#x27;2020-08-21 20:41:34&#x27;</span>);</span><br><span class="line">+<span class="comment">--------------------------------+----------------------------------+--------------------------------+</span></span><br><span class="line">| DAYNAME(&#x27;2020-08-21 20:41:34&#x27;) | DAYOFWEEK(&#x27;2020-08-21 20:41:34&#x27;) | WEEKDAY(&#x27;2020-08-21 20:41:34&#x27;) |</span><br><span class="line">+<span class="comment">--------------------------------+----------------------------------+--------------------------------+</span></span><br><span class="line">| Friday                         |                                6 |                              4 |</span><br><span class="line">+<span class="comment">--------------------------------+----------------------------------+--------------------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#时、分、秒</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">HOUR</span>(<span class="string">&#x27;2020-08-21 20:41:34&#x27;</span>),<span class="keyword">MINUTE</span>(<span class="string">&#x27;2020-08-21 20:41:34&#x27;</span>),<span class="keyword">SECOND</span>(<span class="string">&#x27;2020-08-21 20:41:34&#x27;</span>);</span><br><span class="line">+<span class="comment">-----------------------------+-------------------------------+-------------------------------+</span></span><br><span class="line">| HOUR(&#x27;2020-08-21 20:41:34&#x27;) | MINUTE(&#x27;2020-08-21 20:41:34&#x27;) | SECOND(&#x27;2020-08-21 20:41:34&#x27;) |</span><br><span class="line">+<span class="comment">-----------------------------+-------------------------------+-------------------------------+</span></span><br><span class="line">|                          20 |                            41 |                            34 |</span><br><span class="line">+<span class="comment">-----------------------------+-------------------------------+-------------------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#EXTRACT(type FROM d)</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">EXTRACT</span>( YEAR_MONTH <span class="keyword">FROM</span> <span class="string">&#x27;2020-08-21 20:41:34&#x27;</span>),<span class="keyword">EXTRACT</span>( DAY_HOUR <span class="keyword">FROM</span> <span class="string">&#x27;2020-08-21 20:41:34&#x27;</span>);</span><br><span class="line">+<span class="comment">-------------------------------------------------+-----------------------------------------------+</span></span><br><span class="line">| EXTRACT( YEAR_MONTH FROM &#x27;2020-08-21 20:41:34&#x27;) | EXTRACT( DAY_HOUR FROM &#x27;2020-08-21 20:41:34&#x27;) |</span><br><span class="line">+<span class="comment">-------------------------------------------------+-----------------------------------------------+</span></span><br><span class="line">|                                          202008 |                                          2120 |</span><br><span class="line">+<span class="comment">-------------------------------------------------+-----------------------------------------------+</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="3-日期的相关计算"><a href="#3-日期的相关计算" class="headerlink" title="3.日期的相关计算"></a>3.日期的相关计算</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ADDDATE(d,n)</td>
+<td>计算起始日期 d 加上 n 天的日期</td>
+</tr>
+<tr>
+<td>SUBDATE(d,n)</td>
+<td>日期 d 减去 n 天后的日期</td>
+</tr>
+<tr>
+<td>ADDTIME(t,n)</td>
+<td>时间 t 加上 n 秒的时间</td>
+</tr>
+<tr>
+<td>SUBTIME(t,n)</td>
+<td>时间 t 减去 n 秒的时间</td>
+</tr>
+<tr>
+<td>DATE_ADD(d，INTERVAL expr type)</td>
+<td>计算起始日期 d 加上一个时间段后的日期</td>
+</tr>
+<tr>
+<td>DATE_SUB(date,INTERVAL expr type)</td>
+<td>计算起始日期 d 减去一个时间段后的日期</td>
+</tr>
+<tr>
+<td>TIMESTAMP(expression, [interval])</td>
+<td>单个参数时，函数返回日期或日期时间表达式；有2个参数时，将参数加和</td>
+</tr>
+<tr>
+<td>PERIOD_DIFF(period1, period2)</td>
+<td>返回两个时段之间的月份差值</td>
+</tr>
+<tr>
+<td>PERIOD_ADD(period, number)</td>
+<td>为 年-月 组合日期添加一个时段</td>
+</tr>
+<tr>
+<td>DATEDIFF(d1,d2)</td>
+<td>计算日期 d1，d2 之间相隔的天数</td>
+</tr>
+<tr>
+<td>TIMEDIFF(time1, time2)</td>
+<td>计算时间差值</td>
+</tr>
+</tbody></table>
+<ul>
+<li><code>DATE_ADD/DATE_SUB(d，INTERVAL expr type)</code>中type可取的值与<code>EXTRACT(type FROM d)</code>中的<code>type</code>一致</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#增减天数，增加/减少5天</span></span><br><span class="line"><span class="keyword">SELECT</span> ADDDATE(<span class="string">&#x27;2020-08-21 20:41:34&#x27;</span>,<span class="number">5</span>),<span class="keyword">SUBDATE</span>(<span class="string">&#x27;2020-08-21 20:41:34&#x27;</span>,<span class="number">5</span>);</span><br><span class="line">+<span class="comment">----------------------------------+----------------------------------+</span></span><br><span class="line">| ADDDATE(&#x27;2020-08-21 20:41:34&#x27;,5) | SUBDATE(&#x27;2020-08-21 20:41:34&#x27;,5) |</span><br><span class="line">+<span class="comment">----------------------------------+----------------------------------+</span></span><br><span class="line">| 2020-08-26 20:41:34              | 2020-08-16 20:41:34              |</span><br><span class="line">+<span class="comment">----------------------------------+----------------------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#增减秒，增加/减少50秒</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">ADDTIME</span>(<span class="string">&#x27;2020-08-21 20:41:34&#x27;</span>,<span class="number">50</span>),<span class="keyword">SUBTIME</span>(<span class="string">&#x27;2020-08-21 20:41:34&#x27;</span>,<span class="number">50</span>);</span><br><span class="line">+<span class="comment">-----------------------------------+-----------------------------------+</span></span><br><span class="line">| ADDTIME(&#x27;2020-08-21 20:41:34&#x27;,50) | SUBTIME(&#x27;2020-08-21 20:41:34&#x27;,50) |</span><br><span class="line">+<span class="comment">-----------------------------------+-----------------------------------+</span></span><br><span class="line">| 2020-08-21 20:42:24               | 2020-08-21 20:40:44               |</span><br><span class="line">+<span class="comment">-----------------------------------+-----------------------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#增减日期，如增加5年、减少3月</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">DATE_ADD</span>(<span class="string">&#x27;2020-08-21 20:41:34&#x27;</span>,<span class="built_in">INTERVAL</span> <span class="number">5</span> <span class="keyword">YEAR</span>),<span class="keyword">DATE_SUB</span>(<span class="string">&#x27;2020-08-21 20:41:34&#x27;</span>,<span class="built_in">INTERVAL</span> <span class="number">3</span> <span class="keyword">MONTH</span>);</span><br><span class="line">+<span class="comment">-------------------------------------------------+--------------------------------------------------+</span></span><br><span class="line">| DATE_ADD(&#x27;2020-08-21 20:41:34&#x27;,INTERVAL 5 YEAR) | DATE_SUB(&#x27;2020-08-21 20:41:34&#x27;,INTERVAL 3 MONTH) |</span><br><span class="line">+<span class="comment">-------------------------------------------------+--------------------------------------------------+</span></span><br><span class="line">| 2025-08-21 20:41:34                             | 2020-05-21 20:41:34                              |</span><br><span class="line">+<span class="comment">-------------------------------------------------+--------------------------------------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#TIMESTAMP(expression, [interval])</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">TIMESTAMP</span>(<span class="string">&#x27;2020-08-21 20:41:34&#x27;</span>),<span class="built_in">TIMESTAMP</span>(<span class="string">&#x27;2020-08-21 20:41:34&#x27;</span>,<span class="string">&#x27;6:00:00&#x27;</span>);</span><br><span class="line">+<span class="comment">----------------------------------+--------------------------------------------+</span></span><br><span class="line">| TIMESTAMP(&#x27;2020-08-21 20:41:34&#x27;) | TIMESTAMP(&#x27;2020-08-21 20:41:34&#x27;,&#x27;6:00:00&#x27;) |</span><br><span class="line">+<span class="comment">----------------------------------+--------------------------------------------+</span></span><br><span class="line">| 2020-08-21 20:41:34              | 2020-08-22 02:41:34                        |</span><br><span class="line">+<span class="comment">----------------------------------+--------------------------------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#PERIOD_DIFF(period1, period2),时段月份差</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">PERIOD_DIFF</span>(<span class="number">202008</span>,<span class="number">202004</span>),<span class="keyword">PERIOD_DIFF</span>(<span class="number">201709</span>,<span class="number">202107</span>);</span><br><span class="line">+<span class="comment">----------------------------+----------------------------+</span></span><br><span class="line">| PERIOD_DIFF(202008,202004) | PERIOD_DIFF(201709,202107) |</span><br><span class="line">+<span class="comment">----------------------------+----------------------------+</span></span><br><span class="line">|                          4 |                        -46 |</span><br><span class="line">+<span class="comment">----------------------------+----------------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#PERIOD_ADD(period, number)，时段添加</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">PERIOD_ADD</span>(<span class="number">202008</span>,<span class="number">04</span>);</span><br><span class="line">+<span class="comment">----------------------+</span></span><br><span class="line">| PERIOD_ADD(202008,4) |</span><br><span class="line">+<span class="comment">----------------------+</span></span><br><span class="line">|               202012 |</span><br><span class="line">+<span class="comment">----------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#DATEDIFF(d1,d2)，日期天数差</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">DATEDIFF</span>(<span class="string">&#x27;2017-09-16&#x27;</span>,<span class="string">&#x27;2021-07-01&#x27;</span>),<span class="keyword">DATEDIFF</span>(<span class="string">&#x27;2020-08-21 20:41:34&#x27;</span>,<span class="string">&#x27;2020-04-30 6:00:00&#x27;</span>);</span><br><span class="line">+<span class="comment">-------------------------------------+------------------------------------------------------+</span></span><br><span class="line">| DATEDIFF(&#x27;2017-09-16&#x27;,&#x27;2021-07-01&#x27;) | DATEDIFF(&#x27;2020-08-21 20:41:34&#x27;,&#x27;2020-04-30 6:00:00&#x27;) |</span><br><span class="line">+<span class="comment">-------------------------------------+------------------------------------------------------+</span></span><br><span class="line">|                               -1384 |                                                  113 |</span><br><span class="line">+<span class="comment">-------------------------------------+------------------------------------------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#TIMEDIFF(time1, time2)，时间差，最大值为 838:59:59</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">TIMEDIFF</span>(<span class="string">&#x27;2020-08-21 20:41:34&#x27;</span>,<span class="string">&#x27;2020-08-19 6:00:00&#x27;</span>),<span class="keyword">TIMEDIFF</span>(<span class="string">&#x27;20:41:34&#x27;</span>,<span class="string">&#x27;6:00:00&#x27;</span>);</span><br><span class="line">+<span class="comment">------------------------------------------------------+--------------------------------+</span></span><br><span class="line">| TIMEDIFF(&#x27;2020-08-21 20:41:34&#x27;,&#x27;2020-08-19 6:00:00&#x27;) | TIMEDIFF(&#x27;20:41:34&#x27;,&#x27;6:00:00&#x27;) |</span><br><span class="line">+<span class="comment">------------------------------------------------------+--------------------------------+</span></span><br><span class="line">| 62:41:34                                             | 14:41:34                       |</span><br><span class="line">+<span class="comment">------------------------------------------------------+--------------------------------+</span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="4-日期格式转换"><a href="#4-日期格式转换" class="headerlink" title="4.日期格式转换"></a>4.日期格式转换</h4><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MAKEDATE(year, day-of-year)</td>
+<td>基于给定参数年份 year 和所在年中的天数序号 day-of-year 返回一个日期</td>
+</tr>
+<tr>
+<td>MAKETIME(hour, minute, second)</td>
+<td>组合时间，参数分别为小时、分钟、秒</td>
+</tr>
+<tr>
+<td>TO_DAYS(d)</td>
+<td>计算日期 d 距离 0000 年 1 月 1 日的天数</td>
+</tr>
+<tr>
+<td>FROM_DAYS(n)</td>
+<td>计算从 0000 年 1 月 1 日开始 n 天后的日期</td>
+</tr>
+<tr>
+<td>TIME_TO_SEC(t)</td>
+<td>将时间 t 转换为秒</td>
+</tr>
+<tr>
+<td>SEC_TO_TIME(s)</td>
+<td>将以秒为单位的时间 s 转换为时分秒的格式</td>
+</tr>
+<tr>
+<td>TIME_FORMAT(t,f)</td>
+<td>按表达式 f的要求显示日期 t</td>
+</tr>
+<tr>
+<td>DATE_FORMAT(d,f)</td>
+<td>按表达式 f的要求显示日期 d</td>
+</tr>
+<tr>
+<td>STR_TO_DATE(string, format_mask)</td>
+<td>将字符串转变为日期</td>
+</tr>
+</tbody></table>
+<p><code>DATE_FORMAT(datetime,fmt) </code>等的<strong>格式符及含义：</strong></p>
+<table>
+<thead>
+<tr>
+<th>格式符</th>
+<th>说明</th>
+<th>格式符</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>%Y</td>
+<td>4位数字表示年份</td>
+<td>%y</td>
+<td>表示两位数字表示年份</td>
+</tr>
+<tr>
+<td>%M</td>
+<td>月名表示月份（January,….）</td>
+<td>%m</td>
+<td>两位数字表示月份（01,02,03。。。）</td>
+</tr>
+<tr>
+<td>%b</td>
+<td>缩写的月名（Jan.，Feb.，….）</td>
+<td>%c</td>
+<td>数字表示月份（1,2,3,…）</td>
+</tr>
+<tr>
+<td>%D</td>
+<td>英文后缀表示月中的天数（1st,2nd,3rd,…）</td>
+<td>%d</td>
+<td>两位数字表示月中的天数(01,02…)</td>
+</tr>
+<tr>
+<td>%e</td>
+<td>数字形式表示月中的天数（1,2,3,4,5…..）</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>%H</td>
+<td>两位数字表示小数，24小时制（01,02..）</td>
+<td>%h和%I</td>
+<td>两位数字表示小时，12小时制（01,02..）</td>
+</tr>
+<tr>
+<td>%k</td>
+<td>数字形式的小时，24小时制(1,2,3)</td>
+<td>%l</td>
+<td>数字形式表示小时，12小时制（1,2,3,4….）</td>
+</tr>
+<tr>
+<td>%i</td>
+<td>两位数字表示分钟（00,01,02）</td>
+<td>%S和%s</td>
+<td>两位数字表示秒(00,01,02…)</td>
+</tr>
+<tr>
+<td>%W</td>
+<td>一周中的星期名称（Sunday…）</td>
+<td>%a</td>
+<td>一周中的星期缩写（Sun.，Mon.,Tues.，..）</td>
+</tr>
+<tr>
+<td>%w</td>
+<td>以数字表示周中的天数(0=Sunday,1=Monday….)</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>%j</td>
+<td>以3位数字表示年中的天数(001,002…)</td>
+<td>%U</td>
+<td>以数字表示年中的第几周，（1,2,3。。）其中Sunday为周中第一天</td>
+</tr>
+<tr>
+<td>%u</td>
+<td>以数字表示年中的第几周，（1,2,3。。）其中Monday为周中第一天</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>%T</td>
+<td>24小时制</td>
+<td>%r</td>
+<td>12小时制</td>
+</tr>
+<tr>
+<td>%p</td>
+<td>AM或PM</td>
+<td>%%</td>
+<td>表示%</td>
+</tr>
+</tbody></table>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#MAKEDATE(year, day-of-year)，将2020年的第100天转换成日期</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">MAKEDATE</span>(<span class="number">2020</span>,<span class="number">100</span>);</span><br><span class="line">+<span class="comment">--------------------+</span></span><br><span class="line">| MAKEDATE(2020,100) |</span><br><span class="line">+<span class="comment">--------------------+</span></span><br><span class="line">| 2020-04-09         |</span><br><span class="line">+<span class="comment">--------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#MAKETIME(hour, minute, second)，将时分秒组合成时间，超出单位上限则返回NULL</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">MAKETIME</span>(<span class="number">20</span>,<span class="number">41</span>,<span class="number">34</span>),<span class="keyword">MAKETIME</span>(<span class="number">20</span>,<span class="number">61</span>,<span class="number">34</span>);</span><br><span class="line">+<span class="comment">--------------------+--------------------+</span></span><br><span class="line">| MAKETIME(20,41,34) | MAKETIME(20,61,34) |</span><br><span class="line">+<span class="comment">--------------------+--------------------+</span></span><br><span class="line">| 20:41:34           | NULL               |</span><br><span class="line">+<span class="comment">--------------------+--------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#参考0000年1月1日的天数和日期的转换</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">TO_DAYS</span>(<span class="string">&#x27;2020-08-21 20:41:34&#x27;</span>),<span class="keyword">FROM_DAYS</span>(<span class="number">738023</span>);</span><br><span class="line">+<span class="comment">--------------------------------+-------------------+</span></span><br><span class="line">| TO_DAYS(&#x27;2020-08-21 20:41:34&#x27;) | FROM_DAYS(738023) |</span><br><span class="line">+<span class="comment">--------------------------------+-------------------+</span></span><br><span class="line">|                         738023 | 2020-08-21        |</span><br><span class="line">+<span class="comment">--------------------------------+-------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#时间与秒的转换</span></span><br><span class="line"><span class="keyword">SELECT</span> TIME_TO_SEC(<span class="string">&#x27;20:41:34&#x27;</span>),<span class="keyword">SEC_TO_TIME</span>(<span class="number">74494</span>);</span><br><span class="line">+<span class="comment">-------------------------+--------------------+</span></span><br><span class="line">| TIME_TO_SEC(&#x27;20:41:34&#x27;) | SEC_TO_TIME(74494) |</span><br><span class="line">+<span class="comment">-------------------------+--------------------+</span></span><br><span class="line">|                   74494 | 20:41:34           |</span><br><span class="line">+<span class="comment">-------------------------+--------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#格式化日期时间</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">TIME_FORMAT</span>(<span class="string">&#x27;20:41:34&#x27;</span>,<span class="string">&#x27;%h:%i:%s %p&#x27;</span>),<span class="keyword">DATE_FORMAT</span>(<span class="string">&#x27;2020-08-21 20:41:34&#x27;</span>,<span class="string">&#x27;%M %D %Y %T&#x27;</span>);</span><br><span class="line">+<span class="comment">---------------------------------------+--------------------------------------------------+</span></span><br><span class="line">| TIME_FORMAT(&#x27;20:41:34&#x27;,&#x27;%h:%i:%s %p&#x27;) | DATE_FORMAT(&#x27;2020-08-21 20:41:34&#x27;,&#x27;%M %D %Y %T&#x27;) |</span><br><span class="line">+<span class="comment">---------------------------------------+--------------------------------------------------+</span></span><br><span class="line">| 08:41:34 PM                           | August 21st 2020 20:41:34                        |</span><br><span class="line">+<span class="comment">---------------------------------------+--------------------------------------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#将字符串转换为日期时间格式</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">STR_TO_DATE</span>(<span class="string">&#x27;08:41:34 PM&#x27;</span>, <span class="string">&#x27;%h:%i:%s %p&#x27;</span>),<span class="keyword">STR_TO_DATE</span>(<span class="string">&#x27;August 21st 2020 20:41:34&#x27;</span>, <span class="string">&#x27;%M %D %Y %T&#x27;</span>);</span><br><span class="line">+<span class="comment">-------------------------------------------+---------------------------------------------------------+</span></span><br><span class="line">| STR_TO_DATE(&#x27;08:41:34 PM&#x27;, &#x27;%h:%i:%s %p&#x27;) | STR_TO_DATE(&#x27;August 21st 2020 20:41:34&#x27;, &#x27;%M %D %Y %T&#x27;) |</span><br><span class="line">+<span class="comment">-------------------------------------------+---------------------------------------------------------+</span></span><br><span class="line">| 20:41:34                                  | 2020-08-21 20:41:34                                     |</span><br><span class="line">+<span class="comment">-------------------------------------------+---------------------------------------------------------+</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="流程函数"><a href="#流程函数" class="headerlink" title="流程函数"></a>流程函数</h3><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>用法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>IF(value,t ,f)</td>
+<td>如果value是真，返回t，否则返回f</td>
+</tr>
+<tr>
+<td>IFNULL(value1, value2)</td>
+<td>如果value1不为空，返回value1，否则返回value2</td>
+</tr>
+<tr>
+<td>CASE WHEN 条件1 THEN result1 WHEN 条件2 THEN result2 …. [ELSE resultn] END</td>
+<td>相当于Java的if…else if…else…</td>
+</tr>
+<tr>
+<td>CASE  expr WHEN 常量值1 THEN 值1 WHEN 常量值1 THEN 值1 …. [ELSE 值n] END</td>
+<td>相当于Java的switch…case…</td>
+</tr>
+</tbody></table>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#为了方便演示先创建一个员工表，包含id，薪资，级别三个字段,并添加5条数据</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> employees(</span><br><span class="line">    uid <span class="built_in">SMALLINT</span> <span class="keyword">UNSIGNED</span>,</span><br><span class="line">    salary <span class="built_in">DECIMAL</span>(<span class="number">10</span>,<span class="number">2</span>) <span class="keyword">UNSIGNED</span>,</span><br><span class="line">    <span class="keyword">level</span> <span class="built_in">TINYINT</span> <span class="keyword">UNSIGNED</span></span><br><span class="line">);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> employees <span class="keyword">VALUES</span>(<span class="number">1</span>,<span class="number">6000</span>,<span class="number">1</span>),(<span class="number">2</span>,<span class="number">12000</span>,<span class="number">3</span>),(<span class="number">3</span>,<span class="number">13000</span>,<span class="number">3</span>),(<span class="number">4</span>,<span class="number">21000</span>,<span class="number">4</span>),(<span class="number">5</span>,<span class="number">8500</span>,<span class="number">2</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">#IF(value,t ,f)，查询员工薪资是否大于一万</span></span><br><span class="line"><span class="keyword">SELECT</span> uid,<span class="keyword">IF</span>(salary&gt;<span class="number">10000</span>,<span class="string">&#x27;是&#x27;</span>,<span class="string">&#x27;否&#x27;</span>) <span class="keyword">AS</span> <span class="string">&#x27;薪资是否大于一万&#x27;</span> <span class="keyword">FROM</span> employees;</span><br><span class="line">+<span class="comment">------+--------------------------+</span></span><br><span class="line">| uid  | 薪资是否大于一万         |</span><br><span class="line">+<span class="comment">------+--------------------------+</span></span><br><span class="line">|    1 | 否                       |</span><br><span class="line">|    2 | 是                       |</span><br><span class="line">|    3 | 是                       |</span><br><span class="line">|    4 | 是                       |</span><br><span class="line">|    5 | 否                       |</span><br><span class="line">+<span class="comment">------+--------------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#IFNULL(value1, value2)，查询员工等级，若为NULL则显示为0</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> employees <span class="keyword">VALUES</span>(<span class="number">6</span>,<span class="number">4500</span>,<span class="literal">NULL</span>);<span class="comment">#添加一条员工信息方便演示</span></span><br><span class="line"><span class="keyword">SELECT</span> uid,<span class="keyword">IFNULL</span>(<span class="keyword">level</span>,<span class="number">0</span>) <span class="keyword">AS</span> <span class="string">&#x27;员工等级&#x27;</span> <span class="keyword">FROM</span> employees;</span><br><span class="line">+<span class="comment">------+--------------+</span></span><br><span class="line">| uid  | 员工等级     |</span><br><span class="line">+<span class="comment">------+--------------+</span></span><br><span class="line">|    1 |            1 |</span><br><span class="line">|    2 |            3 |</span><br><span class="line">|    3 |            3 |</span><br><span class="line">|    4 |            4 |</span><br><span class="line">|    5 |            2 |</span><br><span class="line">|    6 |            0 |</span><br><span class="line">+<span class="comment">------+--------------+</span></span><br><span class="line"><span class="comment">#按照薪资范围添加描述</span></span><br><span class="line"><span class="keyword">SELECT</span> uid,salary <span class="keyword">AS</span> <span class="string">&#x27;工资&#x27;</span>,<span class="keyword">CASE</span> </span><br><span class="line"><span class="keyword">WHEN</span> salary&gt;=<span class="number">15000</span> <span class="keyword">THEN</span> <span class="string">&#x27;高薪&#x27;</span> </span><br><span class="line"><span class="keyword">WHEN</span> salary&gt;=<span class="number">10000</span> <span class="keyword">THEN</span> <span class="string">&#x27;潜力股&#x27;</span></span><br><span class="line"><span class="keyword">ELSE</span> <span class="string">&#x27;屌丝&#x27;</span> <span class="keyword">END</span> <span class="keyword">AS</span> <span class="string">&#x27;描述&#x27;</span></span><br><span class="line"><span class="keyword">FROM</span> employees;</span><br><span class="line">+<span class="comment">------+----------+-----------+</span></span><br><span class="line">| uid  | 工资     | 描述      |</span><br><span class="line">+<span class="comment">------+----------+-----------+</span></span><br><span class="line">|    1 |  6000.00 | 屌丝      |</span><br><span class="line">|    2 | 12000.00 | 潜力股    |</span><br><span class="line">|    3 | 13000.00 | 潜力股    |</span><br><span class="line">|    4 | 21000.00 | 高薪      |</span><br><span class="line">|    5 |  8500.00 | 屌丝      |</span><br><span class="line">|    6 |  4500.00 | 屌丝      |</span><br><span class="line">+<span class="comment">------+----------+-----------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#按照等级发放不同比例的奖金</span></span><br><span class="line"><span class="keyword">SELECT</span> uid,<span class="keyword">IFNULL</span>(<span class="keyword">level</span>,<span class="number">0</span>) <span class="keyword">AS</span> <span class="string">&#x27;员工等级&#x27;</span>,<span class="keyword">CASE</span> <span class="keyword">IFNULL</span>(<span class="keyword">level</span>,<span class="number">0</span>) </span><br><span class="line"><span class="keyword">WHEN</span> <span class="number">4</span> <span class="keyword">THEN</span>  salary*<span class="number">5</span></span><br><span class="line"><span class="keyword">WHEN</span> <span class="number">3</span> <span class="keyword">THEN</span> salary*<span class="number">3</span></span><br><span class="line"><span class="keyword">WHEN</span> <span class="number">2</span> <span class="keyword">THEN</span> salary*<span class="number">2</span></span><br><span class="line"><span class="keyword">ELSE</span> salary <span class="keyword">END</span> <span class="keyword">AS</span> <span class="string">&#x27;奖金&#x27;</span></span><br><span class="line"><span class="keyword">FROM</span> employees;</span><br><span class="line">+<span class="comment">------+--------------+-----------+</span></span><br><span class="line">| uid  | 员工等级     | 奖金      |</span><br><span class="line">+<span class="comment">------+--------------+-----------+</span></span><br><span class="line">|    1 |            1 |   6000.00 |</span><br><span class="line">|    2 |            3 |  36000.00 |</span><br><span class="line">|    3 |            3 |  39000.00 |</span><br><span class="line">|    4 |            4 | 105000.00 |</span><br><span class="line">|    5 |            2 |  17000.00 |</span><br><span class="line">|    6 |            0 |   4500.00 |</span><br><span class="line">+<span class="comment">------+--------------+-----------+</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="其他函数"><a href="#其他函数" class="headerlink" title="其他函数"></a>其他函数</h3><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>用法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>database()</td>
+<td>返回当前数据库名</td>
+</tr>
+<tr>
+<td>version()</td>
+<td>返回当前数据库版本</td>
+</tr>
+<tr>
+<td>user()</td>
+<td>返回当前登录用户名</td>
+</tr>
+<tr>
+<td>password(str)</td>
+<td>返回字符串str的加密版本，41位长的字符串</td>
+</tr>
+<tr>
+<td>md5(str)</td>
+<td>返回字符串str的md5值，也是一种加密方式</td>
+</tr>
+</tbody></table>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">database</span>() <span class="keyword">AS</span> <span class="string">&#x27;数据库名&#x27;</span>,<span class="keyword">version</span>() <span class="keyword">AS</span> <span class="string">&#x27;数据库版本&#x27;</span>,<span class="keyword">user</span>() <span class="keyword">AS</span> <span class="string">&#x27;当前用户名&#x27;</span>;</span><br><span class="line">+<span class="comment">--------------+-----------------+-----------------+</span></span><br><span class="line">| 数据库名     | 数据库版本      | 当前用户名      |</span><br><span class="line">+<span class="comment">--------------+-----------------+-----------------+</span></span><br><span class="line">| test         | 5.7.31-log      | root@localhost  |</span><br><span class="line">+<span class="comment">--------------+-----------------+-----------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#一般用于存储密码时加密，同一个字段只推荐使用同一种加密方式</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">password</span>(<span class="number">123456</span>),<span class="keyword">md5</span>(<span class="number">123456</span>);</span><br><span class="line">+<span class="comment">-------------------------------------------+----------------------------------+</span></span><br><span class="line">| password(123456)                          | md5(123456)                      |</span><br><span class="line">+<span class="comment">-------------------------------------------+----------------------------------+</span></span><br><span class="line">| *6BB4837EB74329105EE4568DDA7DC67ED2CA2AD9 | e10adc3949ba59abbe56e057f20f883e |</span><br><span class="line">+<span class="comment">-------------------------------------------+----------------------------------+</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="分组函数"><a href="#分组函数" class="headerlink" title="分组函数"></a>分组函数</h2><p>​    区别于单行函数，分组函数一般以字段作为参数而只返回一个结果。</p>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AVG(expression)</td>
+<td>返回一个表达式的平均值，expression 是一个字段</td>
+</tr>
+<tr>
+<td>COUNT(expression)</td>
+<td>返回查询的记录总数，expression 参数是一个字段或者 * 号</td>
+</tr>
+<tr>
+<td>MAX(expression)</td>
+<td>返回字段 expression 中的最大值</td>
+</tr>
+<tr>
+<td>MIN(expression)</td>
+<td>返回字段 expression 中的最小值</td>
+</tr>
+<tr>
+<td>SUM(expression)</td>
+<td>返回指定字段的总和</td>
+</tr>
+</tbody></table>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#依然使用上面建的employees表进行演示</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">AVG</span>(salary) <span class="keyword">AS</span> <span class="string">&#x27;平均工资&#x27;</span>,<span class="keyword">MAX</span>(salary) <span class="keyword">AS</span> <span class="string">&#x27;最高工资&#x27;</span>,<span class="keyword">MIN</span>(salary) <span class="keyword">AS</span> <span class="string">&#x27;最低工资&#x27;</span>,<span class="keyword">SUM</span>(salary) <span class="keyword">AS</span> <span class="string">&#x27;工资总和&#x27;</span></span><br><span class="line"><span class="keyword">FROM</span> employees;</span><br><span class="line">+<span class="comment">--------------+--------------+--------------+--------------+</span></span><br><span class="line">| 平均工资     | 最高工资     | 最低工资     | 工资总和     |</span><br><span class="line">+<span class="comment">--------------+--------------+--------------+--------------+</span></span><br><span class="line">| 10833.333333 |     21000.00 |      4500.00 |     65000.00 |</span><br><span class="line">+<span class="comment">--------------+--------------+--------------+--------------+</span></span><br><span class="line"><span class="comment">#COUNT(expression) 参数为*时统计所以记录，参数为字段名时除去该字段为NULL的数据</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">COUNT</span>(*) <span class="keyword">AS</span> <span class="string">&#x27;员工总数&#x27;</span>,<span class="keyword">COUNT</span>(<span class="keyword">level</span>) <span class="keyword">AS</span> <span class="string">&#x27;用于等级的员工总数&#x27;</span> <span class="keyword">FROM</span> employees;</span><br><span class="line">+<span class="comment">--------------+-----------------------------+</span></span><br><span class="line">| 员工总数     | 用于等级的员工总数          |</span><br><span class="line">+<span class="comment">--------------+-----------------------------+</span></span><br><span class="line">|            6 |                           5 |</span><br><span class="line">+<span class="comment">--------------+-----------------------------+</span></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>SQL</tag>
+        <tag>MySQL</tag>
+        <tag>MySQL基础</tag>
+        <tag>SQL函数</tag>
       </tags>
   </entry>
 </search>
