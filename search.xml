@@ -138,98 +138,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Java基础之字符串</title>
-    <url>/2020/08/09/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%AD%97%E7%AC%A6%E4%B8%B2/</url>
-    <content><![CDATA[<h1 id="字符串的特点"><a href="#字符串的特点" class="headerlink" title="字符串的特点"></a>字符串的特点</h1><p>​        <strong><em>以下说明及演示基于JDK1.8版本</em></strong></p>
-<ol>
-<li>字符串String类型本身是final声明的，字符串的对象也是不可变对象，意味着一旦进行修改，就会产生新对象。</li>
-<li>String对象内部是用数组进行保存的，在<strong>JDK1.9之前</strong>用的是字符数组<code>char[]</code>，<strong>JDK1.9之后</strong>使用的是字节数组<code>byte[]</code>。</li>
-</ol>
-<a id="more"></a>
-
-<ol start="3">
-<li>String类中这个<code>values</code>数组,同时由<code>final</code>和<code>private</code>修饰，意味着这个数组<strong>不可变并且不能通过外部进行操作</strong>，String类型提供的所有的方法都是用新对象来表示修改后内容的，所以<strong>保证了String对象的不可变</strong>。</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//JDK1.8中String类的部分源码</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">String</span></span></span><br><span class="line"><span class="class">    <span class="keyword">implements</span> <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span>, <span class="title">Comparable</span>&lt;<span class="title">String</span>&gt;, <span class="title">CharSequence</span> </span>&#123;</span><br><span class="line">    <span class="comment">//使用char数组进行存储。</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">char</span> value[];</span><br><span class="line"></span><br><span class="line">    <span class="comment">//JDK1.8中只有char数组与哈希值，其他版本可能有所不同。</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> hash; <span class="comment">// Default to 0</span></span><br></pre></td></tr></table></figure>
-
-<ol start="4">
-<li>由于字符串对象设计为不可变，那么所以有<strong>字符串常量池</strong>来保存很多常量对象，<strong>JDK1.6以及之前</strong>，常量池设计在<strong>方法区</strong>当中。但由于字符串所占空间比较大，所以<strong>JDk1.7时</strong>将常量池移到了<strong>堆</strong>当中，<strong>JDk1.8</strong>后取消了<strong>方法区</strong>取而代之的是<strong>元空间</strong>，字符串常量池也在<strong>元空间</strong>当中。</li>
-</ol>
-<h1 id="字符串的比较"><a href="#字符串的比较" class="headerlink" title="字符串的比较"></a>字符串的比较</h1><h2 id="1"><a href="#1" class="headerlink" title="1.=="></a>1.==</h2><p>​    <code>==</code>用来比较对象的地址值，因为字符串特殊的存储方式，导致地址比较情况比较多。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str1 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line">String str2 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line">String str3 = <span class="keyword">new</span> String(<span class="string">&quot;A&quot;</span>);</span><br><span class="line">String str4 = <span class="keyword">new</span> String(<span class="string">&quot;A&quot;</span>).intern();</span><br><span class="line">System.out.println(str1 == str2);<span class="comment">//true</span></span><br><span class="line">System.out.println(str1 == str3);<span class="comment">//false</span></span><br><span class="line">System.out.println(str1 == str4);<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
-
-<p>​    <strong>内存示意图：</strong></p>
-<p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%AD%97%E7%AC%A6%E4%B8%B2/%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%86%85%E5%AD%98%E5%9B%BE.png" alt="字符串内存图"></p>
-<h2 id="2-equals"><a href="#2-equals" class="headerlink" title="2.equals()"></a>2.equals()</h2><p>​    <strong>用于比较对象的内容是否相同</strong>，因为String类型重写equals，区分大小写只要两个字符串的字符内容相同，就会返回true。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str1 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line">String str2 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line">String str3 = <span class="keyword">new</span> String(<span class="string">&quot;A&quot;</span>);</span><br><span class="line">System.out.println(str1.equals(str2));<span class="comment">//true</span></span><br><span class="line">System.out.println(str1.equals(str3));<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
-
-<p>查看一下String类中的<code>equals()</code>源码。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object anObject)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//判断是否指向同一个对象，如果是内容一定相同，返回ture</span></span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">this</span> == anObject) &#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    <span class="comment">//若传入参数不为String类则直接返回false</span></span><br><span class="line">      <span class="keyword">if</span> (anObject <span class="keyword">instanceof</span> String) &#123;</span><br><span class="line">          String anotherString = (String)anObject;</span><br><span class="line">          <span class="keyword">int</span> n = value.length;</span><br><span class="line">          <span class="comment">//判断字符串长度是否相等，不相等则一定不相同，返回false</span></span><br><span class="line">          <span class="keyword">if</span> (n == anotherString.value.length) &#123;</span><br><span class="line">              <span class="keyword">char</span> v1[] = value;</span><br><span class="line">              <span class="keyword">char</span> v2[] = anotherString.value;</span><br><span class="line">              <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">              <span class="comment">//逐个比较字符是否相等</span></span><br><span class="line">              <span class="keyword">while</span> (n-- != <span class="number">0</span>) &#123;</span><br><span class="line">                  <span class="keyword">if</span> (v1[i] != v2[i])</span><br><span class="line">                      <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">                  i++;</span><br><span class="line">              &#125;</span><br><span class="line">              <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>了避免空指针异常，若是与已知字符串做比较用已知字符串来调用方法。</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="string">&quot;已知字符串&quot;</span>.equals（）</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="3-equalsIgnoreCase"><a href="#3-equalsIgnoreCase" class="headerlink" title="3.equalsIgnoreCase()"></a>3.equalsIgnoreCase()</h2><p>​    <strong>用于不区分大小写的比较字符串内容</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">System.out.println(<span class="string">&quot;A&quot;</span>.equalsIgnoreCase(<span class="string">&quot;a&quot;</span>));<span class="comment">//ture</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="4-compareTo"><a href="#4-compareTo" class="headerlink" title="4.compareTo()"></a>4.compareTo()</h2><p>​    <strong>用于按照字符的Unicode编码值进行排序</strong>,String类型重写了<code>Comparable接口</code>的抽象方法。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">System.out.println(<span class="string">&quot;A&quot;</span>.compareTo(<span class="string">&quot;a&quot;</span>));<span class="comment">//-32</span></span><br><span class="line">System.out.println(<span class="string">&quot;AB&quot;</span>.compareTo(<span class="string">&quot;A&quot;</span>));<span class="comment">//1</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>源码如下:</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//String类中的compareTo方法</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compareTo</span><span class="params">(String anotherString)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> len1 = value.length;</span><br><span class="line">        <span class="keyword">int</span> len2 = anotherString.value.length;</span><br><span class="line">        <span class="keyword">int</span> lim = Math.min(len1, len2);</span><br><span class="line">        <span class="keyword">char</span> v1[] = value;</span><br><span class="line">        <span class="keyword">char</span> v2[] = anotherString.value;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> k = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (k &lt; lim) &#123;</span><br><span class="line">            <span class="keyword">char</span> c1 = v1[k];</span><br><span class="line">            <span class="keyword">char</span> c2 = v2[k];</span><br><span class="line">            <span class="keyword">if</span> (c1 != c2) &#123;</span><br><span class="line">                <span class="keyword">return</span> c1 - c2;</span><br><span class="line">            &#125;<span class="comment">//返回char的差值，说明按照Unicode编码值进行排序</span></span><br><span class="line">            k++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> len1 - len2;<span class="comment">//若一方为另一方的子字符串，则判定为较小的一方</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="5-compareToIgnoreCase"><a href="#5-compareToIgnoreCase" class="headerlink" title="5.compareToIgnoreCase()"></a>5.compareToIgnoreCase()</h2><p>​    <strong>用于不区分大小的情况下按照字符的Unicode编码值进行排序</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">System.out.println(<span class="string">&quot;A&quot;</span>.compareToIgnoreCase(<span class="string">&quot;a&quot;</span>));<span class="comment">//0</span></span><br><span class="line">System.out.println(<span class="string">&quot;AB&quot;</span>.compareToIgnoreCase(<span class="string">&quot;Ab&quot;</span>));<span class="comment">//0</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="字符串的拼接"><a href="#字符串的拼接" class="headerlink" title="字符串的拼接"></a>字符串的拼接</h1><h2 id="1-“-”连接符的实现"><a href="#1-“-”连接符的实现" class="headerlink" title="1.“+”连接符的实现"></a>1.“+”连接符的实现</h2><p>​    <strong>引入一段对API中String类的描述</strong></p>
-<blockquote>
-<p>Java 语言提供对字符串串联符号（”+”）以及将其他对象转换为字符串的特殊支持。字符串串联是通过 <code>StringBuilder</code>（或  <code>StringBuffer</code>）类及其 <code>append</code> 方法实现的。字符串转换是通过  <code>toString</code> 方法实现的，该方法由 <code>Object</code> 类定义，并可被 Java 中的所有类继承。</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String s1 = <span class="keyword">new</span> String(<span class="string">&quot;A&quot;</span>);</span><br><span class="line">String s2 = <span class="keyword">new</span> String(<span class="string">&quot;B&quot;</span>);</span><br><span class="line">String s3 = s1 + s2;<span class="comment">//第三行的代码等价于第四行</span></span><br><span class="line">String s3 = (<span class="keyword">new</span> StringBuilder()).append(s1).append(s2).toString();</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-编译器对“-”的优化"><a href="#2-编译器对“-”的优化" class="headerlink" title="2.编译器对“+”的优化"></a>2.编译器对“+”的优化</h2><p>​    当**”+”两端均为编译期确定的字符串常量**时，编译器会进行相应的优化，直接将两个字符串常量拼接好，例如：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">System.out.println(<span class="string">&quot;Hello&quot;</span> + <span class="string">&quot;World&quot;</span>);</span><br><span class="line"><span class="comment">//编译器优化之后</span></span><br><span class="line">System.out.println(<span class="string">&quot;HelloWorld&quot;</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">String s1 =<span class="string">&quot;A&quot;</span> + <span class="string">&quot;B&quot;</span>;</span><br><span class="line">String s2 =<span class="string">&quot;AB&quot;</span>;</span><br><span class="line">System.out.println(s1 == s2);<span class="comment">//ture</span></span><br></pre></td></tr></table></figure>
-
-<p>​    除了常量字符串外，还有一种也情况是为编译期确定的字符串常量，就是有<code>final</code>修饰的<code>String变量</code>。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String s1 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line">String s2 = <span class="string">&quot;B&quot;</span>;</span><br><span class="line"><span class="comment">//此时s1，s2不是编译期间确定的字符串常量，依然通过StringBuilde的方式连接字符串</span></span><br><span class="line">String s3 = s1 + s2;</span><br><span class="line">System.out.println(s3 == <span class="string">&quot;AB&quot;</span>);<span class="comment">//false</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">final</span> String s1 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line"><span class="keyword">final</span> String s2 = <span class="string">&quot;B&quot;</span>;</span><br><span class="line">String s3 = s1 + s2;<span class="comment">//此时s1，s2在编译期间就确定为字符串常量</span></span><br><span class="line"><span class="comment">//等价于 String = “A” + “B”，String s2 =&quot;AB&quot;;</span></span><br><span class="line">System.out.println(s3 == <span class="string">&quot;AB&quot;</span>);<span class="comment">//ture</span></span><br></pre></td></tr></table></figure>
-
-<p>​    但也不是只要<code>final</code>修饰的<code>String变量</code>就一定是常量。例如下面这种情况。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">    <span class="keyword">final</span> String s1 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line">    <span class="keyword">final</span> String s2 = getS1();</span><br><span class="line">    String s3 = s1 + s2;</span><br><span class="line">    System.out.println(s3 == <span class="string">&quot;AB&quot;</span>);<span class="comment">//false</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">static</span> String <span class="title">getS1</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;B&quot;</span> ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-手动优化"><a href="#3-手动优化" class="headerlink" title="3.手动优化"></a>3.手动优化</h2><p>​    由于每次拼接非确定字符串时都需要隐式创建一个<code>StringBuilder对象</code>，如果存在需要<strong>大量循环拼接</strong>的情况则会在堆中创建大量的<code>StringBuilder对象</code>。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String s = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;<span class="number">10000</span>; i++) &#123;</span><br><span class="line">    s += <span class="string">&quot;abc&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>​    这种情况建议直接创建一个StringBuilder对象再使用append()方法手动拼接，最后再转为字符串，这样可以提高效率节省内存。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">StringBuilder sb = <span class="keyword">new</span> StringBuilder(<span class="string">&quot;abc&quot;</span>);</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10000</span>; i++) &#123;</span><br><span class="line">    sb.append(<span class="string">&quot;abc&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line">sb.toString();</span><br></pre></td></tr></table></figure>
-
-<h1 id="可变字符序列"><a href="#可变字符序列" class="headerlink" title="可变字符序列"></a>可变字符序列</h1><p>​    除了不可变的<code>String类</code>，java中还提供了可变字符序列的两个类：<code>StringBuilder类</code>和<code>StringBuffer类</code>。除了是否可变外这三个类的主要差别在运算性能和线程安全性上。</p>
-<h2 id="1-运算速度比较"><a href="#1-运算速度比较" class="headerlink" title="1.运算速度比较"></a>1.运算速度比较</h2><p>​    通常情况下：<code>StringBuilder</code> &gt;<code>StringBuffer</code>&gt;<code> String</code></p>
-<p>​    <code>String</code>是<code>final类</code>不能被继承且为字符串<strong>常量</strong>，而<code>StringBuilder</code>和<code>StringBuffer</code>均为字符串<strong>变量</strong>。<code>String</code>对象一旦创建便<strong>不可更改</strong>，而后两者是<strong>可更改的</strong>，它们只能通过构造函数来建立对象，且对象被建立以后将在内存中分配内存空间，并初始保存一个null，通过append方法向StringBuffer和StringBuilder中赋值。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line">System.out.println(str);</span><br><span class="line">str = str + <span class="string">&quot;de&quot;</span>;</span><br><span class="line">System.out.println(str);</span><br></pre></td></tr></table></figure>
-
-<p>​    上述代码先创建一个<code>String</code>对象str，并赋值abc给str，然后运行到第三行，JVM会再创建一个新的str对象，并将原有str的值和de加起来再赋值给新的str。而第一个创建的str对象被JVM的垃圾回收机制（GC）回收掉。所以str实际上并没有被更改，即<code>String</code>对象一旦创建就不可更改。所以Java中对<code>String</code>对象进行的操作实际上是一个<strong>不断创建并回收对象的过程</strong>，因此在运行速度上很慢。</p>
-<p>​    而<code>StringBuilder</code>比<code>StringBuffer</code>更快的源于没有了线程锁的损耗。</p>
-<h2 id="2-线程安全性"><a href="#2-线程安全性" class="headerlink" title="2.线程安全性"></a>2.线程安全性</h2><p>​    <code>StringBuffer</code>（线程安全的）</p>
-<p>​    <code>StringBuffer</code>中大部分方法由<code>synchronized</code>关键字修饰，在必要时可对方法进行同步，因此任意特定实例上的所有操作就好像是以串行顺序发生的，该顺序与所涉及的每个线程进行的方法调用顺序一致，所以是<strong>线程安全</strong>的。</p>
-<p>​    <code>StringBuilder</code>（非线程安全）</p>
-<p>​    该类在<code>JDK1.5</code>时新增提供一个与StringBuffer兼容的 API，但不能保证同步，所以在性能上较高。因此，在大多数情况下优先使用StringBuilder</p>
-<h2 id="3-总结"><a href="#3-总结" class="headerlink" title="3.总结"></a>3.总结</h2><p><code>String</code>：适用于少量的字符串操作。</p>
-<p><code>StringBuilder</code>：适用于单线程下在字符串缓冲区进行大量操作。</p>
-<p><code>StringBuffer</code>：适用于多线程下在字符串缓冲区进行大量操作。</p>
-]]></content>
-      <categories>
-        <category>Java</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>Java基础</tag>
-        <tag>字符串</tag>
-        <tag>String</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Java基础之多线程</title>
     <url>/2020/08/10/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%A4%9A%E7%BA%BF%E7%A8%8B/</url>
     <content><![CDATA[<h1 id="相关的概念"><a href="#相关的概念" class="headerlink" title="相关的概念"></a>相关的概念</h1><ol>
@@ -390,6 +298,98 @@
         <tag>Java</tag>
         <tag>Java基础</tag>
         <tag>多线程</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java基础之字符串</title>
+    <url>/2020/08/09/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%AD%97%E7%AC%A6%E4%B8%B2/</url>
+    <content><![CDATA[<h1 id="字符串的特点"><a href="#字符串的特点" class="headerlink" title="字符串的特点"></a>字符串的特点</h1><p>​        <strong><em>以下说明及演示基于JDK1.8版本</em></strong></p>
+<ol>
+<li>字符串String类型本身是final声明的，字符串的对象也是不可变对象，意味着一旦进行修改，就会产生新对象。</li>
+<li>String对象内部是用数组进行保存的，在<strong>JDK1.9之前</strong>用的是字符数组<code>char[]</code>，<strong>JDK1.9之后</strong>使用的是字节数组<code>byte[]</code>。</li>
+</ol>
+<a id="more"></a>
+
+<ol start="3">
+<li>String类中这个<code>values</code>数组,同时由<code>final</code>和<code>private</code>修饰，意味着这个数组<strong>不可变并且不能通过外部进行操作</strong>，String类型提供的所有的方法都是用新对象来表示修改后内容的，所以<strong>保证了String对象的不可变</strong>。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//JDK1.8中String类的部分源码</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">String</span></span></span><br><span class="line"><span class="class">    <span class="keyword">implements</span> <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span>, <span class="title">Comparable</span>&lt;<span class="title">String</span>&gt;, <span class="title">CharSequence</span> </span>&#123;</span><br><span class="line">    <span class="comment">//使用char数组进行存储。</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">char</span> value[];</span><br><span class="line"></span><br><span class="line">    <span class="comment">//JDK1.8中只有char数组与哈希值，其他版本可能有所不同。</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> hash; <span class="comment">// Default to 0</span></span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>由于字符串对象设计为不可变，那么所以有<strong>字符串常量池</strong>来保存很多常量对象，<strong>JDK1.6以及之前</strong>，常量池设计在<strong>方法区</strong>当中。但由于字符串所占空间比较大，所以<strong>JDk1.7时</strong>将常量池移到了<strong>堆</strong>当中，<strong>JDk1.8</strong>后取消了<strong>方法区</strong>取而代之的是<strong>元空间</strong>，字符串常量池也在<strong>元空间</strong>当中。</li>
+</ol>
+<h1 id="字符串的比较"><a href="#字符串的比较" class="headerlink" title="字符串的比较"></a>字符串的比较</h1><h2 id="1"><a href="#1" class="headerlink" title="1.=="></a>1.==</h2><p>​    <code>==</code>用来比较对象的地址值，因为字符串特殊的存储方式，导致地址比较情况比较多。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str1 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line">String str2 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line">String str3 = <span class="keyword">new</span> String(<span class="string">&quot;A&quot;</span>);</span><br><span class="line">String str4 = <span class="keyword">new</span> String(<span class="string">&quot;A&quot;</span>).intern();</span><br><span class="line">System.out.println(str1 == str2);<span class="comment">//true</span></span><br><span class="line">System.out.println(str1 == str3);<span class="comment">//false</span></span><br><span class="line">System.out.println(str1 == str4);<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<p>​    <strong>内存示意图：</strong></p>
+<p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%AD%97%E7%AC%A6%E4%B8%B2/%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%86%85%E5%AD%98%E5%9B%BE.png" alt="字符串内存图"></p>
+<h2 id="2-equals"><a href="#2-equals" class="headerlink" title="2.equals()"></a>2.equals()</h2><p>​    <strong>用于比较对象的内容是否相同</strong>，因为String类型重写equals，区分大小写只要两个字符串的字符内容相同，就会返回true。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str1 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line">String str2 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line">String str3 = <span class="keyword">new</span> String(<span class="string">&quot;A&quot;</span>);</span><br><span class="line">System.out.println(str1.equals(str2));<span class="comment">//true</span></span><br><span class="line">System.out.println(str1.equals(str3));<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<p>查看一下String类中的<code>equals()</code>源码。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object anObject)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//判断是否指向同一个对象，如果是内容一定相同，返回ture</span></span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">this</span> == anObject) &#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    <span class="comment">//若传入参数不为String类则直接返回false</span></span><br><span class="line">      <span class="keyword">if</span> (anObject <span class="keyword">instanceof</span> String) &#123;</span><br><span class="line">          String anotherString = (String)anObject;</span><br><span class="line">          <span class="keyword">int</span> n = value.length;</span><br><span class="line">          <span class="comment">//判断字符串长度是否相等，不相等则一定不相同，返回false</span></span><br><span class="line">          <span class="keyword">if</span> (n == anotherString.value.length) &#123;</span><br><span class="line">              <span class="keyword">char</span> v1[] = value;</span><br><span class="line">              <span class="keyword">char</span> v2[] = anotherString.value;</span><br><span class="line">              <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">              <span class="comment">//逐个比较字符是否相等</span></span><br><span class="line">              <span class="keyword">while</span> (n-- != <span class="number">0</span>) &#123;</span><br><span class="line">                  <span class="keyword">if</span> (v1[i] != v2[i])</span><br><span class="line">                      <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">                  i++;</span><br><span class="line">              &#125;</span><br><span class="line">              <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>了避免空指针异常，若是与已知字符串做比较用已知字符串来调用方法。</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="string">&quot;已知字符串&quot;</span>.equals（）</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="3-equalsIgnoreCase"><a href="#3-equalsIgnoreCase" class="headerlink" title="3.equalsIgnoreCase()"></a>3.equalsIgnoreCase()</h2><p>​    <strong>用于不区分大小写的比较字符串内容</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">System.out.println(<span class="string">&quot;A&quot;</span>.equalsIgnoreCase(<span class="string">&quot;a&quot;</span>));<span class="comment">//ture</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="4-compareTo"><a href="#4-compareTo" class="headerlink" title="4.compareTo()"></a>4.compareTo()</h2><p>​    <strong>用于按照字符的Unicode编码值进行排序</strong>,String类型重写了<code>Comparable接口</code>的抽象方法。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">System.out.println(<span class="string">&quot;A&quot;</span>.compareTo(<span class="string">&quot;a&quot;</span>));<span class="comment">//-32</span></span><br><span class="line">System.out.println(<span class="string">&quot;AB&quot;</span>.compareTo(<span class="string">&quot;A&quot;</span>));<span class="comment">//1</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>源码如下:</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//String类中的compareTo方法</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compareTo</span><span class="params">(String anotherString)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> len1 = value.length;</span><br><span class="line">        <span class="keyword">int</span> len2 = anotherString.value.length;</span><br><span class="line">        <span class="keyword">int</span> lim = Math.min(len1, len2);</span><br><span class="line">        <span class="keyword">char</span> v1[] = value;</span><br><span class="line">        <span class="keyword">char</span> v2[] = anotherString.value;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> k = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (k &lt; lim) &#123;</span><br><span class="line">            <span class="keyword">char</span> c1 = v1[k];</span><br><span class="line">            <span class="keyword">char</span> c2 = v2[k];</span><br><span class="line">            <span class="keyword">if</span> (c1 != c2) &#123;</span><br><span class="line">                <span class="keyword">return</span> c1 - c2;</span><br><span class="line">            &#125;<span class="comment">//返回char的差值，说明按照Unicode编码值进行排序</span></span><br><span class="line">            k++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> len1 - len2;<span class="comment">//若一方为另一方的子字符串，则判定为较小的一方</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-compareToIgnoreCase"><a href="#5-compareToIgnoreCase" class="headerlink" title="5.compareToIgnoreCase()"></a>5.compareToIgnoreCase()</h2><p>​    <strong>用于不区分大小的情况下按照字符的Unicode编码值进行排序</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">System.out.println(<span class="string">&quot;A&quot;</span>.compareToIgnoreCase(<span class="string">&quot;a&quot;</span>));<span class="comment">//0</span></span><br><span class="line">System.out.println(<span class="string">&quot;AB&quot;</span>.compareToIgnoreCase(<span class="string">&quot;Ab&quot;</span>));<span class="comment">//0</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="字符串的拼接"><a href="#字符串的拼接" class="headerlink" title="字符串的拼接"></a>字符串的拼接</h1><h2 id="1-“-”连接符的实现"><a href="#1-“-”连接符的实现" class="headerlink" title="1.“+”连接符的实现"></a>1.“+”连接符的实现</h2><p>​    <strong>引入一段对API中String类的描述</strong></p>
+<blockquote>
+<p>Java 语言提供对字符串串联符号（”+”）以及将其他对象转换为字符串的特殊支持。字符串串联是通过 <code>StringBuilder</code>（或  <code>StringBuffer</code>）类及其 <code>append</code> 方法实现的。字符串转换是通过  <code>toString</code> 方法实现的，该方法由 <code>Object</code> 类定义，并可被 Java 中的所有类继承。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String s1 = <span class="keyword">new</span> String(<span class="string">&quot;A&quot;</span>);</span><br><span class="line">String s2 = <span class="keyword">new</span> String(<span class="string">&quot;B&quot;</span>);</span><br><span class="line">String s3 = s1 + s2;<span class="comment">//第三行的代码等价于第四行</span></span><br><span class="line">String s3 = (<span class="keyword">new</span> StringBuilder()).append(s1).append(s2).toString();</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-编译器对“-”的优化"><a href="#2-编译器对“-”的优化" class="headerlink" title="2.编译器对“+”的优化"></a>2.编译器对“+”的优化</h2><p>​    当**”+”两端均为编译期确定的字符串常量**时，编译器会进行相应的优化，直接将两个字符串常量拼接好，例如：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">System.out.println(<span class="string">&quot;Hello&quot;</span> + <span class="string">&quot;World&quot;</span>);</span><br><span class="line"><span class="comment">//编译器优化之后</span></span><br><span class="line">System.out.println(<span class="string">&quot;HelloWorld&quot;</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">String s1 =<span class="string">&quot;A&quot;</span> + <span class="string">&quot;B&quot;</span>;</span><br><span class="line">String s2 =<span class="string">&quot;AB&quot;</span>;</span><br><span class="line">System.out.println(s1 == s2);<span class="comment">//ture</span></span><br></pre></td></tr></table></figure>
+
+<p>​    除了常量字符串外，还有一种也情况是为编译期确定的字符串常量，就是有<code>final</code>修饰的<code>String变量</code>。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String s1 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line">String s2 = <span class="string">&quot;B&quot;</span>;</span><br><span class="line"><span class="comment">//此时s1，s2不是编译期间确定的字符串常量，依然通过StringBuilde的方式连接字符串</span></span><br><span class="line">String s3 = s1 + s2;</span><br><span class="line">System.out.println(s3 == <span class="string">&quot;AB&quot;</span>);<span class="comment">//false</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">final</span> String s1 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line"><span class="keyword">final</span> String s2 = <span class="string">&quot;B&quot;</span>;</span><br><span class="line">String s3 = s1 + s2;<span class="comment">//此时s1，s2在编译期间就确定为字符串常量</span></span><br><span class="line"><span class="comment">//等价于 String = “A” + “B”，String s2 =&quot;AB&quot;;</span></span><br><span class="line">System.out.println(s3 == <span class="string">&quot;AB&quot;</span>);<span class="comment">//ture</span></span><br></pre></td></tr></table></figure>
+
+<p>​    但也不是只要<code>final</code>修饰的<code>String变量</code>就一定是常量。例如下面这种情况。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">    <span class="keyword">final</span> String s1 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line">    <span class="keyword">final</span> String s2 = getS1();</span><br><span class="line">    String s3 = s1 + s2;</span><br><span class="line">    System.out.println(s3 == <span class="string">&quot;AB&quot;</span>);<span class="comment">//false</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">static</span> String <span class="title">getS1</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;B&quot;</span> ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-手动优化"><a href="#3-手动优化" class="headerlink" title="3.手动优化"></a>3.手动优化</h2><p>​    由于每次拼接非确定字符串时都需要隐式创建一个<code>StringBuilder对象</code>，如果存在需要<strong>大量循环拼接</strong>的情况则会在堆中创建大量的<code>StringBuilder对象</code>。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String s = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;<span class="number">10000</span>; i++) &#123;</span><br><span class="line">    s += <span class="string">&quot;abc&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    这种情况建议直接创建一个StringBuilder对象再使用append()方法手动拼接，最后再转为字符串，这样可以提高效率节省内存。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">StringBuilder sb = <span class="keyword">new</span> StringBuilder(<span class="string">&quot;abc&quot;</span>);</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10000</span>; i++) &#123;</span><br><span class="line">    sb.append(<span class="string">&quot;abc&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line">sb.toString();</span><br></pre></td></tr></table></figure>
+
+<h1 id="可变字符序列"><a href="#可变字符序列" class="headerlink" title="可变字符序列"></a>可变字符序列</h1><p>​    除了不可变的<code>String类</code>，java中还提供了可变字符序列的两个类：<code>StringBuilder类</code>和<code>StringBuffer类</code>。除了是否可变外这三个类的主要差别在运算性能和线程安全性上。</p>
+<h2 id="1-运算速度比较"><a href="#1-运算速度比较" class="headerlink" title="1.运算速度比较"></a>1.运算速度比较</h2><p>​    通常情况下：<code>StringBuilder</code> &gt;<code>StringBuffer</code>&gt;<code> String</code></p>
+<p>​    <code>String</code>是<code>final类</code>不能被继承且为字符串<strong>常量</strong>，而<code>StringBuilder</code>和<code>StringBuffer</code>均为字符串<strong>变量</strong>。<code>String</code>对象一旦创建便<strong>不可更改</strong>，而后两者是<strong>可更改的</strong>，它们只能通过构造函数来建立对象，且对象被建立以后将在内存中分配内存空间，并初始保存一个null，通过append方法向StringBuffer和StringBuilder中赋值。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line">System.out.println(str);</span><br><span class="line">str = str + <span class="string">&quot;de&quot;</span>;</span><br><span class="line">System.out.println(str);</span><br></pre></td></tr></table></figure>
+
+<p>​    上述代码先创建一个<code>String</code>对象str，并赋值abc给str，然后运行到第三行，JVM会再创建一个新的str对象，并将原有str的值和de加起来再赋值给新的str。而第一个创建的str对象被JVM的垃圾回收机制（GC）回收掉。所以str实际上并没有被更改，即<code>String</code>对象一旦创建就不可更改。所以Java中对<code>String</code>对象进行的操作实际上是一个<strong>不断创建并回收对象的过程</strong>，因此在运行速度上很慢。</p>
+<p>​    而<code>StringBuilder</code>比<code>StringBuffer</code>更快的源于没有了线程锁的损耗。</p>
+<h2 id="2-线程安全性"><a href="#2-线程安全性" class="headerlink" title="2.线程安全性"></a>2.线程安全性</h2><p>​    <code>StringBuffer</code>（线程安全的）</p>
+<p>​    <code>StringBuffer</code>中大部分方法由<code>synchronized</code>关键字修饰，在必要时可对方法进行同步，因此任意特定实例上的所有操作就好像是以串行顺序发生的，该顺序与所涉及的每个线程进行的方法调用顺序一致，所以是<strong>线程安全</strong>的。</p>
+<p>​    <code>StringBuilder</code>（非线程安全）</p>
+<p>​    该类在<code>JDK1.5</code>时新增提供一个与StringBuffer兼容的 API，但不能保证同步，所以在性能上较高。因此，在大多数情况下优先使用StringBuilder</p>
+<h2 id="3-总结"><a href="#3-总结" class="headerlink" title="3.总结"></a>3.总结</h2><p><code>String</code>：适用于少量的字符串操作。</p>
+<p><code>StringBuilder</code>：适用于单线程下在字符串缓冲区进行大量操作。</p>
+<p><code>StringBuffer</code>：适用于多线程下在字符串缓冲区进行大量操作。</p>
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>Java基础</tag>
+        <tag>字符串</tag>
+        <tag>String</tag>
       </tags>
   </entry>
   <entry>
@@ -1096,221 +1096,6 @@
       </tags>
   </entry>
   <entry>
-    <title>markdown常用语法</title>
-    <url>/2020/08/05/markdown%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95/</url>
-    <content><![CDATA[<h1 id="markdown常用语法"><a href="#markdown常用语法" class="headerlink" title="markdown常用语法"></a>markdown常用语法</h1><p>​    工欲善其事必先利其器，markdown作为最适合程序员的文本编辑格式，是写技术博客不可或缺的一环，花了一天时间学习了相关的语法，总结分享作为新博客的第一篇文章。</p>
-<a id="more"></a>
-
-<h2 id="文本格式"><a href="#文本格式" class="headerlink" title="文本格式"></a>文本格式</h2><h3 id="0-标题"><a href="#0-标题" class="headerlink" title="0.标题"></a>0.标题</h3><p>​    标题格式：<strong># + 空格 + 标题内容</strong>，几个’#就代表几级标题。</p>
-<h3 id="1-字体"><a href="#1-字体" class="headerlink" title="1.字体"></a>1.字体</h3><p>​        字体格式：<strong>*文本内容* 或  _文本内容_</strong> ，一个符号为<em>斜体文本</em>，两个符号为<strong>粗体文本</strong>，三个符号为**<em>粗斜体文本**</em>。</p>
-<table>
-<thead>
-<tr>
-<th align="center">输入内容</th>
-<th align="center">效果</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">*斜体文本* 或  _斜体文本_</td>
-<td align="center"><em>斜体文本</em></td>
-</tr>
-<tr>
-<td align="center">**粗体文本** 或 __粗体文本__</td>
-<td align="center"><strong>粗体文本</strong></td>
-</tr>
-<tr>
-<td align="center">***粗斜体文本*** 或 ___粗斜体文本___</td>
-<td align="center"><strong><em>粗斜体文本</em></strong></td>
-</tr>
-</tbody></table>
-<h3 id="2-删除线"><a href="#2-删除线" class="headerlink" title="2.删除线"></a>2.删除线</h3><p>​        删除线格式：<strong>~~删除线文本~~</strong></p>
-<table>
-<thead>
-<tr>
-<th align="center">输入内容</th>
-<th align="center">效果</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">普通文本</td>
-<td align="center">普通文本</td>
-</tr>
-<tr>
-<td align="center">~~删除线文本~~</td>
-<td align="center"><del>删除线文本</del></td>
-</tr>
-</tbody></table>
-<h3 id="3-下划线"><a href="#3-下划线" class="headerlink" title="3.下划线"></a>3.下划线</h3><p>​        下划线格式：<strong>&lt;u&gt;带下划线的文本&lt;/u&gt;</strong></p>
-<table>
-<thead>
-<tr>
-<th align="center">输入内容</th>
-<th align="center">效果</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">普通文本</td>
-<td align="center">普通文本</td>
-</tr>
-<tr>
-<td align="center">&lt;u&gt;带下划线的文本&lt;/u&gt;</td>
-<td align="center"><u>带下划线的文本</u></td>
-</tr>
-</tbody></table>
-<h3 id="4-脚注"><a href="#4-脚注" class="headerlink" title="4.脚注"></a>4.脚注</h3><p>​    <strong>使用脚注</strong>：文本内容[^脚注名称]，<strong>解释脚注：</strong>[^脚注名称]:脚注内容。</p>
-<p>​    <strong>效果</strong>：文本内容<a href="%E8%BF%99%E6%98%AF%E4%B8%80%E4%B8%AA%E8%84%9A%E6%B3%A8">^脚注</a></p>
-<h3 id="5-分割线"><a href="#5-分割线" class="headerlink" title="5.分割线"></a>5.分割线</h3><p>​    使用三个或以上 * 或 - 来使用下划线，可以在符号中加空格（可能会在编写软件中识别为其他符号，<strong>不建议使用</strong>），且本行中不可有其他内容。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">几种分割线示意：</span><br><span class="line">***</span><br><span class="line"></span><br><span class="line">* * *</span><br><span class="line"></span><br><span class="line">*****</span><br><span class="line"></span><br><span class="line">- - -</span><br><span class="line"></span><br><span class="line">----------</span><br></pre></td></tr></table></figure>
-
-<p>分割线效果：</p>
-<hr>
-<p><strong>错误示范</strong>：***其他内容（未出现分割线效果）</p>
-<h2 id="列表与区块"><a href="#列表与区块" class="headerlink" title="列表与区块"></a>列表与区块</h2><h3 id="1-无序列表"><a href="#1-无序列表" class="headerlink" title="1.无序列表"></a>1.无序列表</h3><p>​    无序列表格式：<strong>* 或 + 或 - 加上一个空格后面再加上内容</strong>，三个符号效果相同。</p>
-<p><strong>输入</strong>：</p>
-<p>​    * 无序第一列</p>
-<p>​    + 无序第二列</p>
-<p>​    -  无序第三列</p>
-<p><strong>效果</strong>：</p>
-<pre><code>    * 无序第一列</code></pre>
-<ul>
-<li>无序第二列</li>
-</ul>
-<ul>
-<li>无序第三列</li>
-</ul>
-<h3 id="2-有序列表"><a href="#2-有序列表" class="headerlink" title="2.有序列表"></a>2.有序列表</h3><p>​    有序列表格式：<strong>数字+ . + 空格 + 内容</strong>，即将无序列表的符号替换为数字加点的格式（例如1.）。</p>
-<p><strong>输入</strong>：</p>
-<p>​    1. 有序第一列</p>
-<p>​    2. 有序第二列</p>
-<p>​    3. 有序第三列</p>
-<p><strong>效果</strong>:</p>
-<ol>
-<li>有序第一列</li>
-<li>有序第二列</li>
-<li>有序第三列</li>
-</ol>
-<h3 id="3-列表嵌套"><a href="#3-列表嵌套" class="headerlink" title="3.列表嵌套"></a>3.列表嵌套</h3><p>​    在语法中为在<strong>子列表前添加四个空格</strong>，不过一般都在编写软件上编写<strong>更推荐使用TAB（缩进）与SHIFT+TAB（反缩进）</strong></p>
-<p>​    <strong>输入</strong>：</p>
-<p>​    1. 第一项：</p>
-<p>​        * 第一项嵌套的第一个元素</p>
-<p>​        * 第一项嵌套的第二个元素</p>
-<p>​    2. 第二项：</p>
-<p>​        * 第二项嵌套的第一个元素</p>
-<p>​        * 第二项嵌套的第二个元素</p>
-<p><strong>效果</strong>:</p>
-<ol>
-<li>第一项：<ul>
-<li>第一项嵌套的第一个元素</li>
-<li>第一项嵌套的第二个元素</li>
-</ul>
-</li>
-<li>第二项：<pre><code>* 第二项嵌套的第一个元素
-   * 第二项嵌套的第二个元素</code></pre>
-</li>
-</ol>
-<h3 id="4-区块"><a href="#4-区块" class="headerlink" title="4.区块"></a>4.区块</h3><p>​    区块格式：<strong>在每行前加上 &gt; 然后紧跟一个空格。</strong></p>
-<p><strong>输入：</strong></p>
-<p>&gt; 区块引用第一行</p>
-<p>&gt; 区块引用第二行</p>
-<p><strong>效果：</strong></p>
-<blockquote>
-<p>区块引用第一行</p>
-<p>区块引用第二行</p>
-</blockquote>
-<h3 id="5-区块嵌套"><a href="#5-区块嵌套" class="headerlink" title="5.区块嵌套"></a>5.区块嵌套</h3><p>​    区块嵌套格式：<strong>每有一个 &gt; 号就表示一层嵌套</strong></p>
-<p><strong>输入：</strong></p>
-<p>&gt; 最外层</p>
-<p>&gt;&gt; 第一层嵌套</p>
-<p>&gt;&gt;&gt; 第二层嵌套</p>
-<p>**效果: **</p>
-<blockquote>
-<p>最外层</p>
-<blockquote>
-<p>第一层嵌套</p>
-<blockquote>
-<p>第二层嵌套</p>
-</blockquote>
-</blockquote>
-</blockquote>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><h3 id="1-代码片段"><a href="#1-代码片段" class="headerlink" title="1.代码片段"></a>1.代码片段</h3><p>​    代码片段格式：**` 代码内容 ` **(反引号)</p>
-<p>​    <strong>输入：</strong> ` int a ;`         <strong>效果：</strong> <code>int a;</code></p>
-<h3 id="2-代码区块"><a href="#2-代码区块" class="headerlink" title="2.代码区块"></a>2.代码区块</h3><p>​    格式：用 <strong>```</strong> 包裹一段代码，并指定一种语言（也可以不指定）：</p>
-<p><strong>输入：</strong></p>
-<p>​    ``` java</p>
-<p>public class Test {<br>    public static void main(String[] args) {<br>        System.out.println(“Hello World”);<br>    }<br>}</p>
-<p>​    ```</p>
-<p><strong>效果：</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Hello World&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h2><h3 id="1-直接显示链接"><a href="#1-直接显示链接" class="headerlink" title="1.直接显示链接"></a>1.直接显示链接</h3><p>​    语法格式: <strong>&lt; 链接 &gt; **    **效果:</strong> <a href="https://www.baidu.com/">https://www.baidu.com/</a></p>
-<h3 id="2-用名称替代链接"><a href="#2-用名称替代链接" class="headerlink" title="2.用名称替代链接"></a>2.用名称替代链接</h3><p>​    语法格式：**[链接名称](链接地址)  **效果：这是我的<a href="https://ykailh.github.io/">博客</a></p>
-<h3 id="3-用名称和变量替代链接"><a href="#3-用名称和变量替代链接" class="headerlink" title="3.用名称和变量替代链接"></a>3.用名称和变量替代链接</h3><p>​    语法格式：<strong>[链接名称][变量名称]，[变量名称]</strong>: 链接。变量定义类似于脚注，效果与用名称替代类似，但方便多次使用。</p>
-<p>效果：这是一个<a href="https://www.baidu.com/">百度链接</a>，再次使用<a href="https://www.baidu.com/">百度链接</a>。</p>
-<h2 id="表格"><a href="#表格" class="headerlink" title="表格"></a>表格</h2><p>​    <strong>用 | 来分隔单元格，- 来分隔表头。</strong></p>
-<p><strong>输入：</strong></p>
-<p>| 表头 | 表头 |</p>
-<p>|  —-  |  —-  |</p>
-<p>| 单元格 | 单元格 |</p>
-<p>| 单元格 | 单元格 |</p>
-<p><strong>效果：</strong></p>
-<table>
-<thead>
-<tr>
-<th>表头</th>
-<th>表头</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>单元格</td>
-<td>单元格</td>
-</tr>
-<tr>
-<td>单元格</td>
-<td>单元格</td>
-</tr>
-</tbody></table>
-<p><strong>默认为左对齐</strong></p>
-<hr>
-<p>将分隔符替换为<strong>-: , :-  , :-:</strong> 分别表示右对齐，左对齐，居中对齐。</p>
-<p><strong>输入：</strong></p>
-<p>| 左对齐 | 右对齐 | 居中对齐 |</p>
-<p>|  :—-  |  —-:  | :—-: |</p>
-<p>| 单元格 | 单元格 | 单元格 |</p>
-<p>| 单元格 | 单元格 | 单元格 |</p>
-<p><strong>效果</strong>：</p>
-<table>
-<thead>
-<tr>
-<th align="left">左对齐</th>
-<th align="right">右对齐</th>
-<th align="center">居中对齐</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">单元格</td>
-<td align="right">单元格</td>
-<td align="center">单元格</td>
-</tr>
-<tr>
-<td align="left">单元格</td>
-<td align="right">单元格</td>
-<td align="center">单元格</td>
-</tr>
-</tbody></table>
-<h2 id="图片"><a href="#图片" class="headerlink" title="图片"></a>图片</h2><p>​    图片插入格式：![图片名](图片相对路径/绝对路径/图片链接)；</p>
-<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><p>​    编写md文件时建议使用专用的编辑器，一般都支持自动补全和实时预览，可以提高编写的效率。博主正在用的也是许多人推荐的Typora,也推荐给大家。<a href="https://www.typora.io/">Typora官网</a></p>
-<hr>
-]]></content>
-      <categories>
-        <category>常用软件</category>
-      </categories>
-      <tags>
-        <tag>markdown</tag>
-        <tag>Typora</tag>
-        <tag>常用软件</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>MySQL基础之运算符</title>
     <url>/2020/08/19/MySQL%E5%9F%BA%E7%A1%80%E4%B9%8B%E8%BF%90%E7%AE%97%E7%AC%A6/</url>
     <content><![CDATA[<h1 id="MySQL运算符"><a href="#MySQL运算符" class="headerlink" title="MySQL运算符"></a>MySQL运算符</h1><p>​    MySQL的运算符分为<strong>算术运算符</strong>、<strong>比较运算符</strong>、<strong>逻辑运算符</strong>、<strong>位运算符</strong>四个类型。</p>
@@ -1525,6 +1310,235 @@
         <tag>SQL</tag>
         <tag>MySQL</tag>
         <tag>MySQL基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Web基础之HTML</title>
+    <url>/2020/09/01/Web%E5%9F%BA%E7%A1%80%E4%B9%8BHTML/</url>
+    <content><![CDATA[<p>​    Web基础系列主要对Java开发中Web相关的内容(如HTML、CSS、JavaScript等)进行最基本的讲解，本系列其他文章请参考<a href="">Web基础</a></p>
+]]></content>
+      <categories>
+        <category>Web</category>
+      </categories>
+      <tags>
+        <tag>Web</tag>
+        <tag>Web基础</tag>
+        <tag>HTML</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>markdown常用语法</title>
+    <url>/2020/08/05/markdown%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95/</url>
+    <content><![CDATA[<h1 id="markdown常用语法"><a href="#markdown常用语法" class="headerlink" title="markdown常用语法"></a>markdown常用语法</h1><p>​    工欲善其事必先利其器，markdown作为最适合程序员的文本编辑格式，是写技术博客不可或缺的一环，花了一天时间学习了相关的语法，总结分享作为新博客的第一篇文章。</p>
+<a id="more"></a>
+
+<h2 id="文本格式"><a href="#文本格式" class="headerlink" title="文本格式"></a>文本格式</h2><h3 id="0-标题"><a href="#0-标题" class="headerlink" title="0.标题"></a>0.标题</h3><p>​    标题格式：<strong># + 空格 + 标题内容</strong>，几个’#就代表几级标题。</p>
+<h3 id="1-字体"><a href="#1-字体" class="headerlink" title="1.字体"></a>1.字体</h3><p>​        字体格式：<strong>*文本内容* 或  _文本内容_</strong> ，一个符号为<em>斜体文本</em>，两个符号为<strong>粗体文本</strong>，三个符号为**<em>粗斜体文本**</em>。</p>
+<table>
+<thead>
+<tr>
+<th align="center">输入内容</th>
+<th align="center">效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">*斜体文本* 或  _斜体文本_</td>
+<td align="center"><em>斜体文本</em></td>
+</tr>
+<tr>
+<td align="center">**粗体文本** 或 __粗体文本__</td>
+<td align="center"><strong>粗体文本</strong></td>
+</tr>
+<tr>
+<td align="center">***粗斜体文本*** 或 ___粗斜体文本___</td>
+<td align="center"><strong><em>粗斜体文本</em></strong></td>
+</tr>
+</tbody></table>
+<h3 id="2-删除线"><a href="#2-删除线" class="headerlink" title="2.删除线"></a>2.删除线</h3><p>​        删除线格式：<strong>~~删除线文本~~</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">输入内容</th>
+<th align="center">效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">普通文本</td>
+<td align="center">普通文本</td>
+</tr>
+<tr>
+<td align="center">~~删除线文本~~</td>
+<td align="center"><del>删除线文本</del></td>
+</tr>
+</tbody></table>
+<h3 id="3-下划线"><a href="#3-下划线" class="headerlink" title="3.下划线"></a>3.下划线</h3><p>​        下划线格式：<strong>&lt;u&gt;带下划线的文本&lt;/u&gt;</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">输入内容</th>
+<th align="center">效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">普通文本</td>
+<td align="center">普通文本</td>
+</tr>
+<tr>
+<td align="center">&lt;u&gt;带下划线的文本&lt;/u&gt;</td>
+<td align="center"><u>带下划线的文本</u></td>
+</tr>
+</tbody></table>
+<h3 id="4-脚注"><a href="#4-脚注" class="headerlink" title="4.脚注"></a>4.脚注</h3><p>​    <strong>使用脚注</strong>：文本内容[^脚注名称]，<strong>解释脚注：</strong>[^脚注名称]:脚注内容。</p>
+<p>​    <strong>效果</strong>：文本内容<a href="%E8%BF%99%E6%98%AF%E4%B8%80%E4%B8%AA%E8%84%9A%E6%B3%A8">^脚注</a></p>
+<h3 id="5-分割线"><a href="#5-分割线" class="headerlink" title="5.分割线"></a>5.分割线</h3><p>​    使用三个或以上 * 或 - 来使用下划线，可以在符号中加空格（可能会在编写软件中识别为其他符号，<strong>不建议使用</strong>），且本行中不可有其他内容。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">几种分割线示意：</span><br><span class="line">***</span><br><span class="line"></span><br><span class="line">* * *</span><br><span class="line"></span><br><span class="line">*****</span><br><span class="line"></span><br><span class="line">- - -</span><br><span class="line"></span><br><span class="line">----------</span><br></pre></td></tr></table></figure>
+
+<p>分割线效果：</p>
+<hr>
+<p><strong>错误示范</strong>：***其他内容（未出现分割线效果）</p>
+<h2 id="列表与区块"><a href="#列表与区块" class="headerlink" title="列表与区块"></a>列表与区块</h2><h3 id="1-无序列表"><a href="#1-无序列表" class="headerlink" title="1.无序列表"></a>1.无序列表</h3><p>​    无序列表格式：<strong>* 或 + 或 - 加上一个空格后面再加上内容</strong>，三个符号效果相同。</p>
+<p><strong>输入</strong>：</p>
+<p>​    * 无序第一列</p>
+<p>​    + 无序第二列</p>
+<p>​    -  无序第三列</p>
+<p><strong>效果</strong>：</p>
+<pre><code>    * 无序第一列</code></pre>
+<ul>
+<li>无序第二列</li>
+</ul>
+<ul>
+<li>无序第三列</li>
+</ul>
+<h3 id="2-有序列表"><a href="#2-有序列表" class="headerlink" title="2.有序列表"></a>2.有序列表</h3><p>​    有序列表格式：<strong>数字+ . + 空格 + 内容</strong>，即将无序列表的符号替换为数字加点的格式（例如1.）。</p>
+<p><strong>输入</strong>：</p>
+<p>​    1. 有序第一列</p>
+<p>​    2. 有序第二列</p>
+<p>​    3. 有序第三列</p>
+<p><strong>效果</strong>:</p>
+<ol>
+<li>有序第一列</li>
+<li>有序第二列</li>
+<li>有序第三列</li>
+</ol>
+<h3 id="3-列表嵌套"><a href="#3-列表嵌套" class="headerlink" title="3.列表嵌套"></a>3.列表嵌套</h3><p>​    在语法中为在<strong>子列表前添加四个空格</strong>，不过一般都在编写软件上编写<strong>更推荐使用TAB（缩进）与SHIFT+TAB（反缩进）</strong></p>
+<p>​    <strong>输入</strong>：</p>
+<p>​    1. 第一项：</p>
+<p>​        * 第一项嵌套的第一个元素</p>
+<p>​        * 第一项嵌套的第二个元素</p>
+<p>​    2. 第二项：</p>
+<p>​        * 第二项嵌套的第一个元素</p>
+<p>​        * 第二项嵌套的第二个元素</p>
+<p><strong>效果</strong>:</p>
+<ol>
+<li>第一项：<ul>
+<li>第一项嵌套的第一个元素</li>
+<li>第一项嵌套的第二个元素</li>
+</ul>
+</li>
+<li>第二项：<pre><code>* 第二项嵌套的第一个元素
+   * 第二项嵌套的第二个元素</code></pre>
+</li>
+</ol>
+<h3 id="4-区块"><a href="#4-区块" class="headerlink" title="4.区块"></a>4.区块</h3><p>​    区块格式：<strong>在每行前加上 &gt; 然后紧跟一个空格。</strong></p>
+<p><strong>输入：</strong></p>
+<p>&gt; 区块引用第一行</p>
+<p>&gt; 区块引用第二行</p>
+<p><strong>效果：</strong></p>
+<blockquote>
+<p>区块引用第一行</p>
+<p>区块引用第二行</p>
+</blockquote>
+<h3 id="5-区块嵌套"><a href="#5-区块嵌套" class="headerlink" title="5.区块嵌套"></a>5.区块嵌套</h3><p>​    区块嵌套格式：<strong>每有一个 &gt; 号就表示一层嵌套</strong></p>
+<p><strong>输入：</strong></p>
+<p>&gt; 最外层</p>
+<p>&gt;&gt; 第一层嵌套</p>
+<p>&gt;&gt;&gt; 第二层嵌套</p>
+<p>**效果: **</p>
+<blockquote>
+<p>最外层</p>
+<blockquote>
+<p>第一层嵌套</p>
+<blockquote>
+<p>第二层嵌套</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><h3 id="1-代码片段"><a href="#1-代码片段" class="headerlink" title="1.代码片段"></a>1.代码片段</h3><p>​    代码片段格式：**` 代码内容 ` **(反引号)</p>
+<p>​    <strong>输入：</strong> ` int a ;`         <strong>效果：</strong> <code>int a;</code></p>
+<h3 id="2-代码区块"><a href="#2-代码区块" class="headerlink" title="2.代码区块"></a>2.代码区块</h3><p>​    格式：用 <strong>```</strong> 包裹一段代码，并指定一种语言（也可以不指定）：</p>
+<p><strong>输入：</strong></p>
+<p>​    ``` java</p>
+<p>public class Test {<br>    public static void main(String[] args) {<br>        System.out.println(“Hello World”);<br>    }<br>}</p>
+<p>​    ```</p>
+<p><strong>效果：</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Hello World&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h2><h3 id="1-直接显示链接"><a href="#1-直接显示链接" class="headerlink" title="1.直接显示链接"></a>1.直接显示链接</h3><p>​    语法格式: <strong>&lt; 链接 &gt; **    **效果:</strong> <a href="https://www.baidu.com/">https://www.baidu.com/</a></p>
+<h3 id="2-用名称替代链接"><a href="#2-用名称替代链接" class="headerlink" title="2.用名称替代链接"></a>2.用名称替代链接</h3><p>​    语法格式：**[链接名称](链接地址)  **效果：这是我的<a href="https://ykailh.github.io/">博客</a></p>
+<h3 id="3-用名称和变量替代链接"><a href="#3-用名称和变量替代链接" class="headerlink" title="3.用名称和变量替代链接"></a>3.用名称和变量替代链接</h3><p>​    语法格式：<strong>[链接名称][变量名称]，[变量名称]</strong>: 链接。变量定义类似于脚注，效果与用名称替代类似，但方便多次使用。</p>
+<p>效果：这是一个<a href="https://www.baidu.com/">百度链接</a>，再次使用<a href="https://www.baidu.com/">百度链接</a>。</p>
+<h2 id="表格"><a href="#表格" class="headerlink" title="表格"></a>表格</h2><p>​    <strong>用 | 来分隔单元格，- 来分隔表头。</strong></p>
+<p><strong>输入：</strong></p>
+<p>| 表头 | 表头 |</p>
+<p>|  —-  |  —-  |</p>
+<p>| 单元格 | 单元格 |</p>
+<p>| 单元格 | 单元格 |</p>
+<p><strong>效果：</strong></p>
+<table>
+<thead>
+<tr>
+<th>表头</th>
+<th>表头</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>单元格</td>
+<td>单元格</td>
+</tr>
+<tr>
+<td>单元格</td>
+<td>单元格</td>
+</tr>
+</tbody></table>
+<p><strong>默认为左对齐</strong></p>
+<hr>
+<p>将分隔符替换为<strong>-: , :-  , :-:</strong> 分别表示右对齐，左对齐，居中对齐。</p>
+<p><strong>输入：</strong></p>
+<p>| 左对齐 | 右对齐 | 居中对齐 |</p>
+<p>|  :—-  |  —-:  | :—-: |</p>
+<p>| 单元格 | 单元格 | 单元格 |</p>
+<p>| 单元格 | 单元格 | 单元格 |</p>
+<p><strong>效果</strong>：</p>
+<table>
+<thead>
+<tr>
+<th align="left">左对齐</th>
+<th align="right">右对齐</th>
+<th align="center">居中对齐</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">单元格</td>
+<td align="right">单元格</td>
+<td align="center">单元格</td>
+</tr>
+<tr>
+<td align="left">单元格</td>
+<td align="right">单元格</td>
+<td align="center">单元格</td>
+</tr>
+</tbody></table>
+<h2 id="图片"><a href="#图片" class="headerlink" title="图片"></a>图片</h2><p>​    图片插入格式：![图片名](图片相对路径/绝对路径/图片链接)；</p>
+<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><p>​    编写md文件时建议使用专用的编辑器，一般都支持自动补全和实时预览，可以提高编写的效率。博主正在用的也是许多人推荐的Typora,也推荐给大家。<a href="https://www.typora.io/">Typora官网</a></p>
+<hr>
+]]></content>
+      <categories>
+        <category>常用软件</category>
+      </categories>
+      <tags>
+        <tag>markdown</tag>
+        <tag>Typora</tag>
+        <tag>常用软件</tag>
       </tags>
   </entry>
   <entry>
