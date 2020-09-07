@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2020-09-07T08:29:23.266Z</updated>
+  <updated>2020-09-07T08:34:32.820Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -21,17 +21,13 @@
     <link href="http://yoursite.com/2020/09/01/Web%E5%9F%BA%E7%A1%80%E4%B9%8BHTML/"/>
     <id>http://yoursite.com/2020/09/01/Web%E5%9F%BA%E7%A1%80%E4%B9%8BHTML/</id>
     <published>2020-09-01T09:16:20.000Z</published>
-    <updated>2020-09-07T08:29:23.266Z</updated>
+    <updated>2020-09-07T08:34:32.820Z</updated>
     
-    <content type="html"><![CDATA[<p>​    Web基础系列主要对Java开发中Web相关的内容(如HTML、CSS、JavaScript等)进行最基本的讲解，本系列其他文章请参考<a href="">Web基础</a></p>]]></content>
+    <content type="html"><![CDATA[<p>​    Web基础系列主要对Java开发中Web相关的内容(如HTML、CSS、JavaScript等)进行最基本的讲解，本系列其他文章请参考<a href="%5Bhttps://ykailh.github.io/tags/Web%E5%9F%BA%E7%A1%80/%5D(https://ykailh.github.io/tags/Web%E5%9F%BA%E7%A1%80/)">Web基础</a></p><a id="more"></a>]]></content>
     
     <summary type="html">
     
-      
-      
-        &lt;p&gt;​    Web基础系列主要对Java开发中Web相关的内容(如HTML、CSS、JavaScript等)进行最基本的讲解，本系列其他文章请参考&lt;a href=&quot;&quot;&gt;Web基础&lt;/a&gt;&lt;/p&gt;
-
-      
+      &lt;p&gt;​    Web基础系列主要对Java开发中Web相关的内容(如HTML、CSS、JavaScript等)进行最基本的讲解，本系列其他文章请参考&lt;a href=&quot;%5Bhttps://ykailh.github.io/tags/Web%E5%9F%BA%E7%A1%80/%5D(https://ykailh.github.io/tags/Web%E5%9F%BA%E7%A1%80/)&quot;&gt;Web基础&lt;/a&gt;&lt;/p&gt;
     
     </summary>
     
