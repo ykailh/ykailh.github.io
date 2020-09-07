@@ -1,6 +1,143 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Java基础之包装类</title>
+    <url>/2020/08/08/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%8C%85%E8%A3%85%E7%B1%BB/</url>
+    <content><![CDATA[<h1 id="什么是包装类"><a href="#什么是包装类" class="headerlink" title="什么是包装类"></a>什么是包装类</h1><p>​    Java作为面向对象的编程语言在设计之初依然延续了C语言的8种基本数据类型，但在不断的更新中设计了很多针对对象的API和新的特性（例如泛型），不支持基本数据类型。为了解决这个问题，Java为每一个基本数据类型提供了包装类。</p>
+<a id="more"></a>
+
+<table>
+<thead>
+<tr>
+<th>基本数据类型</th>
+<th>包装类（java.lang.）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>byte</td>
+<td>Byte</td>
+</tr>
+<tr>
+<td>short</td>
+<td>Short</td>
+</tr>
+<tr>
+<td>int</td>
+<td>Integer</td>
+</tr>
+<tr>
+<td>long</td>
+<td>Long</td>
+</tr>
+<tr>
+<td>float</td>
+<td>Float</td>
+</tr>
+<tr>
+<td>double</td>
+<td>Double</td>
+</tr>
+<tr>
+<td>char</td>
+<td>Character</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>Boolean</td>
+</tr>
+</tbody></table>
+<h1 id="装箱与拆箱"><a href="#装箱与拆箱" class="headerlink" title="装箱与拆箱"></a>装箱与拆箱</h1><p>​    装箱和拆箱实际上就是<strong>基本数据类型和它的包装类之间的转换</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer num1 = <span class="keyword">new</span> Integer(<span class="number">1</span>);    <span class="comment">//基本数据类型转为包装类也叫做手动装箱</span></span><br><span class="line"><span class="keyword">int</span> num2 = num1.intValue();        <span class="comment">//包装类转换为基本数据类型，也叫做手动拆箱</span></span><br></pre></td></tr></table></figure>
+
+<p>​    在J<strong>DK1.5</strong>之后为了方便使用等目的提供了<strong>自动装箱与自动拆箱</strong>。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//包装类中的自动装箱拆箱机制</span></span><br><span class="line">Integer  num1 = <span class="number">1</span>;        <span class="comment">//自动装箱</span></span><br><span class="line"><span class="comment">//这行代码实际等同于    Integer  num1 = Integer.valueOf(1);</span></span><br><span class="line"><span class="comment">//这个于new Integer(1)有所区别 下文会详细说明</span></span><br><span class="line"><span class="keyword">int</span> num2 = num1;        <span class="comment">//自动拆箱</span></span><br></pre></td></tr></table></figure>
+
+<p>​    需要注意的是只在与<strong>对应的基本数据类型和包装类之间</strong>才能实现自动装箱与拆箱。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Double d = <span class="number">1</span>;<span class="comment">//错误的，1是int类型</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="包装类对象的缓存问题"><a href="#包装类对象的缓存问题" class="headerlink" title="包装类对象的缓存问题"></a>包装类对象的缓存问题</h1><p>​    为了引出这个问题首先做以下测试</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer i = <span class="number">1</span>;</span><br><span class="line">Integer j = <span class="number">1</span>;</span><br><span class="line">System.out.println(i == j);<span class="comment">//true</span></span><br><span class="line"></span><br><span class="line">Integer i = <span class="number">128</span>;</span><br><span class="line">Integer j = <span class="number">128</span>;</span><br><span class="line">System.out.println(i == j);<span class="comment">//false</span></span><br></pre></td></tr></table></figure>
+
+<p>​    为什么改变了在包装类的值会影响结果，这就涉及到了包装类对象的缓存问题。对于对象而言，<code>==</code>所比较的是两个对象的地址值，上面的代码就说明了<strong>在一定的范围内相同值的包装类指向的是同一个对象</strong>。每个包装类的缓存范围如下：</p>
+<table>
+<thead>
+<tr>
+<th>包装类</th>
+<th>缓存对象</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Byte</td>
+<td>-128~127</td>
+</tr>
+<tr>
+<td>Short</td>
+<td>-128~127</td>
+</tr>
+<tr>
+<td>Integer</td>
+<td>-128~127</td>
+</tr>
+<tr>
+<td>Long</td>
+<td>-128~127</td>
+</tr>
+<tr>
+<td>Float</td>
+<td>没有</td>
+</tr>
+<tr>
+<td>Double</td>
+<td>没有</td>
+</tr>
+<tr>
+<td>Character</td>
+<td>0~127</td>
+</tr>
+<tr>
+<td>Boolean</td>
+<td>true和false</td>
+</tr>
+</tbody></table>
+<p>​    <strong>以Integer为例</strong>，上面也提到过自动装箱时是调用<code>Integer.valueOf()</code>方法来获取Integer对象的，查看这个方法的源码。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Integer <span class="title">valueOf</span><span class="params">(<span class="keyword">int</span> i)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (i &gt;= IntegerCache.low &amp;&amp; i &lt;= IntegerCache.high)</span><br><span class="line">        <span class="keyword">return</span> IntegerCache.cache[i + (-IntegerCache.low)];</span><br><span class="line">    <span class="comment">//若在某一个范围内直接返回一个cache数组中的Integer对象。</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Integer(i);</span><br><span class="line">   <span class="comment">//若不在这个范围则创建一个Integer对象返回</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再找到<code>IntegerCache</code> 这是Integer的一个内部类</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">IntegerCache</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> low = -<span class="number">128</span>;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> high;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> Integer cache[];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="comment">// high value may be configured by property</span></span><br><span class="line">        <span class="keyword">int</span> h = <span class="number">127</span>;</span><br><span class="line">        String integerCacheHighPropValue =</span><br><span class="line">            sun.misc.VM.getSavedProperty(<span class="string">&quot;java.lang.Integer.IntegerCache.high&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span> (integerCacheHighPropValue != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">int</span> i = parseInt(integerCacheHighPropValue);</span><br><span class="line">                i = Math.max(i, <span class="number">127</span>);</span><br><span class="line">                <span class="comment">// Maximum array size is Integer.MAX_VALUE</span></span><br><span class="line">                h = Math.min(i, Integer.MAX_VALUE - (-low) -<span class="number">1</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span>( NumberFormatException nfe) &#123;</span><br><span class="line">                <span class="comment">// If the property cannot be parsed into an int, ignore it.</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        high = h;</span><br><span class="line"></span><br><span class="line">        cache = <span class="keyword">new</span> Integer[(high - low) + <span class="number">1</span>];</span><br><span class="line">        <span class="keyword">int</span> j = low;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; cache.length; k++)</span><br><span class="line">            cache[k] = <span class="keyword">new</span> Integer(j++);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// range [-128, 127] must be interned (JLS7 5.1.7)</span></span><br><span class="line">        <span class="keyword">assert</span> IntegerCache.high &gt;= <span class="number">127</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">IntegerCache</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    可以发现在Integer类初始化时会创建一个叫cache的数组，里面存放的是low至high范围的Integer类常量，这就是上面提到的缓存对象。</p>
+<p>这就解释了为什么在一定范围内使用<code>==</code>比较两个包装类对象会返回turn。</p>
+<p>再做几个比较实验：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer i = <span class="keyword">new</span> Integer(<span class="number">1</span>);<span class="comment">//新new的在堆中</span></span><br><span class="line">Integer j = <span class="number">1</span>;<span class="comment">//这个用的是缓冲的常量对象，在方法区</span></span><br><span class="line">System.out.println(i == j);<span class="comment">//false</span></span><br><span class="line">System.out.println(i.equals(j));<span class="comment">//true</span></span><br><span class="line"></span><br><span class="line">Integer i = <span class="keyword">new</span> Integer(<span class="number">1</span>);</span><br><span class="line"><span class="keyword">int</span> j = <span class="number">1</span>;</span><br><span class="line">System.out.println(i == j);<span class="comment">//true</span></span><br><span class="line">System.out.println(i.equals(j));<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<p>​    new出来的对象在堆当中，不指向常量对象，这就是<strong>new与valueOf()的区别</strong>，<code>valueOf()</code>只在超出缓存范围时才会创建一个新的对象，所以在实际使用过程中建议直接使用<code>valueOf()</code>。</p>
+<p>​    而与基本数据类型比较（包括计算）时会<strong>先拆箱</strong>再按照基本数据类型的规则比较，所以为了避免歧义，如果是判断值是否相等时建议同一使用<code>equals()</code>方法。</p>
+<h1 id="API演示"><a href="#API演示" class="headerlink" title="API演示"></a>API演示</h1><p>​    由于包装类的存在，许多处理基本数据类型的方法都可以定义在包装类中。下面进行一些<strong>举例</strong>。</p>
+<h2 id="1-把字符串转为基本数据类型"><a href="#1-把字符串转为基本数据类型" class="headerlink" title="1.把字符串转为基本数据类型"></a>1.把字符串转为基本数据类型</h2><p>​    <code>parsxxx()</code>方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = Integer.parseInt(<span class="string">&quot;整数的字符串&quot;</span>);</span><br><span class="line"><span class="keyword">double</span> a = Double.parseDouble(<span class="string">&quot;小数的字符串&quot;</span>);</span><br><span class="line"><span class="keyword">boolean</span> b = Boolean.parseBoolean(<span class="string">&quot;true或false&quot;</span>);</span><br><span class="line"></span><br><span class="line">System.out.println(Double.parseDouble(<span class="string">&quot;1.2&quot;</span>));<span class="comment">//1.2</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-数据类型的最大最小值"><a href="#2-数据类型的最大最小值" class="headerlink" title="2.数据类型的最大最小值"></a>2.数据类型的最大最小值</h2><p>​    <code>MAX_VALUE</code>和<code>MIN_VALUE</code></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer.MAX_VALUE和Integer.MIN_VALUE</span><br><span class="line">Long.MAX_VALUE和Long.MIN_VALUE</span><br><span class="line">Double.MAX_VALUE和Double.MIN_VALUE</span><br><span class="line">    </span><br><span class="line">System.out.println(Integer.MAX_VALUE);<span class="comment">//2147483647</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="3-转进制"><a href="#3-转进制" class="headerlink" title="3.转进制"></a>3.转进制</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer.toBinaryString(<span class="keyword">int</span> i) <span class="comment">//转为2进制</span></span><br><span class="line">Integer.toOctalString(<span class="keyword">int</span> i)  <span class="comment">//转为8进制</span></span><br><span class="line">Integer.toHexString(<span class="keyword">int</span> i)   <span class="comment">//转为16进制</span></span><br><span class="line"></span><br><span class="line">System.out.println(Integer.toBinaryString(<span class="number">15</span>));<span class="comment">//1111</span></span><br><span class="line">System.out.println(Integer.toOctalString(<span class="number">15</span>));<span class="comment">//17</span></span><br><span class="line">System.out.println(Integer.toHexString(<span class="number">15</span>));<span class="comment">//f</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>Java基础</tag>
+        <tag>包装类</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java基础之多线程</title>
     <url>/2020/08/10/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%A4%9A%E7%BA%BF%E7%A8%8B/</url>
     <content><![CDATA[<h1 id="相关的概念"><a href="#相关的概念" class="headerlink" title="相关的概念"></a>相关的概念</h1><ol>
@@ -253,6 +390,109 @@
         <tag>Java基础</tag>
         <tag>字符串</tag>
         <tag>String</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java基础之异常</title>
+    <url>/2020/08/07/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%BC%82%E5%B8%B8/</url>
+    <content><![CDATA[<h1 id="什么是异常"><a href="#什么是异常" class="headerlink" title="什么是异常"></a>什么是异常</h1><p>​    在一些情况下，由于<strong>非程序本身</strong>问题，例如:配置问题、错误输入、磁盘空间不足等等所导致的程序无法正常运行。</p>
+<a id="more"></a>
+
+<p><strong>例如：</strong></p>
+<p>​    试图获取一个int类型</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestException</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Scanner input = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        <span class="keyword">int</span> num = input.nextInt();</span><br><span class="line">        input.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    运行后输入‘a’，由于没有正常的获取到int类型，程序发生异常。</p>
+<p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%BC%82%E5%B8%B8/%E5%BC%82%E5%B8%B8%E6%BC%94%E7%A4%BA.png" alt="异常演示"></p>
+<p><strong>而下面两个情况也是程序无法正常运行，但是是程序本身的问题，不属于异常。</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestException</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        System.out.println(num);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//未定义num的情况下使用num，属于语法错误。不属于异常</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestException</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        System.out.println(getsum(<span class="number">1</span>,<span class="number">1</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//getsum方法用于返回两个int类型的和</span></span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getsum</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> a-b;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//运行结果为0，而不是预期是2，属于程序逻辑错误。不属于异常</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="Java如何处理异常"><a href="#Java如何处理异常" class="headerlink" title="Java如何处理异常"></a>Java如何处理异常</h1><p>​    当程序运行到某一处时发生了异常，程序会暂停运行查看产生异常的原因，并根据此原因生成一个<strong>“异常对象”</strong>然后向外<strong>“抛”</strong>，此时若此处有<strong>try…catch</strong>结构去<strong>“捕获”</strong>这个异常，则程序继续运行。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestException</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Scanner input = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;请输入一个整数&quot;</span>);</span><br><span class="line">            <span class="keyword">int</span> num = input.nextInt();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;输入有误&quot;</span>);</span><br><span class="line">        &#125;<span class="comment">//try..catch语法下文有详解，这里可以理解为“捕获”异常</span></span><br><span class="line">        System.out.println(<span class="string">&quot;其他代码&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>运行结果：</strong></p>
+<p>​    <strong>”捕获“</strong>异常后继续执行其他代码</p>
+<p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%BC%82%E5%B8%B8/%E5%BC%82%E5%B8%B8%E6%8D%95%E8%8E%B7%E6%BC%94%E7%A4%BA.png" alt="异常捕获演示"></p>
+<p>若不能<strong>“捕获”</strong>这个异常则会继续<strong>“抛”</strong>给上一级调用者，直到被<strong>“捕获”</strong>，程序在被<strong>“捕获”</strong>处继续运行。最终上抛至JVM则程序<strong>”崩溃“</strong>。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestException</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            testPao();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;上级捕获到异常&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">&quot;main中的其他代码&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">testPao</span><span class="params">()</span></span>&#123;</span><br><span class="line">        Scanner input = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        System.out.println(<span class="string">&quot;请输入一个整数&quot;</span>);</span><br><span class="line">        <span class="keyword">int</span> num = input.nextInt();</span><br><span class="line">        System.out.println(<span class="string">&quot;其他代码&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>运行结果：</strong></p>
+<p>​    <img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%BC%82%E5%B8%B8/%E5%BC%82%E5%B8%B8%E4%B8%8A%E6%8A%9B%E6%BC%94%E7%A4%BA.png" alt="异常上抛演示"></p>
+<p>若不做<strong>“捕获”</strong>出来<strong>“上抛”</strong>至JVM，程序<strong>“崩溃”</strong></p>
+<h1 id="异常的体系结构"><a href="#异常的体系结构" class="headerlink" title="异常的体系结构"></a>异常的体系结构</h1><p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%BC%82%E5%B8%B8/%E5%BC%82%E5%B8%B8%E7%9A%84%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84.png" alt="异常的体系结构"></p>
+<p>​    所有异常相关的类都有一个公共父类：java.lang.Throwable，Throwable分为两大派别Error和Exception。</p>
+<p><strong>Error：</strong>是程序中无法处理的错误，表示运行应用程序中出现了严重的错误。</p>
+<p>​    此类错误一般表示代码运行时JVM出现问题。通常有Virtual MachineError（虚拟机运行错误）、NoClassDefFoundError（类定义错误）等。比如说当jvm耗完可用内存时，将出现OutOfMemoryError。此类错误发生时，JVM将终止线程。非代码性错误。因此，当此类错误发生时，应用<strong>不应该去处理此类错误</strong>。而是通过代码优化、硬件升级等方式解决。</p>
+<p><strong>Exception：</strong>程序本身可以捕获并且可以处理的异常。</p>
+<p>Exception又分为两大类，运行时异常（也叫不受检异常）和编译时异常（也叫受检异常或非运行时异常）。</p>
+<p><strong>运行时异常：</strong>均为<strong>RuntimeException</strong>或它子类的对象。</p>
+<p>​    表示JVM在运行期间可能出现的错误。编译器不会检查此类异常，并且不要求处理异常。在程序中可以选择捕获处理，但此错误一般是由程序逻辑错误引起的，所有<strong>不建议进行捕获处理。</strong></p>
+<p><strong>编译时异常：</strong>Exception中<strong>除RuntimeException极其子类之外</strong>的异常。</p>
+<p>​    编译器会检查此类异常，如果程序中出现此类异常，比如说IOException，必须对该异常进行处理，要么使用try-catch捕获，要么使用throws语句抛出，否则编译不通过。</p>
+<h1 id="捕获异常语法"><a href="#捕获异常语法" class="headerlink" title="捕获异常语法"></a>捕获异常语法</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">可能发生异常的代码</span><br><span class="line">&#125;<span class="keyword">catch</span>(异常类型  异常名e)&#123;</span><br><span class="line">    处理异常的代码（一般都是打印异常的信息的语句）</span><br><span class="line">&#125;<span class="keyword">catch</span>(异常类型  异常名e)&#123;</span><br><span class="line">    处理异常的代码（一般都是打印异常的信息的语句）</span><br><span class="line">&#125;。。。</span><br><span class="line"><span class="keyword">finally</span>&#123;</span><br><span class="line">    无论<span class="keyword">try</span>中是否有异常，也不管<span class="keyword">catch</span>是否可以捕获异常，也不管<span class="keyword">try</span>和<span class="keyword">catch</span>中是不是有<span class="keyword">return</span>，都要执行的部分</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="1-执行特点"><a href="#1-执行特点" class="headerlink" title="1.执行特点"></a>1.执行特点</h2><ul>
+<li><p>如果try中的代码没有异常，那么try中的代码会正常执行，catch部分就不执行，finally中会执行</p>
+</li>
+<li><p>如果try中的代码有异常，那么try中发生异常的代码的后面就不执行了，找对应的匹配的catch分支执行，        finally中会执行</p>
+</li>
+</ul>
+<h2 id="2-注意事项"><a href="#2-注意事项" class="headerlink" title="2.注意事项"></a>2.注意事项</h2><ul>
+<li>catch 中的异常名通常都命名为e，<strong>非强制</strong>要求。</li>
+<li>捕获异常时是从上到下执行，一旦<strong>前面的catch捕获到异常后面的catch就不会执行</strong>（类似于if…else if的选择分支结构），所以<strong>要将范围较大的异常类型的catch放到范围较小的catch底下</strong>（一般情况下范围较大的异常类型是范围较小的父类)，否则会导致范围较小的catch永远无法执行，此时编译器也会报错。</li>
+</ul>
+<p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%BC%82%E5%B8%B8/catch%E9%A1%BA%E5%BA%8F.png" alt="catch顺序"></p>
+<ul>
+<li>try…catch…finally存在return时，在非finally的地方遇到return时，会先把此时需要return的值放到<strong>“操作数栈”</strong>中然后再去执行finally中的代码，然后最终执行return。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestTryCatchFinally</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">            System.out.println(testTryReturn());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">testTryReturn</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> i ;</span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            i = <span class="number">1</span>;</span><br><span class="line">            System.out.println(<span class="string">&quot;执行try，此时i = &quot;</span>+i);</span><br><span class="line">            <span class="keyword">int</span> a = <span class="number">1</span>/<span class="number">0</span>;<span class="comment">//发生异常</span></span><br><span class="line">            <span class="keyword">return</span> i;</span><br><span class="line">        &#125;<span class="keyword">catch</span>(Exception e) &#123;</span><br><span class="line">            i = <span class="number">2</span>;</span><br><span class="line">            System.out.println(<span class="string">&quot;执行catch，此时i = &quot;</span>+i);</span><br><span class="line">            <span class="keyword">return</span> i;</span><br><span class="line">        &#125;<span class="keyword">finally</span>&#123;</span><br><span class="line">            i = <span class="number">3</span>;</span><br><span class="line">            System.out.println(<span class="string">&quot;执行finally，此时i = &quot;</span>+i);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>执行结果：</strong></p>
+<p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%BC%82%E5%B8%B8/return%E4%B8%8Etry.png" alt="return与try"></p>
+<ul>
+<li>若return存在于finally时，try和catch中的return没有机会执行。在实际开发中finally一般用于关闭资源等操作，不允许在finally中写return语句（编译器也会发出警告）。</li>
+</ul>
+<h1 id="其他语法"><a href="#其他语法" class="headerlink" title="其他语法"></a>其他语法</h1><h2 id="1-throws"><a href="#1-throws" class="headerlink" title="1.throws"></a>1.throws</h2><p>​    用于告知调用者此方法可能抛出的异常</p>
+<p><strong>使用格式：</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">【修饰符】 返回值类型  方法名(【形参列表】) <span class="keyword">throws</span> 异常列表&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意事项：</strong></p>
+<ul>
+<li>子类重写父类方法时，throws的异常列表范围不能大于父类，原因是保证多态引用时能正确捕获异常</li>
+</ul>
+<h2 id="2-throw"><a href="#2-throw" class="headerlink" title="2.throw"></a>2.throw</h2><p>​    用于手动抛出异常</p>
+<p><strong>使用格式：</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">throw</span> 异常对象;</span><br><span class="line"></span><br><span class="line"><span class="comment">//例如：</span></span><br><span class="line"><span class="keyword">throw</span> <span class="keyword">new</span> AccountException(<span class="string">&quot;异常信息&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意事项：</strong></p>
+<ul>
+<li><p>throw抛出来的异常对象，和JVM抛出来的异常对象一样，也要用try..catch处理或者throws。</p>
+<p>如果是运行时异常，编译器不会强制要求你处理，如果是编译时异常，那么编译器会强制要求你处理。</p>
+</li>
+</ul>
+<h1 id="自定义异常"><a href="#自定义异常" class="headerlink" title="自定义异常"></a>自定义异常</h1><p>​    创建自定义异常的方式为创建一个类并继承Throwable或它的子类，在实际开发中通常是继承RuntimeException或Exception来自定义运行时异常或编译时异常。</p>
+<p>​    <strong>建议在自定义异常时至少保留无参构造和异常信息message使用的有参构造</strong></p>
+<p><strong>示例：</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//自定义一个编译时异常</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestCustomException</span> <span class="keyword">extends</span> <span class="title">Exception</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TestCustomException</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TestCustomException</span><span class="params">(String message)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(message);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    自定义异常只能手动通过throw抛出。</p>
+<h1 id="关于异常的几个方法"><a href="#关于异常的几个方法" class="headerlink" title="关于异常的几个方法"></a>关于异常的几个方法</h1><p><strong>printStackTrace()：</strong></p>
+<p>打印异常对象的详细信息，包括异常类型，message，堆栈跟踪信息。</p>
+<p><strong>e.getMessage()：</strong></p>
+<p>只是获取异常的message信息</p>
+<p><strong>关于异常信息的打印：</strong></p>
+<p>用System.err打印和用e.printStackTrace()都是会标记红色的突出。</p>
+<p>用System.out打印，当成普通信息打印。</p>
+<p>这两个打印是两个独立的线程，顺序是不能精确控制的。</p>
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>Java基础</tag>
+        <tag>异常</tag>
       </tags>
   </entry>
   <entry>
@@ -589,246 +829,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Java基础之包装类</title>
-    <url>/2020/08/08/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%8C%85%E8%A3%85%E7%B1%BB/</url>
-    <content><![CDATA[<h1 id="什么是包装类"><a href="#什么是包装类" class="headerlink" title="什么是包装类"></a>什么是包装类</h1><p>​    Java作为面向对象的编程语言在设计之初依然延续了C语言的8种基本数据类型，但在不断的更新中设计了很多针对对象的API和新的特性（例如泛型），不支持基本数据类型。为了解决这个问题，Java为每一个基本数据类型提供了包装类。</p>
-<a id="more"></a>
-
-<table>
-<thead>
-<tr>
-<th>基本数据类型</th>
-<th>包装类（java.lang.）</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>byte</td>
-<td>Byte</td>
-</tr>
-<tr>
-<td>short</td>
-<td>Short</td>
-</tr>
-<tr>
-<td>int</td>
-<td>Integer</td>
-</tr>
-<tr>
-<td>long</td>
-<td>Long</td>
-</tr>
-<tr>
-<td>float</td>
-<td>Float</td>
-</tr>
-<tr>
-<td>double</td>
-<td>Double</td>
-</tr>
-<tr>
-<td>char</td>
-<td>Character</td>
-</tr>
-<tr>
-<td>boolean</td>
-<td>Boolean</td>
-</tr>
-</tbody></table>
-<h1 id="装箱与拆箱"><a href="#装箱与拆箱" class="headerlink" title="装箱与拆箱"></a>装箱与拆箱</h1><p>​    装箱和拆箱实际上就是<strong>基本数据类型和它的包装类之间的转换</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer num1 = <span class="keyword">new</span> Integer(<span class="number">1</span>);    <span class="comment">//基本数据类型转为包装类也叫做手动装箱</span></span><br><span class="line"><span class="keyword">int</span> num2 = num1.intValue();        <span class="comment">//包装类转换为基本数据类型，也叫做手动拆箱</span></span><br></pre></td></tr></table></figure>
-
-<p>​    在J<strong>DK1.5</strong>之后为了方便使用等目的提供了<strong>自动装箱与自动拆箱</strong>。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//包装类中的自动装箱拆箱机制</span></span><br><span class="line">Integer  num1 = <span class="number">1</span>;        <span class="comment">//自动装箱</span></span><br><span class="line"><span class="comment">//这行代码实际等同于    Integer  num1 = Integer.valueOf(1);</span></span><br><span class="line"><span class="comment">//这个于new Integer(1)有所区别 下文会详细说明</span></span><br><span class="line"><span class="keyword">int</span> num2 = num1;        <span class="comment">//自动拆箱</span></span><br></pre></td></tr></table></figure>
-
-<p>​    需要注意的是只在与<strong>对应的基本数据类型和包装类之间</strong>才能实现自动装箱与拆箱。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Double d = <span class="number">1</span>;<span class="comment">//错误的，1是int类型</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="包装类对象的缓存问题"><a href="#包装类对象的缓存问题" class="headerlink" title="包装类对象的缓存问题"></a>包装类对象的缓存问题</h1><p>​    为了引出这个问题首先做以下测试</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer i = <span class="number">1</span>;</span><br><span class="line">Integer j = <span class="number">1</span>;</span><br><span class="line">System.out.println(i == j);<span class="comment">//true</span></span><br><span class="line"></span><br><span class="line">Integer i = <span class="number">128</span>;</span><br><span class="line">Integer j = <span class="number">128</span>;</span><br><span class="line">System.out.println(i == j);<span class="comment">//false</span></span><br></pre></td></tr></table></figure>
-
-<p>​    为什么改变了在包装类的值会影响结果，这就涉及到了包装类对象的缓存问题。对于对象而言，<code>==</code>所比较的是两个对象的地址值，上面的代码就说明了<strong>在一定的范围内相同值的包装类指向的是同一个对象</strong>。每个包装类的缓存范围如下：</p>
-<table>
-<thead>
-<tr>
-<th>包装类</th>
-<th>缓存对象</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Byte</td>
-<td>-128~127</td>
-</tr>
-<tr>
-<td>Short</td>
-<td>-128~127</td>
-</tr>
-<tr>
-<td>Integer</td>
-<td>-128~127</td>
-</tr>
-<tr>
-<td>Long</td>
-<td>-128~127</td>
-</tr>
-<tr>
-<td>Float</td>
-<td>没有</td>
-</tr>
-<tr>
-<td>Double</td>
-<td>没有</td>
-</tr>
-<tr>
-<td>Character</td>
-<td>0~127</td>
-</tr>
-<tr>
-<td>Boolean</td>
-<td>true和false</td>
-</tr>
-</tbody></table>
-<p>​    <strong>以Integer为例</strong>，上面也提到过自动装箱时是调用<code>Integer.valueOf()</code>方法来获取Integer对象的，查看这个方法的源码。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Integer <span class="title">valueOf</span><span class="params">(<span class="keyword">int</span> i)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (i &gt;= IntegerCache.low &amp;&amp; i &lt;= IntegerCache.high)</span><br><span class="line">        <span class="keyword">return</span> IntegerCache.cache[i + (-IntegerCache.low)];</span><br><span class="line">    <span class="comment">//若在某一个范围内直接返回一个cache数组中的Integer对象。</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Integer(i);</span><br><span class="line">   <span class="comment">//若不在这个范围则创建一个Integer对象返回</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>再找到<code>IntegerCache</code> 这是Integer的一个内部类</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">IntegerCache</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> low = -<span class="number">128</span>;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> high;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> Integer cache[];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="comment">// high value may be configured by property</span></span><br><span class="line">        <span class="keyword">int</span> h = <span class="number">127</span>;</span><br><span class="line">        String integerCacheHighPropValue =</span><br><span class="line">            sun.misc.VM.getSavedProperty(<span class="string">&quot;java.lang.Integer.IntegerCache.high&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span> (integerCacheHighPropValue != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">int</span> i = parseInt(integerCacheHighPropValue);</span><br><span class="line">                i = Math.max(i, <span class="number">127</span>);</span><br><span class="line">                <span class="comment">// Maximum array size is Integer.MAX_VALUE</span></span><br><span class="line">                h = Math.min(i, Integer.MAX_VALUE - (-low) -<span class="number">1</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span>( NumberFormatException nfe) &#123;</span><br><span class="line">                <span class="comment">// If the property cannot be parsed into an int, ignore it.</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        high = h;</span><br><span class="line"></span><br><span class="line">        cache = <span class="keyword">new</span> Integer[(high - low) + <span class="number">1</span>];</span><br><span class="line">        <span class="keyword">int</span> j = low;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; cache.length; k++)</span><br><span class="line">            cache[k] = <span class="keyword">new</span> Integer(j++);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// range [-128, 127] must be interned (JLS7 5.1.7)</span></span><br><span class="line">        <span class="keyword">assert</span> IntegerCache.high &gt;= <span class="number">127</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">IntegerCache</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>​    可以发现在Integer类初始化时会创建一个叫cache的数组，里面存放的是low至high范围的Integer类常量，这就是上面提到的缓存对象。</p>
-<p>这就解释了为什么在一定范围内使用<code>==</code>比较两个包装类对象会返回turn。</p>
-<p>再做几个比较实验：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer i = <span class="keyword">new</span> Integer(<span class="number">1</span>);<span class="comment">//新new的在堆中</span></span><br><span class="line">Integer j = <span class="number">1</span>;<span class="comment">//这个用的是缓冲的常量对象，在方法区</span></span><br><span class="line">System.out.println(i == j);<span class="comment">//false</span></span><br><span class="line">System.out.println(i.equals(j));<span class="comment">//true</span></span><br><span class="line"></span><br><span class="line">Integer i = <span class="keyword">new</span> Integer(<span class="number">1</span>);</span><br><span class="line"><span class="keyword">int</span> j = <span class="number">1</span>;</span><br><span class="line">System.out.println(i == j);<span class="comment">//true</span></span><br><span class="line">System.out.println(i.equals(j));<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
-
-<p>​    new出来的对象在堆当中，不指向常量对象，这就是<strong>new与valueOf()的区别</strong>，<code>valueOf()</code>只在超出缓存范围时才会创建一个新的对象，所以在实际使用过程中建议直接使用<code>valueOf()</code>。</p>
-<p>​    而与基本数据类型比较（包括计算）时会<strong>先拆箱</strong>再按照基本数据类型的规则比较，所以为了避免歧义，如果是判断值是否相等时建议同一使用<code>equals()</code>方法。</p>
-<h1 id="API演示"><a href="#API演示" class="headerlink" title="API演示"></a>API演示</h1><p>​    由于包装类的存在，许多处理基本数据类型的方法都可以定义在包装类中。下面进行一些<strong>举例</strong>。</p>
-<h2 id="1-把字符串转为基本数据类型"><a href="#1-把字符串转为基本数据类型" class="headerlink" title="1.把字符串转为基本数据类型"></a>1.把字符串转为基本数据类型</h2><p>​    <code>parsxxx()</code>方法</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = Integer.parseInt(<span class="string">&quot;整数的字符串&quot;</span>);</span><br><span class="line"><span class="keyword">double</span> a = Double.parseDouble(<span class="string">&quot;小数的字符串&quot;</span>);</span><br><span class="line"><span class="keyword">boolean</span> b = Boolean.parseBoolean(<span class="string">&quot;true或false&quot;</span>);</span><br><span class="line"></span><br><span class="line">System.out.println(Double.parseDouble(<span class="string">&quot;1.2&quot;</span>));<span class="comment">//1.2</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="2-数据类型的最大最小值"><a href="#2-数据类型的最大最小值" class="headerlink" title="2.数据类型的最大最小值"></a>2.数据类型的最大最小值</h2><p>​    <code>MAX_VALUE</code>和<code>MIN_VALUE</code></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer.MAX_VALUE和Integer.MIN_VALUE</span><br><span class="line">Long.MAX_VALUE和Long.MIN_VALUE</span><br><span class="line">Double.MAX_VALUE和Double.MIN_VALUE</span><br><span class="line">    </span><br><span class="line">System.out.println(Integer.MAX_VALUE);<span class="comment">//2147483647</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="3-转进制"><a href="#3-转进制" class="headerlink" title="3.转进制"></a>3.转进制</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer.toBinaryString(<span class="keyword">int</span> i) <span class="comment">//转为2进制</span></span><br><span class="line">Integer.toOctalString(<span class="keyword">int</span> i)  <span class="comment">//转为8进制</span></span><br><span class="line">Integer.toHexString(<span class="keyword">int</span> i)   <span class="comment">//转为16进制</span></span><br><span class="line"></span><br><span class="line">System.out.println(Integer.toBinaryString(<span class="number">15</span>));<span class="comment">//1111</span></span><br><span class="line">System.out.println(Integer.toOctalString(<span class="number">15</span>));<span class="comment">//17</span></span><br><span class="line">System.out.println(Integer.toHexString(<span class="number">15</span>));<span class="comment">//f</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-]]></content>
-      <categories>
-        <category>Java</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>Java基础</tag>
-        <tag>包装类</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Java基础之异常</title>
-    <url>/2020/08/07/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%BC%82%E5%B8%B8/</url>
-    <content><![CDATA[<h1 id="什么是异常"><a href="#什么是异常" class="headerlink" title="什么是异常"></a>什么是异常</h1><p>​    在一些情况下，由于<strong>非程序本身</strong>问题，例如:配置问题、错误输入、磁盘空间不足等等所导致的程序无法正常运行。</p>
-<a id="more"></a>
-
-<p><strong>例如：</strong></p>
-<p>​    试图获取一个int类型</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestException</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Scanner input = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        <span class="keyword">int</span> num = input.nextInt();</span><br><span class="line">        input.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>​    运行后输入‘a’，由于没有正常的获取到int类型，程序发生异常。</p>
-<p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%BC%82%E5%B8%B8/%E5%BC%82%E5%B8%B8%E6%BC%94%E7%A4%BA.png" alt="异常演示"></p>
-<p><strong>而下面两个情况也是程序无法正常运行，但是是程序本身的问题，不属于异常。</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestException</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        System.out.println(num);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//未定义num的情况下使用num，属于语法错误。不属于异常</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestException</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        System.out.println(getsum(<span class="number">1</span>,<span class="number">1</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//getsum方法用于返回两个int类型的和</span></span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getsum</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> a-b;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//运行结果为0，而不是预期是2，属于程序逻辑错误。不属于异常</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="Java如何处理异常"><a href="#Java如何处理异常" class="headerlink" title="Java如何处理异常"></a>Java如何处理异常</h1><p>​    当程序运行到某一处时发生了异常，程序会暂停运行查看产生异常的原因，并根据此原因生成一个<strong>“异常对象”</strong>然后向外<strong>“抛”</strong>，此时若此处有<strong>try…catch</strong>结构去<strong>“捕获”</strong>这个异常，则程序继续运行。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestException</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Scanner input = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;请输入一个整数&quot;</span>);</span><br><span class="line">            <span class="keyword">int</span> num = input.nextInt();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;输入有误&quot;</span>);</span><br><span class="line">        &#125;<span class="comment">//try..catch语法下文有详解，这里可以理解为“捕获”异常</span></span><br><span class="line">        System.out.println(<span class="string">&quot;其他代码&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>运行结果：</strong></p>
-<p>​    <strong>”捕获“</strong>异常后继续执行其他代码</p>
-<p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%BC%82%E5%B8%B8/%E5%BC%82%E5%B8%B8%E6%8D%95%E8%8E%B7%E6%BC%94%E7%A4%BA.png" alt="异常捕获演示"></p>
-<p>若不能<strong>“捕获”</strong>这个异常则会继续<strong>“抛”</strong>给上一级调用者，直到被<strong>“捕获”</strong>，程序在被<strong>“捕获”</strong>处继续运行。最终上抛至JVM则程序<strong>”崩溃“</strong>。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestException</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            testPao();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;上级捕获到异常&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">&quot;main中的其他代码&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">testPao</span><span class="params">()</span></span>&#123;</span><br><span class="line">        Scanner input = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        System.out.println(<span class="string">&quot;请输入一个整数&quot;</span>);</span><br><span class="line">        <span class="keyword">int</span> num = input.nextInt();</span><br><span class="line">        System.out.println(<span class="string">&quot;其他代码&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>运行结果：</strong></p>
-<p>​    <img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%BC%82%E5%B8%B8/%E5%BC%82%E5%B8%B8%E4%B8%8A%E6%8A%9B%E6%BC%94%E7%A4%BA.png" alt="异常上抛演示"></p>
-<p>若不做<strong>“捕获”</strong>出来<strong>“上抛”</strong>至JVM，程序<strong>“崩溃”</strong></p>
-<h1 id="异常的体系结构"><a href="#异常的体系结构" class="headerlink" title="异常的体系结构"></a>异常的体系结构</h1><p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%BC%82%E5%B8%B8/%E5%BC%82%E5%B8%B8%E7%9A%84%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84.png" alt="异常的体系结构"></p>
-<p>​    所有异常相关的类都有一个公共父类：java.lang.Throwable，Throwable分为两大派别Error和Exception。</p>
-<p><strong>Error：</strong>是程序中无法处理的错误，表示运行应用程序中出现了严重的错误。</p>
-<p>​    此类错误一般表示代码运行时JVM出现问题。通常有Virtual MachineError（虚拟机运行错误）、NoClassDefFoundError（类定义错误）等。比如说当jvm耗完可用内存时，将出现OutOfMemoryError。此类错误发生时，JVM将终止线程。非代码性错误。因此，当此类错误发生时，应用<strong>不应该去处理此类错误</strong>。而是通过代码优化、硬件升级等方式解决。</p>
-<p><strong>Exception：</strong>程序本身可以捕获并且可以处理的异常。</p>
-<p>Exception又分为两大类，运行时异常（也叫不受检异常）和编译时异常（也叫受检异常或非运行时异常）。</p>
-<p><strong>运行时异常：</strong>均为<strong>RuntimeException</strong>或它子类的对象。</p>
-<p>​    表示JVM在运行期间可能出现的错误。编译器不会检查此类异常，并且不要求处理异常。在程序中可以选择捕获处理，但此错误一般是由程序逻辑错误引起的，所有<strong>不建议进行捕获处理。</strong></p>
-<p><strong>编译时异常：</strong>Exception中<strong>除RuntimeException极其子类之外</strong>的异常。</p>
-<p>​    编译器会检查此类异常，如果程序中出现此类异常，比如说IOException，必须对该异常进行处理，要么使用try-catch捕获，要么使用throws语句抛出，否则编译不通过。</p>
-<h1 id="捕获异常语法"><a href="#捕获异常语法" class="headerlink" title="捕获异常语法"></a>捕获异常语法</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">可能发生异常的代码</span><br><span class="line">&#125;<span class="keyword">catch</span>(异常类型  异常名e)&#123;</span><br><span class="line">    处理异常的代码（一般都是打印异常的信息的语句）</span><br><span class="line">&#125;<span class="keyword">catch</span>(异常类型  异常名e)&#123;</span><br><span class="line">    处理异常的代码（一般都是打印异常的信息的语句）</span><br><span class="line">&#125;。。。</span><br><span class="line"><span class="keyword">finally</span>&#123;</span><br><span class="line">    无论<span class="keyword">try</span>中是否有异常，也不管<span class="keyword">catch</span>是否可以捕获异常，也不管<span class="keyword">try</span>和<span class="keyword">catch</span>中是不是有<span class="keyword">return</span>，都要执行的部分</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="1-执行特点"><a href="#1-执行特点" class="headerlink" title="1.执行特点"></a>1.执行特点</h2><ul>
-<li><p>如果try中的代码没有异常，那么try中的代码会正常执行，catch部分就不执行，finally中会执行</p>
-</li>
-<li><p>如果try中的代码有异常，那么try中发生异常的代码的后面就不执行了，找对应的匹配的catch分支执行，        finally中会执行</p>
-</li>
-</ul>
-<h2 id="2-注意事项"><a href="#2-注意事项" class="headerlink" title="2.注意事项"></a>2.注意事项</h2><ul>
-<li>catch 中的异常名通常都命名为e，<strong>非强制</strong>要求。</li>
-<li>捕获异常时是从上到下执行，一旦<strong>前面的catch捕获到异常后面的catch就不会执行</strong>（类似于if…else if的选择分支结构），所以<strong>要将范围较大的异常类型的catch放到范围较小的catch底下</strong>（一般情况下范围较大的异常类型是范围较小的父类)，否则会导致范围较小的catch永远无法执行，此时编译器也会报错。</li>
-</ul>
-<p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%BC%82%E5%B8%B8/catch%E9%A1%BA%E5%BA%8F.png" alt="catch顺序"></p>
-<ul>
-<li>try…catch…finally存在return时，在非finally的地方遇到return时，会先把此时需要return的值放到<strong>“操作数栈”</strong>中然后再去执行finally中的代码，然后最终执行return。</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestTryCatchFinally</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">            System.out.println(testTryReturn());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">testTryReturn</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> i ;</span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            i = <span class="number">1</span>;</span><br><span class="line">            System.out.println(<span class="string">&quot;执行try，此时i = &quot;</span>+i);</span><br><span class="line">            <span class="keyword">int</span> a = <span class="number">1</span>/<span class="number">0</span>;<span class="comment">//发生异常</span></span><br><span class="line">            <span class="keyword">return</span> i;</span><br><span class="line">        &#125;<span class="keyword">catch</span>(Exception e) &#123;</span><br><span class="line">            i = <span class="number">2</span>;</span><br><span class="line">            System.out.println(<span class="string">&quot;执行catch，此时i = &quot;</span>+i);</span><br><span class="line">            <span class="keyword">return</span> i;</span><br><span class="line">        &#125;<span class="keyword">finally</span>&#123;</span><br><span class="line">            i = <span class="number">3</span>;</span><br><span class="line">            System.out.println(<span class="string">&quot;执行finally，此时i = &quot;</span>+i);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>执行结果：</strong></p>
-<p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%BC%82%E5%B8%B8/return%E4%B8%8Etry.png" alt="return与try"></p>
-<ul>
-<li>若return存在于finally时，try和catch中的return没有机会执行。在实际开发中finally一般用于关闭资源等操作，不允许在finally中写return语句（编译器也会发出警告）。</li>
-</ul>
-<h1 id="其他语法"><a href="#其他语法" class="headerlink" title="其他语法"></a>其他语法</h1><h2 id="1-throws"><a href="#1-throws" class="headerlink" title="1.throws"></a>1.throws</h2><p>​    用于告知调用者此方法可能抛出的异常</p>
-<p><strong>使用格式：</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">【修饰符】 返回值类型  方法名(【形参列表】) <span class="keyword">throws</span> 异常列表&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>注意事项：</strong></p>
-<ul>
-<li>子类重写父类方法时，throws的异常列表范围不能大于父类，原因是保证多态引用时能正确捕获异常</li>
-</ul>
-<h2 id="2-throw"><a href="#2-throw" class="headerlink" title="2.throw"></a>2.throw</h2><p>​    用于手动抛出异常</p>
-<p><strong>使用格式：</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">throw</span> 异常对象;</span><br><span class="line"></span><br><span class="line"><span class="comment">//例如：</span></span><br><span class="line"><span class="keyword">throw</span> <span class="keyword">new</span> AccountException(<span class="string">&quot;异常信息&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<p><strong>注意事项：</strong></p>
-<ul>
-<li><p>throw抛出来的异常对象，和JVM抛出来的异常对象一样，也要用try..catch处理或者throws。</p>
-<p>如果是运行时异常，编译器不会强制要求你处理，如果是编译时异常，那么编译器会强制要求你处理。</p>
-</li>
-</ul>
-<h1 id="自定义异常"><a href="#自定义异常" class="headerlink" title="自定义异常"></a>自定义异常</h1><p>​    创建自定义异常的方式为创建一个类并继承Throwable或它的子类，在实际开发中通常是继承RuntimeException或Exception来自定义运行时异常或编译时异常。</p>
-<p>​    <strong>建议在自定义异常时至少保留无参构造和异常信息message使用的有参构造</strong></p>
-<p><strong>示例：</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//自定义一个编译时异常</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestCustomException</span> <span class="keyword">extends</span> <span class="title">Exception</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TestCustomException</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TestCustomException</span><span class="params">(String message)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(message);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>​    自定义异常只能手动通过throw抛出。</p>
-<h1 id="关于异常的几个方法"><a href="#关于异常的几个方法" class="headerlink" title="关于异常的几个方法"></a>关于异常的几个方法</h1><p><strong>printStackTrace()：</strong></p>
-<p>打印异常对象的详细信息，包括异常类型，message，堆栈跟踪信息。</p>
-<p><strong>e.getMessage()：</strong></p>
-<p>只是获取异常的message信息</p>
-<p><strong>关于异常信息的打印：</strong></p>
-<p>用System.err打印和用e.printStackTrace()都是会标记红色的突出。</p>
-<p>用System.out打印，当成普通信息打印。</p>
-<p>这两个打印是两个独立的线程，顺序是不能精确控制的。</p>
-]]></content>
-      <categories>
-        <category>Java</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>Java基础</tag>
-        <tag>异常</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>MySQL基础之数据类型</title>
     <url>/2020/08/18/MySQL%E5%9F%BA%E7%A1%80%E4%B9%8B%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/</url>
     <content><![CDATA[<h1 id="MySQL数据类型"><a href="#MySQL数据类型" class="headerlink" title="MySQL数据类型"></a>MySQL数据类型</h1><p>​    数据库字段的数据类型直接影响了数据库的性能，掌握好数据类型对数据库的优化来说十分重要。</p>
@@ -1096,221 +1096,6 @@
       </tags>
   </entry>
   <entry>
-    <title>markdown常用语法</title>
-    <url>/2020/08/05/markdown%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95/</url>
-    <content><![CDATA[<h1 id="markdown常用语法"><a href="#markdown常用语法" class="headerlink" title="markdown常用语法"></a>markdown常用语法</h1><p>​    工欲善其事必先利其器，markdown作为最适合程序员的文本编辑格式，是写技术博客不可或缺的一环，花了一天时间学习了相关的语法，总结分享作为新博客的第一篇文章。</p>
-<a id="more"></a>
-
-<h2 id="文本格式"><a href="#文本格式" class="headerlink" title="文本格式"></a>文本格式</h2><h3 id="0-标题"><a href="#0-标题" class="headerlink" title="0.标题"></a>0.标题</h3><p>​    标题格式：<strong># + 空格 + 标题内容</strong>，几个’#就代表几级标题。</p>
-<h3 id="1-字体"><a href="#1-字体" class="headerlink" title="1.字体"></a>1.字体</h3><p>​        字体格式：<strong>*文本内容* 或  _文本内容_</strong> ，一个符号为<em>斜体文本</em>，两个符号为<strong>粗体文本</strong>，三个符号为**<em>粗斜体文本**</em>。</p>
-<table>
-<thead>
-<tr>
-<th align="center">输入内容</th>
-<th align="center">效果</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">*斜体文本* 或  _斜体文本_</td>
-<td align="center"><em>斜体文本</em></td>
-</tr>
-<tr>
-<td align="center">**粗体文本** 或 __粗体文本__</td>
-<td align="center"><strong>粗体文本</strong></td>
-</tr>
-<tr>
-<td align="center">***粗斜体文本*** 或 ___粗斜体文本___</td>
-<td align="center"><strong><em>粗斜体文本</em></strong></td>
-</tr>
-</tbody></table>
-<h3 id="2-删除线"><a href="#2-删除线" class="headerlink" title="2.删除线"></a>2.删除线</h3><p>​        删除线格式：<strong>~~删除线文本~~</strong></p>
-<table>
-<thead>
-<tr>
-<th align="center">输入内容</th>
-<th align="center">效果</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">普通文本</td>
-<td align="center">普通文本</td>
-</tr>
-<tr>
-<td align="center">~~删除线文本~~</td>
-<td align="center"><del>删除线文本</del></td>
-</tr>
-</tbody></table>
-<h3 id="3-下划线"><a href="#3-下划线" class="headerlink" title="3.下划线"></a>3.下划线</h3><p>​        下划线格式：<strong>&lt;u&gt;带下划线的文本&lt;/u&gt;</strong></p>
-<table>
-<thead>
-<tr>
-<th align="center">输入内容</th>
-<th align="center">效果</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">普通文本</td>
-<td align="center">普通文本</td>
-</tr>
-<tr>
-<td align="center">&lt;u&gt;带下划线的文本&lt;/u&gt;</td>
-<td align="center"><u>带下划线的文本</u></td>
-</tr>
-</tbody></table>
-<h3 id="4-脚注"><a href="#4-脚注" class="headerlink" title="4.脚注"></a>4.脚注</h3><p>​    <strong>使用脚注</strong>：文本内容[^脚注名称]，<strong>解释脚注：</strong>[^脚注名称]:脚注内容。</p>
-<p>​    <strong>效果</strong>：文本内容<a href="%E8%BF%99%E6%98%AF%E4%B8%80%E4%B8%AA%E8%84%9A%E6%B3%A8">^脚注</a></p>
-<h3 id="5-分割线"><a href="#5-分割线" class="headerlink" title="5.分割线"></a>5.分割线</h3><p>​    使用三个或以上 * 或 - 来使用下划线，可以在符号中加空格（可能会在编写软件中识别为其他符号，<strong>不建议使用</strong>），且本行中不可有其他内容。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">几种分割线示意：</span><br><span class="line">***</span><br><span class="line"></span><br><span class="line">* * *</span><br><span class="line"></span><br><span class="line">*****</span><br><span class="line"></span><br><span class="line">- - -</span><br><span class="line"></span><br><span class="line">----------</span><br></pre></td></tr></table></figure>
-
-<p>分割线效果：</p>
-<hr>
-<p><strong>错误示范</strong>：***其他内容（未出现分割线效果）</p>
-<h2 id="列表与区块"><a href="#列表与区块" class="headerlink" title="列表与区块"></a>列表与区块</h2><h3 id="1-无序列表"><a href="#1-无序列表" class="headerlink" title="1.无序列表"></a>1.无序列表</h3><p>​    无序列表格式：<strong>* 或 + 或 - 加上一个空格后面再加上内容</strong>，三个符号效果相同。</p>
-<p><strong>输入</strong>：</p>
-<p>​    * 无序第一列</p>
-<p>​    + 无序第二列</p>
-<p>​    -  无序第三列</p>
-<p><strong>效果</strong>：</p>
-<pre><code>    * 无序第一列</code></pre>
-<ul>
-<li>无序第二列</li>
-</ul>
-<ul>
-<li>无序第三列</li>
-</ul>
-<h3 id="2-有序列表"><a href="#2-有序列表" class="headerlink" title="2.有序列表"></a>2.有序列表</h3><p>​    有序列表格式：<strong>数字+ . + 空格 + 内容</strong>，即将无序列表的符号替换为数字加点的格式（例如1.）。</p>
-<p><strong>输入</strong>：</p>
-<p>​    1. 有序第一列</p>
-<p>​    2. 有序第二列</p>
-<p>​    3. 有序第三列</p>
-<p><strong>效果</strong>:</p>
-<ol>
-<li>有序第一列</li>
-<li>有序第二列</li>
-<li>有序第三列</li>
-</ol>
-<h3 id="3-列表嵌套"><a href="#3-列表嵌套" class="headerlink" title="3.列表嵌套"></a>3.列表嵌套</h3><p>​    在语法中为在<strong>子列表前添加四个空格</strong>，不过一般都在编写软件上编写<strong>更推荐使用TAB（缩进）与SHIFT+TAB（反缩进）</strong></p>
-<p>​    <strong>输入</strong>：</p>
-<p>​    1. 第一项：</p>
-<p>​        * 第一项嵌套的第一个元素</p>
-<p>​        * 第一项嵌套的第二个元素</p>
-<p>​    2. 第二项：</p>
-<p>​        * 第二项嵌套的第一个元素</p>
-<p>​        * 第二项嵌套的第二个元素</p>
-<p><strong>效果</strong>:</p>
-<ol>
-<li>第一项：<ul>
-<li>第一项嵌套的第一个元素</li>
-<li>第一项嵌套的第二个元素</li>
-</ul>
-</li>
-<li>第二项：<pre><code>* 第二项嵌套的第一个元素
-   * 第二项嵌套的第二个元素</code></pre>
-</li>
-</ol>
-<h3 id="4-区块"><a href="#4-区块" class="headerlink" title="4.区块"></a>4.区块</h3><p>​    区块格式：<strong>在每行前加上 &gt; 然后紧跟一个空格。</strong></p>
-<p><strong>输入：</strong></p>
-<p>&gt; 区块引用第一行</p>
-<p>&gt; 区块引用第二行</p>
-<p><strong>效果：</strong></p>
-<blockquote>
-<p>区块引用第一行</p>
-<p>区块引用第二行</p>
-</blockquote>
-<h3 id="5-区块嵌套"><a href="#5-区块嵌套" class="headerlink" title="5.区块嵌套"></a>5.区块嵌套</h3><p>​    区块嵌套格式：<strong>每有一个 &gt; 号就表示一层嵌套</strong></p>
-<p><strong>输入：</strong></p>
-<p>&gt; 最外层</p>
-<p>&gt;&gt; 第一层嵌套</p>
-<p>&gt;&gt;&gt; 第二层嵌套</p>
-<p>**效果: **</p>
-<blockquote>
-<p>最外层</p>
-<blockquote>
-<p>第一层嵌套</p>
-<blockquote>
-<p>第二层嵌套</p>
-</blockquote>
-</blockquote>
-</blockquote>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><h3 id="1-代码片段"><a href="#1-代码片段" class="headerlink" title="1.代码片段"></a>1.代码片段</h3><p>​    代码片段格式：**` 代码内容 ` **(反引号)</p>
-<p>​    <strong>输入：</strong> ` int a ;`         <strong>效果：</strong> <code>int a;</code></p>
-<h3 id="2-代码区块"><a href="#2-代码区块" class="headerlink" title="2.代码区块"></a>2.代码区块</h3><p>​    格式：用 <strong>```</strong> 包裹一段代码，并指定一种语言（也可以不指定）：</p>
-<p><strong>输入：</strong></p>
-<p>​    ``` java</p>
-<p>public class Test {<br>    public static void main(String[] args) {<br>        System.out.println(“Hello World”);<br>    }<br>}</p>
-<p>​    ```</p>
-<p><strong>效果：</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Hello World&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h2><h3 id="1-直接显示链接"><a href="#1-直接显示链接" class="headerlink" title="1.直接显示链接"></a>1.直接显示链接</h3><p>​    语法格式: <strong>&lt; 链接 &gt; **    **效果:</strong> <a href="https://www.baidu.com/">https://www.baidu.com/</a></p>
-<h3 id="2-用名称替代链接"><a href="#2-用名称替代链接" class="headerlink" title="2.用名称替代链接"></a>2.用名称替代链接</h3><p>​    语法格式：**[链接名称](链接地址)  **效果：这是我的<a href="https://ykailh.github.io/">博客</a></p>
-<h3 id="3-用名称和变量替代链接"><a href="#3-用名称和变量替代链接" class="headerlink" title="3.用名称和变量替代链接"></a>3.用名称和变量替代链接</h3><p>​    语法格式：<strong>[链接名称][变量名称]，[变量名称]</strong>: 链接。变量定义类似于脚注，效果与用名称替代类似，但方便多次使用。</p>
-<p>效果：这是一个<a href="https://www.baidu.com/">百度链接</a>，再次使用<a href="https://www.baidu.com/">百度链接</a>。</p>
-<h2 id="表格"><a href="#表格" class="headerlink" title="表格"></a>表格</h2><p>​    <strong>用 | 来分隔单元格，- 来分隔表头。</strong></p>
-<p><strong>输入：</strong></p>
-<p>| 表头 | 表头 |</p>
-<p>|  —-  |  —-  |</p>
-<p>| 单元格 | 单元格 |</p>
-<p>| 单元格 | 单元格 |</p>
-<p><strong>效果：</strong></p>
-<table>
-<thead>
-<tr>
-<th>表头</th>
-<th>表头</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>单元格</td>
-<td>单元格</td>
-</tr>
-<tr>
-<td>单元格</td>
-<td>单元格</td>
-</tr>
-</tbody></table>
-<p><strong>默认为左对齐</strong></p>
-<hr>
-<p>将分隔符替换为<strong>-: , :-  , :-:</strong> 分别表示右对齐，左对齐，居中对齐。</p>
-<p><strong>输入：</strong></p>
-<p>| 左对齐 | 右对齐 | 居中对齐 |</p>
-<p>|  :—-  |  —-:  | :—-: |</p>
-<p>| 单元格 | 单元格 | 单元格 |</p>
-<p>| 单元格 | 单元格 | 单元格 |</p>
-<p><strong>效果</strong>：</p>
-<table>
-<thead>
-<tr>
-<th align="left">左对齐</th>
-<th align="right">右对齐</th>
-<th align="center">居中对齐</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">单元格</td>
-<td align="right">单元格</td>
-<td align="center">单元格</td>
-</tr>
-<tr>
-<td align="left">单元格</td>
-<td align="right">单元格</td>
-<td align="center">单元格</td>
-</tr>
-</tbody></table>
-<h2 id="图片"><a href="#图片" class="headerlink" title="图片"></a>图片</h2><p>​    图片插入格式：![图片名](图片相对路径/绝对路径/图片链接)；</p>
-<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><p>​    编写md文件时建议使用专用的编辑器，一般都支持自动补全和实时预览，可以提高编写的效率。博主正在用的也是许多人推荐的Typora,也推荐给大家。<a href="https://www.typora.io/">Typora官网</a></p>
-<hr>
-]]></content>
-      <categories>
-        <category>常用软件</category>
-      </categories>
-      <tags>
-        <tag>markdown</tag>
-        <tag>Typora</tag>
-        <tag>常用软件</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>MySQL基础之运算符</title>
     <url>/2020/08/19/MySQL%E5%9F%BA%E7%A1%80%E4%B9%8B%E8%BF%90%E7%AE%97%E7%AC%A6/</url>
     <content><![CDATA[<h1 id="MySQL运算符"><a href="#MySQL运算符" class="headerlink" title="MySQL运算符"></a>MySQL运算符</h1><p>​    MySQL的运算符分为<strong>算术运算符</strong>、<strong>比较运算符</strong>、<strong>逻辑运算符</strong>、<strong>位运算符</strong>四个类型。</p>
@@ -1530,7 +1315,7 @@
   <entry>
     <title>Web基础之HTML</title>
     <url>/2020/09/01/Web%E5%9F%BA%E7%A1%80%E4%B9%8BHTML/</url>
-    <content><![CDATA[<p>​    Web基础系列主要对Java开发中Web相关的内容(如HTML、CSS、JavaScript等)进行最基本的讲解，本系列其他文章请参考<a href="https://ykailh.github.io/tags/Web%E5%9F%BA%E7%A1%80/">Web基础</a></p>
+    <content><![CDATA[<p>​    Web基础系列主要对Java开发中Web相关的内容(如HTML、CSS、JavaScript等)进行最基本的讲解，本系列其他文章请参考<a href="https://ykailh.github.io/tags/Web%E5%9F%BA%E7%A1%80/">链接</a></p>
 <a id="more"></a>]]></content>
       <categories>
         <category>Web</category>
@@ -1539,6 +1324,221 @@
         <tag>Web</tag>
         <tag>Web基础</tag>
         <tag>HTML</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>markdown常用语法</title>
+    <url>/2020/08/05/markdown%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95/</url>
+    <content><![CDATA[<h1 id="markdown常用语法"><a href="#markdown常用语法" class="headerlink" title="markdown常用语法"></a>markdown常用语法</h1><p>​    工欲善其事必先利其器，markdown作为最适合程序员的文本编辑格式，是写技术博客不可或缺的一环，花了一天时间学习了相关的语法，总结分享作为新博客的第一篇文章。</p>
+<a id="more"></a>
+
+<h2 id="文本格式"><a href="#文本格式" class="headerlink" title="文本格式"></a>文本格式</h2><h3 id="0-标题"><a href="#0-标题" class="headerlink" title="0.标题"></a>0.标题</h3><p>​    标题格式：<strong># + 空格 + 标题内容</strong>，几个’#就代表几级标题。</p>
+<h3 id="1-字体"><a href="#1-字体" class="headerlink" title="1.字体"></a>1.字体</h3><p>​        字体格式：<strong>*文本内容* 或  _文本内容_</strong> ，一个符号为<em>斜体文本</em>，两个符号为<strong>粗体文本</strong>，三个符号为**<em>粗斜体文本**</em>。</p>
+<table>
+<thead>
+<tr>
+<th align="center">输入内容</th>
+<th align="center">效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">*斜体文本* 或  _斜体文本_</td>
+<td align="center"><em>斜体文本</em></td>
+</tr>
+<tr>
+<td align="center">**粗体文本** 或 __粗体文本__</td>
+<td align="center"><strong>粗体文本</strong></td>
+</tr>
+<tr>
+<td align="center">***粗斜体文本*** 或 ___粗斜体文本___</td>
+<td align="center"><strong><em>粗斜体文本</em></strong></td>
+</tr>
+</tbody></table>
+<h3 id="2-删除线"><a href="#2-删除线" class="headerlink" title="2.删除线"></a>2.删除线</h3><p>​        删除线格式：<strong>~~删除线文本~~</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">输入内容</th>
+<th align="center">效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">普通文本</td>
+<td align="center">普通文本</td>
+</tr>
+<tr>
+<td align="center">~~删除线文本~~</td>
+<td align="center"><del>删除线文本</del></td>
+</tr>
+</tbody></table>
+<h3 id="3-下划线"><a href="#3-下划线" class="headerlink" title="3.下划线"></a>3.下划线</h3><p>​        下划线格式：<strong>&lt;u&gt;带下划线的文本&lt;/u&gt;</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">输入内容</th>
+<th align="center">效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">普通文本</td>
+<td align="center">普通文本</td>
+</tr>
+<tr>
+<td align="center">&lt;u&gt;带下划线的文本&lt;/u&gt;</td>
+<td align="center"><u>带下划线的文本</u></td>
+</tr>
+</tbody></table>
+<h3 id="4-脚注"><a href="#4-脚注" class="headerlink" title="4.脚注"></a>4.脚注</h3><p>​    <strong>使用脚注</strong>：文本内容[^脚注名称]，<strong>解释脚注：</strong>[^脚注名称]:脚注内容。</p>
+<p>​    <strong>效果</strong>：文本内容<a href="%E8%BF%99%E6%98%AF%E4%B8%80%E4%B8%AA%E8%84%9A%E6%B3%A8">^脚注</a></p>
+<h3 id="5-分割线"><a href="#5-分割线" class="headerlink" title="5.分割线"></a>5.分割线</h3><p>​    使用三个或以上 * 或 - 来使用下划线，可以在符号中加空格（可能会在编写软件中识别为其他符号，<strong>不建议使用</strong>），且本行中不可有其他内容。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">几种分割线示意：</span><br><span class="line">***</span><br><span class="line"></span><br><span class="line">* * *</span><br><span class="line"></span><br><span class="line">*****</span><br><span class="line"></span><br><span class="line">- - -</span><br><span class="line"></span><br><span class="line">----------</span><br></pre></td></tr></table></figure>
+
+<p>分割线效果：</p>
+<hr>
+<p><strong>错误示范</strong>：***其他内容（未出现分割线效果）</p>
+<h2 id="列表与区块"><a href="#列表与区块" class="headerlink" title="列表与区块"></a>列表与区块</h2><h3 id="1-无序列表"><a href="#1-无序列表" class="headerlink" title="1.无序列表"></a>1.无序列表</h3><p>​    无序列表格式：<strong>* 或 + 或 - 加上一个空格后面再加上内容</strong>，三个符号效果相同。</p>
+<p><strong>输入</strong>：</p>
+<p>​    * 无序第一列</p>
+<p>​    + 无序第二列</p>
+<p>​    -  无序第三列</p>
+<p><strong>效果</strong>：</p>
+<pre><code>    * 无序第一列</code></pre>
+<ul>
+<li>无序第二列</li>
+</ul>
+<ul>
+<li>无序第三列</li>
+</ul>
+<h3 id="2-有序列表"><a href="#2-有序列表" class="headerlink" title="2.有序列表"></a>2.有序列表</h3><p>​    有序列表格式：<strong>数字+ . + 空格 + 内容</strong>，即将无序列表的符号替换为数字加点的格式（例如1.）。</p>
+<p><strong>输入</strong>：</p>
+<p>​    1. 有序第一列</p>
+<p>​    2. 有序第二列</p>
+<p>​    3. 有序第三列</p>
+<p><strong>效果</strong>:</p>
+<ol>
+<li>有序第一列</li>
+<li>有序第二列</li>
+<li>有序第三列</li>
+</ol>
+<h3 id="3-列表嵌套"><a href="#3-列表嵌套" class="headerlink" title="3.列表嵌套"></a>3.列表嵌套</h3><p>​    在语法中为在<strong>子列表前添加四个空格</strong>，不过一般都在编写软件上编写<strong>更推荐使用TAB（缩进）与SHIFT+TAB（反缩进）</strong></p>
+<p>​    <strong>输入</strong>：</p>
+<p>​    1. 第一项：</p>
+<p>​        * 第一项嵌套的第一个元素</p>
+<p>​        * 第一项嵌套的第二个元素</p>
+<p>​    2. 第二项：</p>
+<p>​        * 第二项嵌套的第一个元素</p>
+<p>​        * 第二项嵌套的第二个元素</p>
+<p><strong>效果</strong>:</p>
+<ol>
+<li>第一项：<ul>
+<li>第一项嵌套的第一个元素</li>
+<li>第一项嵌套的第二个元素</li>
+</ul>
+</li>
+<li>第二项：<pre><code>* 第二项嵌套的第一个元素
+   * 第二项嵌套的第二个元素</code></pre>
+</li>
+</ol>
+<h3 id="4-区块"><a href="#4-区块" class="headerlink" title="4.区块"></a>4.区块</h3><p>​    区块格式：<strong>在每行前加上 &gt; 然后紧跟一个空格。</strong></p>
+<p><strong>输入：</strong></p>
+<p>&gt; 区块引用第一行</p>
+<p>&gt; 区块引用第二行</p>
+<p><strong>效果：</strong></p>
+<blockquote>
+<p>区块引用第一行</p>
+<p>区块引用第二行</p>
+</blockquote>
+<h3 id="5-区块嵌套"><a href="#5-区块嵌套" class="headerlink" title="5.区块嵌套"></a>5.区块嵌套</h3><p>​    区块嵌套格式：<strong>每有一个 &gt; 号就表示一层嵌套</strong></p>
+<p><strong>输入：</strong></p>
+<p>&gt; 最外层</p>
+<p>&gt;&gt; 第一层嵌套</p>
+<p>&gt;&gt;&gt; 第二层嵌套</p>
+<p>**效果: **</p>
+<blockquote>
+<p>最外层</p>
+<blockquote>
+<p>第一层嵌套</p>
+<blockquote>
+<p>第二层嵌套</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><h3 id="1-代码片段"><a href="#1-代码片段" class="headerlink" title="1.代码片段"></a>1.代码片段</h3><p>​    代码片段格式：**` 代码内容 ` **(反引号)</p>
+<p>​    <strong>输入：</strong> ` int a ;`         <strong>效果：</strong> <code>int a;</code></p>
+<h3 id="2-代码区块"><a href="#2-代码区块" class="headerlink" title="2.代码区块"></a>2.代码区块</h3><p>​    格式：用 <strong>```</strong> 包裹一段代码，并指定一种语言（也可以不指定）：</p>
+<p><strong>输入：</strong></p>
+<p>​    ``` java</p>
+<p>public class Test {<br>    public static void main(String[] args) {<br>        System.out.println(“Hello World”);<br>    }<br>}</p>
+<p>​    ```</p>
+<p><strong>效果：</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Hello World&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h2><h3 id="1-直接显示链接"><a href="#1-直接显示链接" class="headerlink" title="1.直接显示链接"></a>1.直接显示链接</h3><p>​    语法格式: <strong>&lt; 链接 &gt; **    **效果:</strong> <a href="https://www.baidu.com/">https://www.baidu.com/</a></p>
+<h3 id="2-用名称替代链接"><a href="#2-用名称替代链接" class="headerlink" title="2.用名称替代链接"></a>2.用名称替代链接</h3><p>​    语法格式：**[链接名称](链接地址)  **效果：这是我的<a href="https://ykailh.github.io/">博客</a></p>
+<h3 id="3-用名称和变量替代链接"><a href="#3-用名称和变量替代链接" class="headerlink" title="3.用名称和变量替代链接"></a>3.用名称和变量替代链接</h3><p>​    语法格式：<strong>[链接名称][变量名称]，[变量名称]</strong>: 链接。变量定义类似于脚注，效果与用名称替代类似，但方便多次使用。</p>
+<p>效果：这是一个<a href="https://www.baidu.com/">百度链接</a>，再次使用<a href="https://www.baidu.com/">百度链接</a>。</p>
+<h2 id="表格"><a href="#表格" class="headerlink" title="表格"></a>表格</h2><p>​    <strong>用 | 来分隔单元格，- 来分隔表头。</strong></p>
+<p><strong>输入：</strong></p>
+<p>| 表头 | 表头 |</p>
+<p>|  —-  |  —-  |</p>
+<p>| 单元格 | 单元格 |</p>
+<p>| 单元格 | 单元格 |</p>
+<p><strong>效果：</strong></p>
+<table>
+<thead>
+<tr>
+<th>表头</th>
+<th>表头</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>单元格</td>
+<td>单元格</td>
+</tr>
+<tr>
+<td>单元格</td>
+<td>单元格</td>
+</tr>
+</tbody></table>
+<p><strong>默认为左对齐</strong></p>
+<hr>
+<p>将分隔符替换为<strong>-: , :-  , :-:</strong> 分别表示右对齐，左对齐，居中对齐。</p>
+<p><strong>输入：</strong></p>
+<p>| 左对齐 | 右对齐 | 居中对齐 |</p>
+<p>|  :—-  |  —-:  | :—-: |</p>
+<p>| 单元格 | 单元格 | 单元格 |</p>
+<p>| 单元格 | 单元格 | 单元格 |</p>
+<p><strong>效果</strong>：</p>
+<table>
+<thead>
+<tr>
+<th align="left">左对齐</th>
+<th align="right">右对齐</th>
+<th align="center">居中对齐</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">单元格</td>
+<td align="right">单元格</td>
+<td align="center">单元格</td>
+</tr>
+<tr>
+<td align="left">单元格</td>
+<td align="right">单元格</td>
+<td align="center">单元格</td>
+</tr>
+</tbody></table>
+<h2 id="图片"><a href="#图片" class="headerlink" title="图片"></a>图片</h2><p>​    图片插入格式：![图片名](图片相对路径/绝对路径/图片链接)；</p>
+<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><p>​    编写md文件时建议使用专用的编辑器，一般都支持自动补全和实时预览，可以提高编写的效率。博主正在用的也是许多人推荐的Typora,也推荐给大家。<a href="https://www.typora.io/">Typora官网</a></p>
+<hr>
+]]></content>
+      <categories>
+        <category>常用软件</category>
+      </categories>
+      <tags>
+        <tag>markdown</tag>
+        <tag>Typora</tag>
+        <tag>常用软件</tag>
       </tags>
   </entry>
   <entry>
