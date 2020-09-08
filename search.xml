@@ -1313,6 +1313,95 @@
       </tags>
   </entry>
   <entry>
+    <title>Web基础之CSS</title>
+    <url>/2020/09/02/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/</url>
+    <content><![CDATA[<p><strong>Web基础系列</strong>主要对Java开发中Web相关的内容(如<code>HTML</code>、<code>CSS</code>、<code>JavaScript</code>等)进行<strong>最基本的讲解</strong>，本系列其他文章请参考<a href="https://ykailh.github.io/tags/Web%E5%9F%BA%E7%A1%80/">Web基础</a> 。</p>
+<p>​    本文主要对<code>CSS</code>进行简单的了解，想要更详细的了解HTML可以参考这个教程<a href="https://www.runoob.com/css/css-tutorial.html">CSS教程</a> 。</p>
+<a id="more"></a>
+
+<h2 id="什么是HTML"><a href="#什么是HTML" class="headerlink" title="什么是HTML"></a>什么是HTML</h2><p>​    <strong>CSS</strong>的全称为（<strong>C</strong>ascading <strong>S</strong>tyle <strong>S</strong>heets）<strong>层叠样式表</strong>，它决定了HTML元素的显示方式。CSS 规则由两个主要部分构成：<strong>选择器</strong>，以及<strong>一条或多条声明</strong>:</p>
+<p>​    <img src="/image/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/CSS%E6%A0%BC%E5%BC%8F.jpg" alt="CSS格式"></p>
+<h2 id="CSS的插入"><a href="#CSS的插入" class="headerlink" title="CSS的插入"></a>CSS的插入</h2><p>​    根据CSS<strong>插入</strong>HTML文件的<strong>方式不同</strong>，分为<strong>外部样式表</strong>、<strong>内部样式表</strong>、<strong>内联样式</strong>。不同的方式有不同的插入格式。</p>
+<ul>
+<li><p><strong>外部样式表</strong></p>
+<p>​    将CSS语句写在一个后缀名为<code>.css</code>的文件中，然后在<code>&lt;head&gt;</code>标签内通过<code>&lt;link&gt;</code>标签引入CSS文件，<code>&lt;link&gt;</code>中的<code>rel</code>属性设置为<code>&quot;stylesheet&quot;</code>，<code>href</code>设置为CSS文件的路径。</p>
+<p>CSS文件示例(mystyle.css)：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">h1</span> &#123;<span class="attribute">color</span>:red;&#125;</span><br><span class="line"><span class="selector-tag">p</span> &#123;<span class="attribute">font-size</span>:<span class="number">30px</span>;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>HTML引入CSS：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span>    </span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>CSS外部样式表<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span> <span class="attr">href</span>=<span class="string">&quot;mystyle.css&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>h1标签内容<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>p标签内容<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    普通文本</span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>内部样式表</strong></p>
+<p>​    将CSS语句直接写在HTML文件<code>&lt;head&gt;</code>标签内的<code>&lt;style&gt;</code>标签中</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span>    </span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>CSS内部样式表<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span>&gt;</span></span><br><span class="line"><span class="css">    <span class="selector-tag">h1</span> &#123;<span class="attribute">color</span>:red;&#125;</span></span><br><span class="line"><span class="css">    <span class="selector-tag">p</span> &#123;<span class="attribute">font-size</span>:<span class="number">30px</span>;&#125;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>h1标签内容<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>p标签内容<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    普通文本</span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>内联样式</strong></p>
+<p>直接通过标签的<code>style</code>属性定义该标签内容的样式。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span>    </span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>CSS内联样式<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span> <span class="attr">style</span> = <span class="string">&quot;color:red&quot;</span>&gt;</span>h1标签内容<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">style</span> = <span class="string">&quot;font-size:30px&quot;</span>&gt;</span>p标签内容<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    普通文本</span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>上面三种方式都可以实现相同的效果：</p>
+<p>​    <img src="/image/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/%E6%A0%B7%E5%BC%8F%E8%A1%A8.png" alt="样式表"></p>
+<p>这三个样式同时存在时的优先级为：<strong>内联样式</strong>  &gt; <strong>内部样式表</strong> &gt; <strong>外部样式表</strong></p>
+<p>保持mystyle.css不变</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span>    </span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>样式优先级<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span> <span class="attr">href</span>=<span class="string">&quot;mystyle.css&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span>&gt;</span></span><br><span class="line"><span class="css">    <span class="selector-tag">h1</span> &#123;<span class="attribute">color</span>:yellow;&#125;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span> <span class="attr">style</span> = <span class="string">&quot;color:green&quot;</span>&gt;</span>测试优先级<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>​    <img src="/image/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/%E6%A0%B7%E5%BC%8F%E4%BC%98%E5%85%88%E7%BA%A7.png" alt="样式优先级"></p>
+<h2 id="CSS选择器"><a href="#CSS选择器" class="headerlink" title="CSS选择器"></a>CSS选择器</h2><p>​    主要介绍以下几种css选择器：</p>
+<ul>
+<li><p>标签选择器</p>
+<p>格式为：<code>标签名&#123;声明..&#125;</code>，对所有同名标签有效上面演示中均为标签选择器</p>
+</li>
+<li><p>类选择器</p>
+<p>格式为：<code>.类名&#123;声明..&#125;</code>,对所有标签中属性<code>class</code>的值为该类名的元素有效。</p>
+<p>可以使用<code>标签名.类名&#123;声明&#125;</code>来选择该标签内<code>class</code>的值为该类名的元素</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span>    </span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>类选择器<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span>&gt;</span></span><br><span class="line"><span class="css">    <span class="comment">/*选择class值为classname的元素*/</span></span></span><br><span class="line"><span class="css">    <span class="selector-class">.classname</span>&#123;<span class="attribute">color</span>:green;&#125;</span></span><br><span class="line"><span class="css">    <span class="comment">/*选择p标签中class值为classname的元素*/</span></span></span><br><span class="line"><span class="css">    <span class="selector-tag">p</span><span class="selector-class">.a</span>&#123;<span class="attribute">font-size</span>:<span class="number">30px</span>;&#125;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span> <span class="attr">class</span> = <span class="string">&quot;classname&quot;</span>&gt;</span>class为classname的h1标签<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span> = <span class="string">&quot;classname&quot;</span>&gt;</span>class为classname的p标签<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span> = <span class="string">&quot;a&quot;</span>&gt;</span>class为a的p标签<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>​    <img src="/image/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/%E7%B1%BB%E9%80%89%E6%8B%A9%E5%99%A8.png" alt="类选择器"></p>
+</li>
+<li><p>id选择器</p>
+<p>格式为：<code>#id值&#123;声明..&#125;</code>，只对id为此id值的元素有效。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span>    </span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>id选择器<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span>&gt;</span></span><br><span class="line"><span class="css">    <span class="comment">/*选择id值为p1的元素*/</span></span></span><br><span class="line"><span class="css">    <span class="selector-id">#p1</span>&#123;<span class="attribute">color</span>:green;&#125;</span></span><br><span class="line"><span class="css">    <span class="comment">/*选择id值为p2的元素*/</span></span></span><br><span class="line"><span class="css">    <span class="selector-id">#p2</span>&#123;<span class="attribute">font-size</span>:<span class="number">30px</span>;&#125;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>h1标签<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">id</span>=<span class="string">&quot;p1&quot;</span>&gt;</span>id值为p1的p标签<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">id</span>=<span class="string">&quot;p2&quot;</span>&gt;</span>id值为p2的p标签<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>​    <img src="/image/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/id%E9%80%89%E6%8B%A9%E5%99%A8.png" alt="id选择器"></p>
+</li>
+<li><p>属性选择器</p>
+<p>格式为：<code>[属性名]&#123;声明..&#125;</code>选择具有该属性的元素。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span>    </span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>属性选择器<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span>&gt;</span></span><br><span class="line"><span class="css">    <span class="comment">/*选择具有id属性的元素*/</span></span></span><br><span class="line"><span class="css">    <span class="selector-attr">[id]</span>&#123;<span class="attribute">color</span>:green;&#125;</span></span><br><span class="line"><span class="css">    <span class="comment">/*选择具有class属性的元素*/</span></span></span><br><span class="line"><span class="css">    <span class="selector-attr">[class]</span>&#123;<span class="attribute">font-size</span>:<span class="number">30px</span>;&#125;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>h1标签<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">id</span>=<span class="string">&quot;p1&quot;</span> <span class="attr">class</span>=<span class="string">&quot;p1&quot;</span>&gt;</span>id值为p1的p标签<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">id</span>=<span class="string">&quot;p2&quot;</span>&gt;</span>id值为p2的p标签<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>​    <img src="/image/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/%E5%B1%9E%E6%80%A7%E9%80%89%E6%8B%A9%E5%99%A8.png" alt="属性选择器"></p>
+</li>
+<li><p>组合选择器</p>
+<ul>
+<li><code>标签(名)1 标签(名)2</code>，选择标签1元素内的标签2元素。</li>
+<li><code>标签(名)1&gt;标签(名)2</code>，选择标签1元素内的标签2元素中的直接子元素。</li>
+<li><code>标签(名)1+标签(名)2</code>，选择紧接在标签1元素后的元素，且二者有相同父元素.</li>
+<li><code>标签(名)1~标签(名)2</code>，选择标签1元素后的所有标签2元素。</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span>    </span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>属性选择器<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span>&gt;</span></span><br><span class="line"><span class="css">    <span class="comment">/*以div p 为例，后续演示只有此处不同，省略代码*/</span></span></span><br><span class="line"><span class="css">    <span class="selector-tag">div</span> <span class="selector-tag">p</span>&#123;<span class="attribute">color</span>:red;&#125;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>div前的p元素<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span>&gt;</span>div内的p元素<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>span内的p元素<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>div后的p元素1<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>div后的p元素2<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>div p</code>结果：</p>
+<p>​    <img src="/image/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/%E7%BB%84%E5%90%88%E9%80%89%E6%8B%A9%E5%99%A81.png" alt="组合选择器1"></p>
+<p><code>div&gt;p</code>结果：</p>
+<p>​    <img src="/image/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/%E7%BB%84%E5%90%88%E9%80%89%E6%8B%A9%E5%99%A82.png" alt="组合选择器2"></p>
+<p><code>div+p</code>结果：</p>
+<p>​    <img src="/image/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/%E7%BB%84%E5%90%88%E9%80%89%E6%8B%A9%E5%99%A83.png" alt="组合选择器3"></p>
+<p><code>div~p</code>结果：</p>
+<p>​    <img src="/image/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/%E7%BB%84%E5%90%88%E9%80%89%E6%8B%A9%E5%99%A84.png" alt="组合选择器4"></p>
+</li>
+</ul>
+<h2 id="CSS常用样式"><a href="#CSS常用样式" class="headerlink" title="CSS常用样式"></a>CSS常用样式</h2>]]></content>
+      <categories>
+        <category>Web</category>
+      </categories>
+      <tags>
+        <tag>Web</tag>
+        <tag>Web基础</tag>
+        <tag>CSS</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Web基础之HTML</title>
     <url>/2020/09/01/Web%E5%9F%BA%E7%A1%80%E4%B9%8BHTML/</url>
     <content><![CDATA[<p>​    <strong>Web基础系列</strong>主要对Java开发中Web相关的内容(如<code>HTML</code>、<code>CSS</code>、<code>JavaScrip</code>t等)进行<strong>最基本的讲解</strong>，本系列其他文章请参考<a href="https://ykailh.github.io/tags/Web%E5%9F%BA%E7%A1%80/">Web基础</a> 。</p>
@@ -1436,6 +1525,117 @@
 <p>​    <img src="/image/Web%E5%9F%BA%E7%A1%80%E4%B9%8BHTML/%E8%A1%A8%E5%8D%95.png" alt="表单"></p>
 <p>提交后后：</p>
 <p>​    <img src="/image/Web%E5%9F%BA%E7%A1%80%E4%B9%8BHTML/%E8%A1%A8%E5%8D%95%E6%8F%90%E4%BA%A4.png" alt="表单提交"></p>
+<h2 id="字符实体"><a href="#字符实体" class="headerlink" title="字符实体"></a>字符实体</h2><p>​    想要显示HTML的<strong>保留字符</strong>或<strong>特殊字符</strong>显示空格时需要使用到字符实体，HTML中的字符实体一般以<code>&amp;</code>符号开头，以<code>;</code>结尾，例如以下这些：需要注意的是字符实体是<strong>对大小写敏感</strong>的。</p>
+<table>
+<thead>
+<tr>
+<th align="left">显示结果</th>
+<th align="left">描述</th>
+<th align="left">实体名称</th>
+<th align="left">实体编号</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"></td>
+<td align="left">空格</td>
+<td align="left">&nbsp;</td>
+<td align="left">&#160;</td>
+</tr>
+<tr>
+<td align="left">&lt;</td>
+<td align="left">小于号</td>
+<td align="left">&lt;</td>
+<td align="left">&#60;</td>
+</tr>
+<tr>
+<td align="left">&gt;</td>
+<td align="left">大于号</td>
+<td align="left">&gt;</td>
+<td align="left">&#62;</td>
+</tr>
+<tr>
+<td align="left">&amp;</td>
+<td align="left">和号</td>
+<td align="left">&amp;</td>
+<td align="left">&#38;</td>
+</tr>
+<tr>
+<td align="left">“</td>
+<td align="left">引号</td>
+<td align="left">&quot;</td>
+<td align="left">&#34;</td>
+</tr>
+<tr>
+<td align="left">‘</td>
+<td align="left">撇号</td>
+<td align="left">&apos; (IE不支持)</td>
+<td align="left">&#39;</td>
+</tr>
+<tr>
+<td align="left">￠</td>
+<td align="left">分</td>
+<td align="left">&cent;</td>
+<td align="left">&#162;</td>
+</tr>
+<tr>
+<td align="left">£</td>
+<td align="left">镑</td>
+<td align="left">&pound;</td>
+<td align="left">&#163;</td>
+</tr>
+<tr>
+<td align="left">¥</td>
+<td align="left">人民币/日元</td>
+<td align="left">&yen;</td>
+<td align="left">&#165;</td>
+</tr>
+<tr>
+<td align="left">€</td>
+<td align="left">欧元</td>
+<td align="left">&euro;</td>
+<td align="left">&#8364;</td>
+</tr>
+<tr>
+<td align="left">§</td>
+<td align="left">小节</td>
+<td align="left">&sect;</td>
+<td align="left">&#167;</td>
+</tr>
+<tr>
+<td align="left">©</td>
+<td align="left">版权</td>
+<td align="left">&copy;</td>
+<td align="left">&#169;</td>
+</tr>
+<tr>
+<td align="left">®</td>
+<td align="left">注册商标</td>
+<td align="left">&reg;</td>
+<td align="left">&#174;</td>
+</tr>
+<tr>
+<td align="left">™</td>
+<td align="left">商标</td>
+<td align="left">&trade;</td>
+<td align="left">&#8482;</td>
+</tr>
+<tr>
+<td align="left">×</td>
+<td align="left">乘号</td>
+<td align="left">&times;</td>
+<td align="left">&#215;</td>
+</tr>
+<tr>
+<td align="left">÷</td>
+<td align="left">除号</td>
+<td align="left">&divide;</td>
+<td align="left">&#247;</td>
+</tr>
+</tbody></table>
+<p>​    完整的HTML实体可以参考： <a href="https://www.runoob.com/tags/ref-entities.html">HTML 实体参考手册</a>。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span>    </span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>字符实体<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 显示小于号和大于号 --&gt;</span></span><br><span class="line">    <span class="symbol">&amp;lt;</span> br <span class="symbol">&amp;gt;</span> <span class="tag">&lt;<span class="name">br</span>/&gt;</span><span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">&lt;!-- 在代码中编写的空格无法显示，想要显示需要使用字符实体 --&gt;</span></span><br><span class="line">    A            B <span class="tag">&lt;<span class="name">br</span>/&gt;</span><span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line">    A<span class="symbol">&amp;nbsp;</span><span class="symbol">&amp;nbsp;</span><span class="symbol">&amp;nbsp;</span><span class="symbol">&amp;nbsp;</span>B</span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/image/Web%E5%9F%BA%E7%A1%80%E4%B9%8BHTML/%E5%AD%97%E7%AC%A6%E5%AE%9E%E4%BD%93.png" alt="字符实体"></p>
 <h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><ul>
 <li>标签<strong>不区分大小写</strong>，但为了<strong>规范代码</strong>，请<strong>一律小写</strong>。</li>
 <li>标签<strong>可以嵌套</strong>使用，但<strong>不可以交叉嵌套</strong>。</li>

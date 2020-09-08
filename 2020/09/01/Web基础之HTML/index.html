@@ -75,7 +75,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">2.8k</span>
+            <span class="post-count">3.1k</span>
         </span>
     </span>
 
@@ -84,7 +84,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">12 min</span>
+            <span class="post-count">13 min</span>
         </span>
     </span>
 </div>
@@ -220,6 +220,117 @@
 <p>​    <img src="/image/Web%E5%9F%BA%E7%A1%80%E4%B9%8BHTML/%E8%A1%A8%E5%8D%95.png" alt="表单"></p>
 <p>提交后后：</p>
 <p>​    <img src="/image/Web%E5%9F%BA%E7%A1%80%E4%B9%8BHTML/%E8%A1%A8%E5%8D%95%E6%8F%90%E4%BA%A4.png" alt="表单提交"></p>
+<h2 id="字符实体"><a href="#字符实体" class="headerlink" title="字符实体"></a>字符实体</h2><p>​    想要显示HTML的<strong>保留字符</strong>或<strong>特殊字符</strong>显示空格时需要使用到字符实体，HTML中的字符实体一般以<code>&amp;</code>符号开头，以<code>;</code>结尾，例如以下这些：需要注意的是字符实体是<strong>对大小写敏感</strong>的。</p>
+<table>
+<thead>
+<tr>
+<th align="left">显示结果</th>
+<th align="left">描述</th>
+<th align="left">实体名称</th>
+<th align="left">实体编号</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"></td>
+<td align="left">空格</td>
+<td align="left">&nbsp;</td>
+<td align="left">&#160;</td>
+</tr>
+<tr>
+<td align="left">&lt;</td>
+<td align="left">小于号</td>
+<td align="left">&lt;</td>
+<td align="left">&#60;</td>
+</tr>
+<tr>
+<td align="left">&gt;</td>
+<td align="left">大于号</td>
+<td align="left">&gt;</td>
+<td align="left">&#62;</td>
+</tr>
+<tr>
+<td align="left">&amp;</td>
+<td align="left">和号</td>
+<td align="left">&amp;</td>
+<td align="left">&#38;</td>
+</tr>
+<tr>
+<td align="left">“</td>
+<td align="left">引号</td>
+<td align="left">&quot;</td>
+<td align="left">&#34;</td>
+</tr>
+<tr>
+<td align="left">‘</td>
+<td align="left">撇号</td>
+<td align="left">&apos; (IE不支持)</td>
+<td align="left">&#39;</td>
+</tr>
+<tr>
+<td align="left">￠</td>
+<td align="left">分</td>
+<td align="left">&cent;</td>
+<td align="left">&#162;</td>
+</tr>
+<tr>
+<td align="left">£</td>
+<td align="left">镑</td>
+<td align="left">&pound;</td>
+<td align="left">&#163;</td>
+</tr>
+<tr>
+<td align="left">¥</td>
+<td align="left">人民币/日元</td>
+<td align="left">&yen;</td>
+<td align="left">&#165;</td>
+</tr>
+<tr>
+<td align="left">€</td>
+<td align="left">欧元</td>
+<td align="left">&euro;</td>
+<td align="left">&#8364;</td>
+</tr>
+<tr>
+<td align="left">§</td>
+<td align="left">小节</td>
+<td align="left">&sect;</td>
+<td align="left">&#167;</td>
+</tr>
+<tr>
+<td align="left">©</td>
+<td align="left">版权</td>
+<td align="left">&copy;</td>
+<td align="left">&#169;</td>
+</tr>
+<tr>
+<td align="left">®</td>
+<td align="left">注册商标</td>
+<td align="left">&reg;</td>
+<td align="left">&#174;</td>
+</tr>
+<tr>
+<td align="left">™</td>
+<td align="left">商标</td>
+<td align="left">&trade;</td>
+<td align="left">&#8482;</td>
+</tr>
+<tr>
+<td align="left">×</td>
+<td align="left">乘号</td>
+<td align="left">&times;</td>
+<td align="left">&#215;</td>
+</tr>
+<tr>
+<td align="left">÷</td>
+<td align="left">除号</td>
+<td align="left">&divide;</td>
+<td align="left">&#247;</td>
+</tr>
+</tbody></table>
+<p>​    完整的HTML实体可以参考： <a target="_blank" rel="noopener" href="https://www.runoob.com/tags/ref-entities.html">HTML 实体参考手册</a>。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span>    </span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>字符实体<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 显示小于号和大于号 --&gt;</span></span><br><span class="line">    <span class="symbol">&amp;lt;</span> br <span class="symbol">&amp;gt;</span> <span class="tag">&lt;<span class="name">br</span>/&gt;</span><span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">&lt;!-- 在代码中编写的空格无法显示，想要显示需要使用字符实体 --&gt;</span></span><br><span class="line">    A            B <span class="tag">&lt;<span class="name">br</span>/&gt;</span><span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line">    A<span class="symbol">&amp;nbsp;</span><span class="symbol">&amp;nbsp;</span><span class="symbol">&amp;nbsp;</span><span class="symbol">&amp;nbsp;</span>B</span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/image/Web%E5%9F%BA%E7%A1%80%E4%B9%8BHTML/%E5%AD%97%E7%AC%A6%E5%AE%9E%E4%BD%93.png" alt="字符实体"></p>
 <h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><ul>
 <li>标签<strong>不区分大小写</strong>，但为了<strong>规范代码</strong>，请<strong>一律小写</strong>。</li>
 <li>标签<strong>可以嵌套</strong>使用，但<strong>不可以交叉嵌套</strong>。</li>
@@ -293,6 +404,15 @@
 
    
   <nav class="article-nav">
+    
+      <a href="/2020/09/02/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Web基础之CSS
+          
+        </div>
+      </a>
     
     
       <a href="/2020/08/22/MySQL%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%87%BD%E6%95%B0/" class="article-nav-link">
