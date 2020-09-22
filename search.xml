@@ -1,6 +1,143 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Java基础之包装类</title>
+    <url>/2020/08/08/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%8C%85%E8%A3%85%E7%B1%BB/</url>
+    <content><![CDATA[<h1 id="什么是包装类"><a href="#什么是包装类" class="headerlink" title="什么是包装类"></a>什么是包装类</h1><p>​    Java作为面向对象的编程语言在设计之初依然延续了C语言的8种基本数据类型，但在不断的更新中设计了很多针对对象的API和新的特性（例如泛型），不支持基本数据类型。为了解决这个问题，Java为每一个基本数据类型提供了包装类。</p>
+<a id="more"></a>
+
+<table>
+<thead>
+<tr>
+<th>基本数据类型</th>
+<th>包装类（java.lang.）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>byte</td>
+<td>Byte</td>
+</tr>
+<tr>
+<td>short</td>
+<td>Short</td>
+</tr>
+<tr>
+<td>int</td>
+<td>Integer</td>
+</tr>
+<tr>
+<td>long</td>
+<td>Long</td>
+</tr>
+<tr>
+<td>float</td>
+<td>Float</td>
+</tr>
+<tr>
+<td>double</td>
+<td>Double</td>
+</tr>
+<tr>
+<td>char</td>
+<td>Character</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>Boolean</td>
+</tr>
+</tbody></table>
+<h1 id="装箱与拆箱"><a href="#装箱与拆箱" class="headerlink" title="装箱与拆箱"></a>装箱与拆箱</h1><p>​    装箱和拆箱实际上就是<strong>基本数据类型和它的包装类之间的转换</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer num1 = <span class="keyword">new</span> Integer(<span class="number">1</span>);    <span class="comment">//基本数据类型转为包装类也叫做手动装箱</span></span><br><span class="line"><span class="keyword">int</span> num2 = num1.intValue();        <span class="comment">//包装类转换为基本数据类型，也叫做手动拆箱</span></span><br></pre></td></tr></table></figure>
+
+<p>​    在J<strong>DK1.5</strong>之后为了方便使用等目的提供了<strong>自动装箱与自动拆箱</strong>。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//包装类中的自动装箱拆箱机制</span></span><br><span class="line">Integer  num1 = <span class="number">1</span>;        <span class="comment">//自动装箱</span></span><br><span class="line"><span class="comment">//这行代码实际等同于    Integer  num1 = Integer.valueOf(1);</span></span><br><span class="line"><span class="comment">//这个于new Integer(1)有所区别 下文会详细说明</span></span><br><span class="line"><span class="keyword">int</span> num2 = num1;        <span class="comment">//自动拆箱</span></span><br></pre></td></tr></table></figure>
+
+<p>​    需要注意的是只在与<strong>对应的基本数据类型和包装类之间</strong>才能实现自动装箱与拆箱。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Double d = <span class="number">1</span>;<span class="comment">//错误的，1是int类型</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="包装类对象的缓存问题"><a href="#包装类对象的缓存问题" class="headerlink" title="包装类对象的缓存问题"></a>包装类对象的缓存问题</h1><p>​    为了引出这个问题首先做以下测试</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer i = <span class="number">1</span>;</span><br><span class="line">Integer j = <span class="number">1</span>;</span><br><span class="line">System.out.println(i == j);<span class="comment">//true</span></span><br><span class="line"></span><br><span class="line">Integer i = <span class="number">128</span>;</span><br><span class="line">Integer j = <span class="number">128</span>;</span><br><span class="line">System.out.println(i == j);<span class="comment">//false</span></span><br></pre></td></tr></table></figure>
+
+<p>​    为什么改变了在包装类的值会影响结果，这就涉及到了包装类对象的缓存问题。对于对象而言，<code>==</code>所比较的是两个对象的地址值，上面的代码就说明了<strong>在一定的范围内相同值的包装类指向的是同一个对象</strong>。每个包装类的缓存范围如下：</p>
+<table>
+<thead>
+<tr>
+<th>包装类</th>
+<th>缓存对象</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Byte</td>
+<td>-128~127</td>
+</tr>
+<tr>
+<td>Short</td>
+<td>-128~127</td>
+</tr>
+<tr>
+<td>Integer</td>
+<td>-128~127</td>
+</tr>
+<tr>
+<td>Long</td>
+<td>-128~127</td>
+</tr>
+<tr>
+<td>Float</td>
+<td>没有</td>
+</tr>
+<tr>
+<td>Double</td>
+<td>没有</td>
+</tr>
+<tr>
+<td>Character</td>
+<td>0~127</td>
+</tr>
+<tr>
+<td>Boolean</td>
+<td>true和false</td>
+</tr>
+</tbody></table>
+<p>​    <strong>以Integer为例</strong>，上面也提到过自动装箱时是调用<code>Integer.valueOf()</code>方法来获取Integer对象的，查看这个方法的源码。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Integer <span class="title">valueOf</span><span class="params">(<span class="keyword">int</span> i)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (i &gt;= IntegerCache.low &amp;&amp; i &lt;= IntegerCache.high)</span><br><span class="line">        <span class="keyword">return</span> IntegerCache.cache[i + (-IntegerCache.low)];</span><br><span class="line">    <span class="comment">//若在某一个范围内直接返回一个cache数组中的Integer对象。</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Integer(i);</span><br><span class="line">   <span class="comment">//若不在这个范围则创建一个Integer对象返回</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再找到<code>IntegerCache</code> 这是Integer的一个内部类</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">IntegerCache</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> low = -<span class="number">128</span>;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> high;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> Integer cache[];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="comment">// high value may be configured by property</span></span><br><span class="line">        <span class="keyword">int</span> h = <span class="number">127</span>;</span><br><span class="line">        String integerCacheHighPropValue =</span><br><span class="line">            sun.misc.VM.getSavedProperty(<span class="string">&quot;java.lang.Integer.IntegerCache.high&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span> (integerCacheHighPropValue != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">int</span> i = parseInt(integerCacheHighPropValue);</span><br><span class="line">                i = Math.max(i, <span class="number">127</span>);</span><br><span class="line">                <span class="comment">// Maximum array size is Integer.MAX_VALUE</span></span><br><span class="line">                h = Math.min(i, Integer.MAX_VALUE - (-low) -<span class="number">1</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span>( NumberFormatException nfe) &#123;</span><br><span class="line">                <span class="comment">// If the property cannot be parsed into an int, ignore it.</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        high = h;</span><br><span class="line"></span><br><span class="line">        cache = <span class="keyword">new</span> Integer[(high - low) + <span class="number">1</span>];</span><br><span class="line">        <span class="keyword">int</span> j = low;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; cache.length; k++)</span><br><span class="line">            cache[k] = <span class="keyword">new</span> Integer(j++);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// range [-128, 127] must be interned (JLS7 5.1.7)</span></span><br><span class="line">        <span class="keyword">assert</span> IntegerCache.high &gt;= <span class="number">127</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">IntegerCache</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    可以发现在Integer类初始化时会创建一个叫cache的数组，里面存放的是low至high范围的Integer类常量，这就是上面提到的缓存对象。</p>
+<p>这就解释了为什么在一定范围内使用<code>==</code>比较两个包装类对象会返回turn。</p>
+<p>再做几个比较实验：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer i = <span class="keyword">new</span> Integer(<span class="number">1</span>);<span class="comment">//新new的在堆中</span></span><br><span class="line">Integer j = <span class="number">1</span>;<span class="comment">//这个用的是缓冲的常量对象，在方法区</span></span><br><span class="line">System.out.println(i == j);<span class="comment">//false</span></span><br><span class="line">System.out.println(i.equals(j));<span class="comment">//true</span></span><br><span class="line"></span><br><span class="line">Integer i = <span class="keyword">new</span> Integer(<span class="number">1</span>);</span><br><span class="line"><span class="keyword">int</span> j = <span class="number">1</span>;</span><br><span class="line">System.out.println(i == j);<span class="comment">//true</span></span><br><span class="line">System.out.println(i.equals(j));<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<p>​    new出来的对象在堆当中，不指向常量对象，这就是<strong>new与valueOf()的区别</strong>，<code>valueOf()</code>只在超出缓存范围时才会创建一个新的对象，所以在实际使用过程中建议直接使用<code>valueOf()</code>。</p>
+<p>​    而与基本数据类型比较（包括计算）时会<strong>先拆箱</strong>再按照基本数据类型的规则比较，所以为了避免歧义，如果是判断值是否相等时建议同一使用<code>equals()</code>方法。</p>
+<h1 id="API演示"><a href="#API演示" class="headerlink" title="API演示"></a>API演示</h1><p>​    由于包装类的存在，许多处理基本数据类型的方法都可以定义在包装类中。下面进行一些<strong>举例</strong>。</p>
+<h2 id="1-把字符串转为基本数据类型"><a href="#1-把字符串转为基本数据类型" class="headerlink" title="1.把字符串转为基本数据类型"></a>1.把字符串转为基本数据类型</h2><p>​    <code>parsxxx()</code>方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = Integer.parseInt(<span class="string">&quot;整数的字符串&quot;</span>);</span><br><span class="line"><span class="keyword">double</span> a = Double.parseDouble(<span class="string">&quot;小数的字符串&quot;</span>);</span><br><span class="line"><span class="keyword">boolean</span> b = Boolean.parseBoolean(<span class="string">&quot;true或false&quot;</span>);</span><br><span class="line"></span><br><span class="line">System.out.println(Double.parseDouble(<span class="string">&quot;1.2&quot;</span>));<span class="comment">//1.2</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-数据类型的最大最小值"><a href="#2-数据类型的最大最小值" class="headerlink" title="2.数据类型的最大最小值"></a>2.数据类型的最大最小值</h2><p>​    <code>MAX_VALUE</code>和<code>MIN_VALUE</code></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer.MAX_VALUE和Integer.MIN_VALUE</span><br><span class="line">Long.MAX_VALUE和Long.MIN_VALUE</span><br><span class="line">Double.MAX_VALUE和Double.MIN_VALUE</span><br><span class="line">    </span><br><span class="line">System.out.println(Integer.MAX_VALUE);<span class="comment">//2147483647</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="3-转进制"><a href="#3-转进制" class="headerlink" title="3.转进制"></a>3.转进制</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer.toBinaryString(<span class="keyword">int</span> i) <span class="comment">//转为2进制</span></span><br><span class="line">Integer.toOctalString(<span class="keyword">int</span> i)  <span class="comment">//转为8进制</span></span><br><span class="line">Integer.toHexString(<span class="keyword">int</span> i)   <span class="comment">//转为16进制</span></span><br><span class="line"></span><br><span class="line">System.out.println(Integer.toBinaryString(<span class="number">15</span>));<span class="comment">//1111</span></span><br><span class="line">System.out.println(Integer.toOctalString(<span class="number">15</span>));<span class="comment">//17</span></span><br><span class="line">System.out.println(Integer.toHexString(<span class="number">15</span>));<span class="comment">//f</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>Java基础</tag>
+        <tag>包装类</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java基础之多线程</title>
     <url>/2020/08/10/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%A4%9A%E7%BA%BF%E7%A8%8B/</url>
     <content><![CDATA[<h1 id="相关的概念"><a href="#相关的概念" class="headerlink" title="相关的概念"></a>相关的概念</h1><ol>
@@ -164,294 +301,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Java基础之字符串</title>
-    <url>/2020/08/09/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%AD%97%E7%AC%A6%E4%B8%B2/</url>
-    <content><![CDATA[<h1 id="字符串的特点"><a href="#字符串的特点" class="headerlink" title="字符串的特点"></a>字符串的特点</h1><p>​        <strong><em>以下说明及演示基于JDK1.8版本</em></strong></p>
-<ol>
-<li>字符串String类型本身是final声明的，字符串的对象也是不可变对象，意味着一旦进行修改，就会产生新对象。</li>
-<li>String对象内部是用数组进行保存的，在<strong>JDK1.9之前</strong>用的是字符数组<code>char[]</code>，<strong>JDK1.9之后</strong>使用的是字节数组<code>byte[]</code>。</li>
-</ol>
-<a id="more"></a>
-
-<ol start="3">
-<li>String类中这个<code>values</code>数组,同时由<code>final</code>和<code>private</code>修饰，意味着这个数组<strong>不可变并且不能通过外部进行操作</strong>，String类型提供的所有的方法都是用新对象来表示修改后内容的，所以<strong>保证了String对象的不可变</strong>。</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//JDK1.8中String类的部分源码</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">String</span></span></span><br><span class="line"><span class="class">    <span class="keyword">implements</span> <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span>, <span class="title">Comparable</span>&lt;<span class="title">String</span>&gt;, <span class="title">CharSequence</span> </span>&#123;</span><br><span class="line">    <span class="comment">//使用char数组进行存储。</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">char</span> value[];</span><br><span class="line"></span><br><span class="line">    <span class="comment">//JDK1.8中只有char数组与哈希值，其他版本可能有所不同。</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> hash; <span class="comment">// Default to 0</span></span><br></pre></td></tr></table></figure>
-
-<ol start="4">
-<li>由于字符串对象设计为不可变，那么所以有<strong>字符串常量池</strong>来保存很多常量对象，<strong>JDK1.6以及之前</strong>，常量池设计在<strong>方法区</strong>当中。但由于字符串所占空间比较大，所以<strong>JDk1.7时</strong>将常量池移到了<strong>堆</strong>当中，<strong>JDk1.8</strong>后取消了<strong>方法区</strong>取而代之的是<strong>元空间</strong>，字符串常量池也在<strong>元空间</strong>当中。</li>
-</ol>
-<h1 id="字符串的比较"><a href="#字符串的比较" class="headerlink" title="字符串的比较"></a>字符串的比较</h1><h2 id="1"><a href="#1" class="headerlink" title="1.=="></a>1.==</h2><p>​    <code>==</code>用来比较对象的地址值，因为字符串特殊的存储方式，导致地址比较情况比较多。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str1 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line">String str2 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line">String str3 = <span class="keyword">new</span> String(<span class="string">&quot;A&quot;</span>);</span><br><span class="line">String str4 = <span class="keyword">new</span> String(<span class="string">&quot;A&quot;</span>).intern();</span><br><span class="line">System.out.println(str1 == str2);<span class="comment">//true</span></span><br><span class="line">System.out.println(str1 == str3);<span class="comment">//false</span></span><br><span class="line">System.out.println(str1 == str4);<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
-
-<p>​    <strong>内存示意图：</strong></p>
-<p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%AD%97%E7%AC%A6%E4%B8%B2/%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%86%85%E5%AD%98%E5%9B%BE.png" alt="字符串内存图"></p>
-<h2 id="2-equals"><a href="#2-equals" class="headerlink" title="2.equals()"></a>2.equals()</h2><p>​    <strong>用于比较对象的内容是否相同</strong>，因为String类型重写equals，区分大小写只要两个字符串的字符内容相同，就会返回true。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str1 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line">String str2 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line">String str3 = <span class="keyword">new</span> String(<span class="string">&quot;A&quot;</span>);</span><br><span class="line">System.out.println(str1.equals(str2));<span class="comment">//true</span></span><br><span class="line">System.out.println(str1.equals(str3));<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
-
-<p>查看一下String类中的<code>equals()</code>源码。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object anObject)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//判断是否指向同一个对象，如果是内容一定相同，返回ture</span></span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">this</span> == anObject) &#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    <span class="comment">//若传入参数不为String类则直接返回false</span></span><br><span class="line">      <span class="keyword">if</span> (anObject <span class="keyword">instanceof</span> String) &#123;</span><br><span class="line">          String anotherString = (String)anObject;</span><br><span class="line">          <span class="keyword">int</span> n = value.length;</span><br><span class="line">          <span class="comment">//判断字符串长度是否相等，不相等则一定不相同，返回false</span></span><br><span class="line">          <span class="keyword">if</span> (n == anotherString.value.length) &#123;</span><br><span class="line">              <span class="keyword">char</span> v1[] = value;</span><br><span class="line">              <span class="keyword">char</span> v2[] = anotherString.value;</span><br><span class="line">              <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">              <span class="comment">//逐个比较字符是否相等</span></span><br><span class="line">              <span class="keyword">while</span> (n-- != <span class="number">0</span>) &#123;</span><br><span class="line">                  <span class="keyword">if</span> (v1[i] != v2[i])</span><br><span class="line">                      <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">                  i++;</span><br><span class="line">              &#125;</span><br><span class="line">              <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>了避免空指针异常，若是与已知字符串做比较用已知字符串来调用方法。</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="string">&quot;已知字符串&quot;</span>.equals（）</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="3-equalsIgnoreCase"><a href="#3-equalsIgnoreCase" class="headerlink" title="3.equalsIgnoreCase()"></a>3.equalsIgnoreCase()</h2><p>​    <strong>用于不区分大小写的比较字符串内容</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">System.out.println(<span class="string">&quot;A&quot;</span>.equalsIgnoreCase(<span class="string">&quot;a&quot;</span>));<span class="comment">//ture</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="4-compareTo"><a href="#4-compareTo" class="headerlink" title="4.compareTo()"></a>4.compareTo()</h2><p>​    <strong>用于按照字符的Unicode编码值进行排序</strong>,String类型重写了<code>Comparable接口</code>的抽象方法。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">System.out.println(<span class="string">&quot;A&quot;</span>.compareTo(<span class="string">&quot;a&quot;</span>));<span class="comment">//-32</span></span><br><span class="line">System.out.println(<span class="string">&quot;AB&quot;</span>.compareTo(<span class="string">&quot;A&quot;</span>));<span class="comment">//1</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>源码如下:</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//String类中的compareTo方法</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compareTo</span><span class="params">(String anotherString)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> len1 = value.length;</span><br><span class="line">        <span class="keyword">int</span> len2 = anotherString.value.length;</span><br><span class="line">        <span class="keyword">int</span> lim = Math.min(len1, len2);</span><br><span class="line">        <span class="keyword">char</span> v1[] = value;</span><br><span class="line">        <span class="keyword">char</span> v2[] = anotherString.value;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> k = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (k &lt; lim) &#123;</span><br><span class="line">            <span class="keyword">char</span> c1 = v1[k];</span><br><span class="line">            <span class="keyword">char</span> c2 = v2[k];</span><br><span class="line">            <span class="keyword">if</span> (c1 != c2) &#123;</span><br><span class="line">                <span class="keyword">return</span> c1 - c2;</span><br><span class="line">            &#125;<span class="comment">//返回char的差值，说明按照Unicode编码值进行排序</span></span><br><span class="line">            k++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> len1 - len2;<span class="comment">//若一方为另一方的子字符串，则判定为较小的一方</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="5-compareToIgnoreCase"><a href="#5-compareToIgnoreCase" class="headerlink" title="5.compareToIgnoreCase()"></a>5.compareToIgnoreCase()</h2><p>​    <strong>用于不区分大小的情况下按照字符的Unicode编码值进行排序</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">System.out.println(<span class="string">&quot;A&quot;</span>.compareToIgnoreCase(<span class="string">&quot;a&quot;</span>));<span class="comment">//0</span></span><br><span class="line">System.out.println(<span class="string">&quot;AB&quot;</span>.compareToIgnoreCase(<span class="string">&quot;Ab&quot;</span>));<span class="comment">//0</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="字符串的拼接"><a href="#字符串的拼接" class="headerlink" title="字符串的拼接"></a>字符串的拼接</h1><h2 id="1-“-”连接符的实现"><a href="#1-“-”连接符的实现" class="headerlink" title="1.“+”连接符的实现"></a>1.“+”连接符的实现</h2><p>​    <strong>引入一段对API中String类的描述</strong></p>
-<blockquote>
-<p>Java 语言提供对字符串串联符号（”+”）以及将其他对象转换为字符串的特殊支持。字符串串联是通过 <code>StringBuilder</code>（或  <code>StringBuffer</code>）类及其 <code>append</code> 方法实现的。字符串转换是通过  <code>toString</code> 方法实现的，该方法由 <code>Object</code> 类定义，并可被 Java 中的所有类继承。</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String s1 = <span class="keyword">new</span> String(<span class="string">&quot;A&quot;</span>);</span><br><span class="line">String s2 = <span class="keyword">new</span> String(<span class="string">&quot;B&quot;</span>);</span><br><span class="line">String s3 = s1 + s2;<span class="comment">//第三行的代码等价于第四行</span></span><br><span class="line">String s3 = (<span class="keyword">new</span> StringBuilder()).append(s1).append(s2).toString();</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-编译器对“-”的优化"><a href="#2-编译器对“-”的优化" class="headerlink" title="2.编译器对“+”的优化"></a>2.编译器对“+”的优化</h2><p>​    当**”+”两端均为编译期确定的字符串常量**时，编译器会进行相应的优化，直接将两个字符串常量拼接好，例如：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">System.out.println(<span class="string">&quot;Hello&quot;</span> + <span class="string">&quot;World&quot;</span>);</span><br><span class="line"><span class="comment">//编译器优化之后</span></span><br><span class="line">System.out.println(<span class="string">&quot;HelloWorld&quot;</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">String s1 =<span class="string">&quot;A&quot;</span> + <span class="string">&quot;B&quot;</span>;</span><br><span class="line">String s2 =<span class="string">&quot;AB&quot;</span>;</span><br><span class="line">System.out.println(s1 == s2);<span class="comment">//ture</span></span><br></pre></td></tr></table></figure>
-
-<p>​    除了常量字符串外，还有一种也情况是为编译期确定的字符串常量，就是有<code>final</code>修饰的<code>String变量</code>。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String s1 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line">String s2 = <span class="string">&quot;B&quot;</span>;</span><br><span class="line"><span class="comment">//此时s1，s2不是编译期间确定的字符串常量，依然通过StringBuilde的方式连接字符串</span></span><br><span class="line">String s3 = s1 + s2;</span><br><span class="line">System.out.println(s3 == <span class="string">&quot;AB&quot;</span>);<span class="comment">//false</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">final</span> String s1 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line"><span class="keyword">final</span> String s2 = <span class="string">&quot;B&quot;</span>;</span><br><span class="line">String s3 = s1 + s2;<span class="comment">//此时s1，s2在编译期间就确定为字符串常量</span></span><br><span class="line"><span class="comment">//等价于 String = “A” + “B”，String s2 =&quot;AB&quot;;</span></span><br><span class="line">System.out.println(s3 == <span class="string">&quot;AB&quot;</span>);<span class="comment">//ture</span></span><br></pre></td></tr></table></figure>
-
-<p>​    但也不是只要<code>final</code>修饰的<code>String变量</code>就一定是常量。例如下面这种情况。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">    <span class="keyword">final</span> String s1 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line">    <span class="keyword">final</span> String s2 = getS1();</span><br><span class="line">    String s3 = s1 + s2;</span><br><span class="line">    System.out.println(s3 == <span class="string">&quot;AB&quot;</span>);<span class="comment">//false</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">static</span> String <span class="title">getS1</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;B&quot;</span> ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-手动优化"><a href="#3-手动优化" class="headerlink" title="3.手动优化"></a>3.手动优化</h2><p>​    由于每次拼接非确定字符串时都需要隐式创建一个<code>StringBuilder对象</code>，如果存在需要<strong>大量循环拼接</strong>的情况则会在堆中创建大量的<code>StringBuilder对象</code>。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String s = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;<span class="number">10000</span>; i++) &#123;</span><br><span class="line">    s += <span class="string">&quot;abc&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>​    这种情况建议直接创建一个StringBuilder对象再使用append()方法手动拼接，最后再转为字符串，这样可以提高效率节省内存。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">StringBuilder sb = <span class="keyword">new</span> StringBuilder(<span class="string">&quot;abc&quot;</span>);</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10000</span>; i++) &#123;</span><br><span class="line">    sb.append(<span class="string">&quot;abc&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line">sb.toString();</span><br></pre></td></tr></table></figure>
-
-<h1 id="可变字符序列"><a href="#可变字符序列" class="headerlink" title="可变字符序列"></a>可变字符序列</h1><p>​    除了不可变的<code>String类</code>，java中还提供了可变字符序列的两个类：<code>StringBuilder类</code>和<code>StringBuffer类</code>。除了是否可变外这三个类的主要差别在运算性能和线程安全性上。</p>
-<h2 id="1-运算速度比较"><a href="#1-运算速度比较" class="headerlink" title="1.运算速度比较"></a>1.运算速度比较</h2><p>​    通常情况下：<code>StringBuilder</code> &gt;<code>StringBuffer</code>&gt;<code> String</code></p>
-<p>​    <code>String</code>是<code>final类</code>不能被继承且为字符串<strong>常量</strong>，而<code>StringBuilder</code>和<code>StringBuffer</code>均为字符串<strong>变量</strong>。<code>String</code>对象一旦创建便<strong>不可更改</strong>，而后两者是<strong>可更改的</strong>，它们只能通过构造函数来建立对象，且对象被建立以后将在内存中分配内存空间，并初始保存一个null，通过append方法向StringBuffer和StringBuilder中赋值。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line">System.out.println(str);</span><br><span class="line">str = str + <span class="string">&quot;de&quot;</span>;</span><br><span class="line">System.out.println(str);</span><br></pre></td></tr></table></figure>
-
-<p>​    上述代码先创建一个<code>String</code>对象str，并赋值abc给str，然后运行到第三行，JVM会再创建一个新的str对象，并将原有str的值和de加起来再赋值给新的str。而第一个创建的str对象被JVM的垃圾回收机制（GC）回收掉。所以str实际上并没有被更改，即<code>String</code>对象一旦创建就不可更改。所以Java中对<code>String</code>对象进行的操作实际上是一个<strong>不断创建并回收对象的过程</strong>，因此在运行速度上很慢。</p>
-<p>​    而<code>StringBuilder</code>比<code>StringBuffer</code>更快的源于没有了线程锁的损耗。</p>
-<h2 id="2-线程安全性"><a href="#2-线程安全性" class="headerlink" title="2.线程安全性"></a>2.线程安全性</h2><p>​    <code>StringBuffer</code>（线程安全的）</p>
-<p>​    <code>StringBuffer</code>中大部分方法由<code>synchronized</code>关键字修饰，在必要时可对方法进行同步，因此任意特定实例上的所有操作就好像是以串行顺序发生的，该顺序与所涉及的每个线程进行的方法调用顺序一致，所以是<strong>线程安全</strong>的。</p>
-<p>​    <code>StringBuilder</code>（非线程安全）</p>
-<p>​    该类在<code>JDK1.5</code>时新增提供一个与StringBuffer兼容的 API，但不能保证同步，所以在性能上较高。因此，在大多数情况下优先使用StringBuilder</p>
-<h2 id="3-总结"><a href="#3-总结" class="headerlink" title="3.总结"></a>3.总结</h2><p><code>String</code>：适用于少量的字符串操作。</p>
-<p><code>StringBuilder</code>：适用于单线程下在字符串缓冲区进行大量操作。</p>
-<p><code>StringBuffer</code>：适用于多线程下在字符串缓冲区进行大量操作。</p>
-]]></content>
-      <categories>
-        <category>Java</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>Java基础</tag>
-        <tag>字符串</tag>
-        <tag>String</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Java基础之包装类</title>
-    <url>/2020/08/08/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%8C%85%E8%A3%85%E7%B1%BB/</url>
-    <content><![CDATA[<h1 id="什么是包装类"><a href="#什么是包装类" class="headerlink" title="什么是包装类"></a>什么是包装类</h1><p>​    Java作为面向对象的编程语言在设计之初依然延续了C语言的8种基本数据类型，但在不断的更新中设计了很多针对对象的API和新的特性（例如泛型），不支持基本数据类型。为了解决这个问题，Java为每一个基本数据类型提供了包装类。</p>
-<a id="more"></a>
-
-<table>
-<thead>
-<tr>
-<th>基本数据类型</th>
-<th>包装类（java.lang.）</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>byte</td>
-<td>Byte</td>
-</tr>
-<tr>
-<td>short</td>
-<td>Short</td>
-</tr>
-<tr>
-<td>int</td>
-<td>Integer</td>
-</tr>
-<tr>
-<td>long</td>
-<td>Long</td>
-</tr>
-<tr>
-<td>float</td>
-<td>Float</td>
-</tr>
-<tr>
-<td>double</td>
-<td>Double</td>
-</tr>
-<tr>
-<td>char</td>
-<td>Character</td>
-</tr>
-<tr>
-<td>boolean</td>
-<td>Boolean</td>
-</tr>
-</tbody></table>
-<h1 id="装箱与拆箱"><a href="#装箱与拆箱" class="headerlink" title="装箱与拆箱"></a>装箱与拆箱</h1><p>​    装箱和拆箱实际上就是<strong>基本数据类型和它的包装类之间的转换</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer num1 = <span class="keyword">new</span> Integer(<span class="number">1</span>);    <span class="comment">//基本数据类型转为包装类也叫做手动装箱</span></span><br><span class="line"><span class="keyword">int</span> num2 = num1.intValue();        <span class="comment">//包装类转换为基本数据类型，也叫做手动拆箱</span></span><br></pre></td></tr></table></figure>
-
-<p>​    在J<strong>DK1.5</strong>之后为了方便使用等目的提供了<strong>自动装箱与自动拆箱</strong>。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//包装类中的自动装箱拆箱机制</span></span><br><span class="line">Integer  num1 = <span class="number">1</span>;        <span class="comment">//自动装箱</span></span><br><span class="line"><span class="comment">//这行代码实际等同于    Integer  num1 = Integer.valueOf(1);</span></span><br><span class="line"><span class="comment">//这个于new Integer(1)有所区别 下文会详细说明</span></span><br><span class="line"><span class="keyword">int</span> num2 = num1;        <span class="comment">//自动拆箱</span></span><br></pre></td></tr></table></figure>
-
-<p>​    需要注意的是只在与<strong>对应的基本数据类型和包装类之间</strong>才能实现自动装箱与拆箱。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Double d = <span class="number">1</span>;<span class="comment">//错误的，1是int类型</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="包装类对象的缓存问题"><a href="#包装类对象的缓存问题" class="headerlink" title="包装类对象的缓存问题"></a>包装类对象的缓存问题</h1><p>​    为了引出这个问题首先做以下测试</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer i = <span class="number">1</span>;</span><br><span class="line">Integer j = <span class="number">1</span>;</span><br><span class="line">System.out.println(i == j);<span class="comment">//true</span></span><br><span class="line"></span><br><span class="line">Integer i = <span class="number">128</span>;</span><br><span class="line">Integer j = <span class="number">128</span>;</span><br><span class="line">System.out.println(i == j);<span class="comment">//false</span></span><br></pre></td></tr></table></figure>
-
-<p>​    为什么改变了在包装类的值会影响结果，这就涉及到了包装类对象的缓存问题。对于对象而言，<code>==</code>所比较的是两个对象的地址值，上面的代码就说明了<strong>在一定的范围内相同值的包装类指向的是同一个对象</strong>。每个包装类的缓存范围如下：</p>
-<table>
-<thead>
-<tr>
-<th>包装类</th>
-<th>缓存对象</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Byte</td>
-<td>-128~127</td>
-</tr>
-<tr>
-<td>Short</td>
-<td>-128~127</td>
-</tr>
-<tr>
-<td>Integer</td>
-<td>-128~127</td>
-</tr>
-<tr>
-<td>Long</td>
-<td>-128~127</td>
-</tr>
-<tr>
-<td>Float</td>
-<td>没有</td>
-</tr>
-<tr>
-<td>Double</td>
-<td>没有</td>
-</tr>
-<tr>
-<td>Character</td>
-<td>0~127</td>
-</tr>
-<tr>
-<td>Boolean</td>
-<td>true和false</td>
-</tr>
-</tbody></table>
-<p>​    <strong>以Integer为例</strong>，上面也提到过自动装箱时是调用<code>Integer.valueOf()</code>方法来获取Integer对象的，查看这个方法的源码。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Integer <span class="title">valueOf</span><span class="params">(<span class="keyword">int</span> i)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (i &gt;= IntegerCache.low &amp;&amp; i &lt;= IntegerCache.high)</span><br><span class="line">        <span class="keyword">return</span> IntegerCache.cache[i + (-IntegerCache.low)];</span><br><span class="line">    <span class="comment">//若在某一个范围内直接返回一个cache数组中的Integer对象。</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Integer(i);</span><br><span class="line">   <span class="comment">//若不在这个范围则创建一个Integer对象返回</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>再找到<code>IntegerCache</code> 这是Integer的一个内部类</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">IntegerCache</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> low = -<span class="number">128</span>;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> high;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> Integer cache[];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="comment">// high value may be configured by property</span></span><br><span class="line">        <span class="keyword">int</span> h = <span class="number">127</span>;</span><br><span class="line">        String integerCacheHighPropValue =</span><br><span class="line">            sun.misc.VM.getSavedProperty(<span class="string">&quot;java.lang.Integer.IntegerCache.high&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span> (integerCacheHighPropValue != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">int</span> i = parseInt(integerCacheHighPropValue);</span><br><span class="line">                i = Math.max(i, <span class="number">127</span>);</span><br><span class="line">                <span class="comment">// Maximum array size is Integer.MAX_VALUE</span></span><br><span class="line">                h = Math.min(i, Integer.MAX_VALUE - (-low) -<span class="number">1</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span>( NumberFormatException nfe) &#123;</span><br><span class="line">                <span class="comment">// If the property cannot be parsed into an int, ignore it.</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        high = h;</span><br><span class="line"></span><br><span class="line">        cache = <span class="keyword">new</span> Integer[(high - low) + <span class="number">1</span>];</span><br><span class="line">        <span class="keyword">int</span> j = low;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; cache.length; k++)</span><br><span class="line">            cache[k] = <span class="keyword">new</span> Integer(j++);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// range [-128, 127] must be interned (JLS7 5.1.7)</span></span><br><span class="line">        <span class="keyword">assert</span> IntegerCache.high &gt;= <span class="number">127</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">IntegerCache</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>​    可以发现在Integer类初始化时会创建一个叫cache的数组，里面存放的是low至high范围的Integer类常量，这就是上面提到的缓存对象。</p>
-<p>这就解释了为什么在一定范围内使用<code>==</code>比较两个包装类对象会返回turn。</p>
-<p>再做几个比较实验：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer i = <span class="keyword">new</span> Integer(<span class="number">1</span>);<span class="comment">//新new的在堆中</span></span><br><span class="line">Integer j = <span class="number">1</span>;<span class="comment">//这个用的是缓冲的常量对象，在方法区</span></span><br><span class="line">System.out.println(i == j);<span class="comment">//false</span></span><br><span class="line">System.out.println(i.equals(j));<span class="comment">//true</span></span><br><span class="line"></span><br><span class="line">Integer i = <span class="keyword">new</span> Integer(<span class="number">1</span>);</span><br><span class="line"><span class="keyword">int</span> j = <span class="number">1</span>;</span><br><span class="line">System.out.println(i == j);<span class="comment">//true</span></span><br><span class="line">System.out.println(i.equals(j));<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
-
-<p>​    new出来的对象在堆当中，不指向常量对象，这就是<strong>new与valueOf()的区别</strong>，<code>valueOf()</code>只在超出缓存范围时才会创建一个新的对象，所以在实际使用过程中建议直接使用<code>valueOf()</code>。</p>
-<p>​    而与基本数据类型比较（包括计算）时会<strong>先拆箱</strong>再按照基本数据类型的规则比较，所以为了避免歧义，如果是判断值是否相等时建议同一使用<code>equals()</code>方法。</p>
-<h1 id="API演示"><a href="#API演示" class="headerlink" title="API演示"></a>API演示</h1><p>​    由于包装类的存在，许多处理基本数据类型的方法都可以定义在包装类中。下面进行一些<strong>举例</strong>。</p>
-<h2 id="1-把字符串转为基本数据类型"><a href="#1-把字符串转为基本数据类型" class="headerlink" title="1.把字符串转为基本数据类型"></a>1.把字符串转为基本数据类型</h2><p>​    <code>parsxxx()</code>方法</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = Integer.parseInt(<span class="string">&quot;整数的字符串&quot;</span>);</span><br><span class="line"><span class="keyword">double</span> a = Double.parseDouble(<span class="string">&quot;小数的字符串&quot;</span>);</span><br><span class="line"><span class="keyword">boolean</span> b = Boolean.parseBoolean(<span class="string">&quot;true或false&quot;</span>);</span><br><span class="line"></span><br><span class="line">System.out.println(Double.parseDouble(<span class="string">&quot;1.2&quot;</span>));<span class="comment">//1.2</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="2-数据类型的最大最小值"><a href="#2-数据类型的最大最小值" class="headerlink" title="2.数据类型的最大最小值"></a>2.数据类型的最大最小值</h2><p>​    <code>MAX_VALUE</code>和<code>MIN_VALUE</code></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer.MAX_VALUE和Integer.MIN_VALUE</span><br><span class="line">Long.MAX_VALUE和Long.MIN_VALUE</span><br><span class="line">Double.MAX_VALUE和Double.MIN_VALUE</span><br><span class="line">    </span><br><span class="line">System.out.println(Integer.MAX_VALUE);<span class="comment">//2147483647</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="3-转进制"><a href="#3-转进制" class="headerlink" title="3.转进制"></a>3.转进制</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Integer.toBinaryString(<span class="keyword">int</span> i) <span class="comment">//转为2进制</span></span><br><span class="line">Integer.toOctalString(<span class="keyword">int</span> i)  <span class="comment">//转为8进制</span></span><br><span class="line">Integer.toHexString(<span class="keyword">int</span> i)   <span class="comment">//转为16进制</span></span><br><span class="line"></span><br><span class="line">System.out.println(Integer.toBinaryString(<span class="number">15</span>));<span class="comment">//1111</span></span><br><span class="line">System.out.println(Integer.toOctalString(<span class="number">15</span>));<span class="comment">//17</span></span><br><span class="line">System.out.println(Integer.toHexString(<span class="number">15</span>));<span class="comment">//f</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-]]></content>
-      <categories>
-        <category>Java</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>Java基础</tag>
-        <tag>包装类</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Java基础之泛型</title>
-    <url>/2020/08/12/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E6%B3%9B%E5%9E%8B/</url>
-    <content><![CDATA[<h2 id="什么是泛型"><a href="#什么是泛型" class="headerlink" title="什么是泛型"></a>什么是泛型</h2><p>​    <strong>泛型</strong>可以按照字面简单理解为<strong>泛化的类型</strong>。</p>
-<blockquote>
-<p>类比到生活中，就是生产瓶子的厂商不给瓶子贴上包装，而是预留了包装的位置。等到灌装前再根据灌装的内容贴上不同的包装。</p>
-</blockquote>
-<p>​    即<strong>将类型明确的操作推迟到创建对象或者调用方法时</strong>，同时把<strong>类型当中参数一样传递</strong>。</p>
-<ul>
-<li><code>ArrayList&lt;E&gt;</code>称为<strong>泛型类型</strong>，其中的<code>E</code>称为类型参数变量，也可以叫做类型形参。</li>
-<li><code>ArrayList&lt;Integer&gt;</code>称为<strong>参数化类型</strong>，其中的<code>Integer</code>称为实际类型参数，也可以叫类型实参。</li>
-</ul>
-<h2 id="泛型的使用"><a href="#泛型的使用" class="headerlink" title="泛型的使用"></a>泛型的使用</h2><h3 id="1-泛型类"><a href="#1-泛型类" class="headerlink" title="1.泛型类"></a>1.泛型类</h3><p>​    语法格式：<code>[修饰符] class 类名&lt;泛型参数列表&gt;</code>，典型的代表就是各种集合类。泛型形参在定义成员变量以及成员方法中使用。</p>
-<p><strong>示例：</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//定义一个学生类，使用泛型形参T代表score的类型</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span>&lt;<span class="title">T</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> T score;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">(T score)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        <span class="keyword">this</span>.score = score;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getScore</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> score;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setScore</span><span class="params">(T score)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.score = score;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>创建对象：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//创建Student时再指定T的类型，可以实现score的不同表现方式</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Student&lt;String&gt; s1= <span class="keyword">new</span> Student&lt;String&gt;(<span class="string">&quot;A&quot;</span>);</span><br><span class="line">    Student&lt;Double&gt; s2= <span class="keyword">new</span> Student&lt;Double&gt;(<span class="number">89.5</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-泛型接口"><a href="#2-泛型接口" class="headerlink" title="2.泛型接口"></a>2.泛型接口</h3><p>​    泛型接口的定义与泛型类的定义相似。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Generator</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">next</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 传入泛型实参时：</span></span><br><span class="line"><span class="comment"> * 定义一个生产器实现这个接口,虽然我们只创建了一个泛型接口Generator&lt;T&gt;</span></span><br><span class="line"><span class="comment"> * 但是我们可以为T传入无数个实参，形成无数种类型的Generator接口。</span></span><br><span class="line"><span class="comment"> * 在实现类实现泛型接口时，如已将泛型类型传入实参类型，则所有使用泛型的地方都要替换成传入的实参类型</span></span><br><span class="line"><span class="comment"> * 即：Generator&lt;T&gt;，public T next();中的的T都要替换成传入的String类型。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FruitGenerator</span> <span class="keyword">implements</span> <span class="title">Generator</span>&lt;<span class="title">String</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String[] fruits = <span class="keyword">new</span> String[]&#123;<span class="string">&quot;Apple&quot;</span>, <span class="string">&quot;Banana&quot;</span>, <span class="string">&quot;Pear&quot;</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">next</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Random rand = <span class="keyword">new</span> Random();</span><br><span class="line">        <span class="keyword">return</span> fruits[rand.nextInt(<span class="number">3</span>)];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="3-泛型方法"><a href="#3-泛型方法" class="headerlink" title="3.泛型方法"></a>3.泛型方法</h3><p>​    如果泛型类/接口上的泛型形参不适用与某个方法时，可以单独设计泛型。这个方法<strong>可以是静态</strong>的。</p>
-<p>在调用泛型方法时，<strong>编译器会根据你的实参类型来确定泛型的类型</strong>。</p>
-<p>例如：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">java.util.Collection&lt;E&gt;中的</span></span><br><span class="line"><span class="comment">public abstract T[] toArray(T[] a)方法</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Collection&lt;String&gt; c = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">    c.add(<span class="string">&quot;a&quot;</span>);</span><br><span class="line">    c.add(<span class="string">&quot;b&quot;</span>);</span><br><span class="line"></span><br><span class="line">    String[] array = c.toArray(<span class="keyword">new</span> String[<span class="number">2</span>]);<span class="comment">//传入String数组编译器确定T为String</span></span><br><span class="line">    Object[] array2 = c.toArray(<span class="keyword">new</span> Object[<span class="number">2</span>]);<span class="comment">//传入Object数组编译器确定T为Object</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="4-泛型的上限"><a href="#4-泛型的上限" class="headerlink" title="4.泛型的上限"></a>4.泛型的上限</h3><p>​    泛型类或泛型接口以及泛型方法中的<strong>泛型形参可以设定上限</strong>，格式为：<code>T extends 上限类</code></p>
-<p>​    设定了上限之后，泛型实参只能为上限类本身或者上限类的子类。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//例如将第一个例子中的T设定上限为Number类</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span>&lt;<span class="title">T</span> <span class="keyword">extends</span> <span class="title">Number</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> T score;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">(T score)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        <span class="keyword">this</span>.score = score;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//创建对象指定为String时报错，因为String不是Number的子类</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Student&lt;String&gt; s1= <span class="keyword">new</span> Student&lt;String&gt;(<span class="string">&quot;A&quot;</span>);</span><br><span class="line">    Student&lt;Double&gt; s2= <span class="keyword">new</span> Student&lt;Double&gt;(<span class="number">89.5</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>​    指定上限还有另一种格式为：<code>T extends 上限类 &amp; 上限接口1 &amp; 上限接口2...</code></p>
-<p>​    这种指定方式要求泛型实参为上限类或子类并且实现这些接口或子接口。</p>
-<p>​    <strong>若未指定泛型实参则按照上限类处理，未设置上限按照<code>Object</code>处理</strong></p>
-<h3 id="5-通配符"><a href="#5-通配符" class="headerlink" title="5.通配符"></a>5.通配符</h3><p>​    通常在需要指定泛型但又未确定这个泛型类型时，可以使用通配符<code>?</code>来表示任意类型。</p>
-<p>例如：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//写一个遍历Collection中集合的方法，可以这样写</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(Collection&lt;?&gt; c)</span></span>&#123;<span class="comment">//此时形参中的Collection需要指定泛型，可以使用通配符代替</span></span><br><span class="line">    <span class="keyword">for</span>(Object object : c)&#123;</span><br><span class="line">        System.out.println(object);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>​    通配符可以设置上下限：</p>
-<p>设置上限：<code>&lt;? extends 上限&gt;</code></p>
-<p>设置下限：<code>&lt;? super 下限&gt;</code></p>
-<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><ul>
-<li><p>泛型中的<strong>泛型实参</strong>只能为<strong>引用数据类型</strong>。</p>
-</li>
-<li><p>泛型<strong>不能</strong>使用在<strong>静态成员</strong>中。</p>
-</li>
-<li><p>泛型只提供给编译器使用，编译完成后的<strong>class文件中不存在泛型</strong>，称为<strong>泛型擦除</strong>。</p>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Java</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>Java基础</tag>
-        <tag>泛型</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Java基础之异常</title>
     <url>/2020/08/07/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%BC%82%E5%B8%B8/</url>
     <content><![CDATA[<h1 id="什么是异常"><a href="#什么是异常" class="headerlink" title="什么是异常"></a>什么是异常</h1><p>​    在一些情况下，由于<strong>非程序本身</strong>问题，例如:配置问题、错误输入、磁盘空间不足等等所导致的程序无法正常运行。</p>
@@ -552,6 +401,98 @@
         <tag>Java</tag>
         <tag>Java基础</tag>
         <tag>异常</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java基础之字符串</title>
+    <url>/2020/08/09/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%AD%97%E7%AC%A6%E4%B8%B2/</url>
+    <content><![CDATA[<h1 id="字符串的特点"><a href="#字符串的特点" class="headerlink" title="字符串的特点"></a>字符串的特点</h1><p>​        <strong><em>以下说明及演示基于JDK1.8版本</em></strong></p>
+<ol>
+<li>字符串String类型本身是final声明的，字符串的对象也是不可变对象，意味着一旦进行修改，就会产生新对象。</li>
+<li>String对象内部是用数组进行保存的，在<strong>JDK1.9之前</strong>用的是字符数组<code>char[]</code>，<strong>JDK1.9之后</strong>使用的是字节数组<code>byte[]</code>。</li>
+</ol>
+<a id="more"></a>
+
+<ol start="3">
+<li>String类中这个<code>values</code>数组,同时由<code>final</code>和<code>private</code>修饰，意味着这个数组<strong>不可变并且不能通过外部进行操作</strong>，String类型提供的所有的方法都是用新对象来表示修改后内容的，所以<strong>保证了String对象的不可变</strong>。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//JDK1.8中String类的部分源码</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">String</span></span></span><br><span class="line"><span class="class">    <span class="keyword">implements</span> <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span>, <span class="title">Comparable</span>&lt;<span class="title">String</span>&gt;, <span class="title">CharSequence</span> </span>&#123;</span><br><span class="line">    <span class="comment">//使用char数组进行存储。</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">char</span> value[];</span><br><span class="line"></span><br><span class="line">    <span class="comment">//JDK1.8中只有char数组与哈希值，其他版本可能有所不同。</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> hash; <span class="comment">// Default to 0</span></span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>由于字符串对象设计为不可变，那么所以有<strong>字符串常量池</strong>来保存很多常量对象，<strong>JDK1.6以及之前</strong>，常量池设计在<strong>方法区</strong>当中。但由于字符串所占空间比较大，所以<strong>JDk1.7时</strong>将常量池移到了<strong>堆</strong>当中，<strong>JDk1.8</strong>后取消了<strong>方法区</strong>取而代之的是<strong>元空间</strong>，字符串常量池也在<strong>元空间</strong>当中。</li>
+</ol>
+<h1 id="字符串的比较"><a href="#字符串的比较" class="headerlink" title="字符串的比较"></a>字符串的比较</h1><h2 id="1"><a href="#1" class="headerlink" title="1.=="></a>1.==</h2><p>​    <code>==</code>用来比较对象的地址值，因为字符串特殊的存储方式，导致地址比较情况比较多。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str1 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line">String str2 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line">String str3 = <span class="keyword">new</span> String(<span class="string">&quot;A&quot;</span>);</span><br><span class="line">String str4 = <span class="keyword">new</span> String(<span class="string">&quot;A&quot;</span>).intern();</span><br><span class="line">System.out.println(str1 == str2);<span class="comment">//true</span></span><br><span class="line">System.out.println(str1 == str3);<span class="comment">//false</span></span><br><span class="line">System.out.println(str1 == str4);<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<p>​    <strong>内存示意图：</strong></p>
+<p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%AD%97%E7%AC%A6%E4%B8%B2/%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%86%85%E5%AD%98%E5%9B%BE.png" alt="字符串内存图"></p>
+<h2 id="2-equals"><a href="#2-equals" class="headerlink" title="2.equals()"></a>2.equals()</h2><p>​    <strong>用于比较对象的内容是否相同</strong>，因为String类型重写equals，区分大小写只要两个字符串的字符内容相同，就会返回true。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str1 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line">String str2 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line">String str3 = <span class="keyword">new</span> String(<span class="string">&quot;A&quot;</span>);</span><br><span class="line">System.out.println(str1.equals(str2));<span class="comment">//true</span></span><br><span class="line">System.out.println(str1.equals(str3));<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<p>查看一下String类中的<code>equals()</code>源码。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object anObject)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//判断是否指向同一个对象，如果是内容一定相同，返回ture</span></span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">this</span> == anObject) &#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    <span class="comment">//若传入参数不为String类则直接返回false</span></span><br><span class="line">      <span class="keyword">if</span> (anObject <span class="keyword">instanceof</span> String) &#123;</span><br><span class="line">          String anotherString = (String)anObject;</span><br><span class="line">          <span class="keyword">int</span> n = value.length;</span><br><span class="line">          <span class="comment">//判断字符串长度是否相等，不相等则一定不相同，返回false</span></span><br><span class="line">          <span class="keyword">if</span> (n == anotherString.value.length) &#123;</span><br><span class="line">              <span class="keyword">char</span> v1[] = value;</span><br><span class="line">              <span class="keyword">char</span> v2[] = anotherString.value;</span><br><span class="line">              <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">              <span class="comment">//逐个比较字符是否相等</span></span><br><span class="line">              <span class="keyword">while</span> (n-- != <span class="number">0</span>) &#123;</span><br><span class="line">                  <span class="keyword">if</span> (v1[i] != v2[i])</span><br><span class="line">                      <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">                  i++;</span><br><span class="line">              &#125;</span><br><span class="line">              <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>了避免空指针异常，若是与已知字符串做比较用已知字符串来调用方法。</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="string">&quot;已知字符串&quot;</span>.equals（）</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="3-equalsIgnoreCase"><a href="#3-equalsIgnoreCase" class="headerlink" title="3.equalsIgnoreCase()"></a>3.equalsIgnoreCase()</h2><p>​    <strong>用于不区分大小写的比较字符串内容</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">System.out.println(<span class="string">&quot;A&quot;</span>.equalsIgnoreCase(<span class="string">&quot;a&quot;</span>));<span class="comment">//ture</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="4-compareTo"><a href="#4-compareTo" class="headerlink" title="4.compareTo()"></a>4.compareTo()</h2><p>​    <strong>用于按照字符的Unicode编码值进行排序</strong>,String类型重写了<code>Comparable接口</code>的抽象方法。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">System.out.println(<span class="string">&quot;A&quot;</span>.compareTo(<span class="string">&quot;a&quot;</span>));<span class="comment">//-32</span></span><br><span class="line">System.out.println(<span class="string">&quot;AB&quot;</span>.compareTo(<span class="string">&quot;A&quot;</span>));<span class="comment">//1</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>源码如下:</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//String类中的compareTo方法</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compareTo</span><span class="params">(String anotherString)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> len1 = value.length;</span><br><span class="line">        <span class="keyword">int</span> len2 = anotherString.value.length;</span><br><span class="line">        <span class="keyword">int</span> lim = Math.min(len1, len2);</span><br><span class="line">        <span class="keyword">char</span> v1[] = value;</span><br><span class="line">        <span class="keyword">char</span> v2[] = anotherString.value;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> k = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (k &lt; lim) &#123;</span><br><span class="line">            <span class="keyword">char</span> c1 = v1[k];</span><br><span class="line">            <span class="keyword">char</span> c2 = v2[k];</span><br><span class="line">            <span class="keyword">if</span> (c1 != c2) &#123;</span><br><span class="line">                <span class="keyword">return</span> c1 - c2;</span><br><span class="line">            &#125;<span class="comment">//返回char的差值，说明按照Unicode编码值进行排序</span></span><br><span class="line">            k++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> len1 - len2;<span class="comment">//若一方为另一方的子字符串，则判定为较小的一方</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-compareToIgnoreCase"><a href="#5-compareToIgnoreCase" class="headerlink" title="5.compareToIgnoreCase()"></a>5.compareToIgnoreCase()</h2><p>​    <strong>用于不区分大小的情况下按照字符的Unicode编码值进行排序</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">System.out.println(<span class="string">&quot;A&quot;</span>.compareToIgnoreCase(<span class="string">&quot;a&quot;</span>));<span class="comment">//0</span></span><br><span class="line">System.out.println(<span class="string">&quot;AB&quot;</span>.compareToIgnoreCase(<span class="string">&quot;Ab&quot;</span>));<span class="comment">//0</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="字符串的拼接"><a href="#字符串的拼接" class="headerlink" title="字符串的拼接"></a>字符串的拼接</h1><h2 id="1-“-”连接符的实现"><a href="#1-“-”连接符的实现" class="headerlink" title="1.“+”连接符的实现"></a>1.“+”连接符的实现</h2><p>​    <strong>引入一段对API中String类的描述</strong></p>
+<blockquote>
+<p>Java 语言提供对字符串串联符号（”+”）以及将其他对象转换为字符串的特殊支持。字符串串联是通过 <code>StringBuilder</code>（或  <code>StringBuffer</code>）类及其 <code>append</code> 方法实现的。字符串转换是通过  <code>toString</code> 方法实现的，该方法由 <code>Object</code> 类定义，并可被 Java 中的所有类继承。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String s1 = <span class="keyword">new</span> String(<span class="string">&quot;A&quot;</span>);</span><br><span class="line">String s2 = <span class="keyword">new</span> String(<span class="string">&quot;B&quot;</span>);</span><br><span class="line">String s3 = s1 + s2;<span class="comment">//第三行的代码等价于第四行</span></span><br><span class="line">String s3 = (<span class="keyword">new</span> StringBuilder()).append(s1).append(s2).toString();</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-编译器对“-”的优化"><a href="#2-编译器对“-”的优化" class="headerlink" title="2.编译器对“+”的优化"></a>2.编译器对“+”的优化</h2><p>​    当**”+”两端均为编译期确定的字符串常量**时，编译器会进行相应的优化，直接将两个字符串常量拼接好，例如：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">System.out.println(<span class="string">&quot;Hello&quot;</span> + <span class="string">&quot;World&quot;</span>);</span><br><span class="line"><span class="comment">//编译器优化之后</span></span><br><span class="line">System.out.println(<span class="string">&quot;HelloWorld&quot;</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">String s1 =<span class="string">&quot;A&quot;</span> + <span class="string">&quot;B&quot;</span>;</span><br><span class="line">String s2 =<span class="string">&quot;AB&quot;</span>;</span><br><span class="line">System.out.println(s1 == s2);<span class="comment">//ture</span></span><br></pre></td></tr></table></figure>
+
+<p>​    除了常量字符串外，还有一种也情况是为编译期确定的字符串常量，就是有<code>final</code>修饰的<code>String变量</code>。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String s1 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line">String s2 = <span class="string">&quot;B&quot;</span>;</span><br><span class="line"><span class="comment">//此时s1，s2不是编译期间确定的字符串常量，依然通过StringBuilde的方式连接字符串</span></span><br><span class="line">String s3 = s1 + s2;</span><br><span class="line">System.out.println(s3 == <span class="string">&quot;AB&quot;</span>);<span class="comment">//false</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">final</span> String s1 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line"><span class="keyword">final</span> String s2 = <span class="string">&quot;B&quot;</span>;</span><br><span class="line">String s3 = s1 + s2;<span class="comment">//此时s1，s2在编译期间就确定为字符串常量</span></span><br><span class="line"><span class="comment">//等价于 String = “A” + “B”，String s2 =&quot;AB&quot;;</span></span><br><span class="line">System.out.println(s3 == <span class="string">&quot;AB&quot;</span>);<span class="comment">//ture</span></span><br></pre></td></tr></table></figure>
+
+<p>​    但也不是只要<code>final</code>修饰的<code>String变量</code>就一定是常量。例如下面这种情况。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">    <span class="keyword">final</span> String s1 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line">    <span class="keyword">final</span> String s2 = getS1();</span><br><span class="line">    String s3 = s1 + s2;</span><br><span class="line">    System.out.println(s3 == <span class="string">&quot;AB&quot;</span>);<span class="comment">//false</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">static</span> String <span class="title">getS1</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;B&quot;</span> ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-手动优化"><a href="#3-手动优化" class="headerlink" title="3.手动优化"></a>3.手动优化</h2><p>​    由于每次拼接非确定字符串时都需要隐式创建一个<code>StringBuilder对象</code>，如果存在需要<strong>大量循环拼接</strong>的情况则会在堆中创建大量的<code>StringBuilder对象</code>。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String s = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;<span class="number">10000</span>; i++) &#123;</span><br><span class="line">    s += <span class="string">&quot;abc&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    这种情况建议直接创建一个StringBuilder对象再使用append()方法手动拼接，最后再转为字符串，这样可以提高效率节省内存。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">StringBuilder sb = <span class="keyword">new</span> StringBuilder(<span class="string">&quot;abc&quot;</span>);</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10000</span>; i++) &#123;</span><br><span class="line">    sb.append(<span class="string">&quot;abc&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line">sb.toString();</span><br></pre></td></tr></table></figure>
+
+<h1 id="可变字符序列"><a href="#可变字符序列" class="headerlink" title="可变字符序列"></a>可变字符序列</h1><p>​    除了不可变的<code>String类</code>，java中还提供了可变字符序列的两个类：<code>StringBuilder类</code>和<code>StringBuffer类</code>。除了是否可变外这三个类的主要差别在运算性能和线程安全性上。</p>
+<h2 id="1-运算速度比较"><a href="#1-运算速度比较" class="headerlink" title="1.运算速度比较"></a>1.运算速度比较</h2><p>​    通常情况下：<code>StringBuilder</code> &gt;<code>StringBuffer</code>&gt;<code> String</code></p>
+<p>​    <code>String</code>是<code>final类</code>不能被继承且为字符串<strong>常量</strong>，而<code>StringBuilder</code>和<code>StringBuffer</code>均为字符串<strong>变量</strong>。<code>String</code>对象一旦创建便<strong>不可更改</strong>，而后两者是<strong>可更改的</strong>，它们只能通过构造函数来建立对象，且对象被建立以后将在内存中分配内存空间，并初始保存一个null，通过append方法向StringBuffer和StringBuilder中赋值。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line">System.out.println(str);</span><br><span class="line">str = str + <span class="string">&quot;de&quot;</span>;</span><br><span class="line">System.out.println(str);</span><br></pre></td></tr></table></figure>
+
+<p>​    上述代码先创建一个<code>String</code>对象str，并赋值abc给str，然后运行到第三行，JVM会再创建一个新的str对象，并将原有str的值和de加起来再赋值给新的str。而第一个创建的str对象被JVM的垃圾回收机制（GC）回收掉。所以str实际上并没有被更改，即<code>String</code>对象一旦创建就不可更改。所以Java中对<code>String</code>对象进行的操作实际上是一个<strong>不断创建并回收对象的过程</strong>，因此在运行速度上很慢。</p>
+<p>​    而<code>StringBuilder</code>比<code>StringBuffer</code>更快的源于没有了线程锁的损耗。</p>
+<h2 id="2-线程安全性"><a href="#2-线程安全性" class="headerlink" title="2.线程安全性"></a>2.线程安全性</h2><p>​    <code>StringBuffer</code>（线程安全的）</p>
+<p>​    <code>StringBuffer</code>中大部分方法由<code>synchronized</code>关键字修饰，在必要时可对方法进行同步，因此任意特定实例上的所有操作就好像是以串行顺序发生的，该顺序与所涉及的每个线程进行的方法调用顺序一致，所以是<strong>线程安全</strong>的。</p>
+<p>​    <code>StringBuilder</code>（非线程安全）</p>
+<p>​    该类在<code>JDK1.5</code>时新增提供一个与StringBuffer兼容的 API，但不能保证同步，所以在性能上较高。因此，在大多数情况下优先使用StringBuilder</p>
+<h2 id="3-总结"><a href="#3-总结" class="headerlink" title="3.总结"></a>3.总结</h2><p><code>String</code>：适用于少量的字符串操作。</p>
+<p><code>StringBuilder</code>：适用于单线程下在字符串缓冲区进行大量操作。</p>
+<p><code>StringBuffer</code>：适用于多线程下在字符串缓冲区进行大量操作。</p>
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>Java基础</tag>
+        <tag>字符串</tag>
+        <tag>String</tag>
       </tags>
   </entry>
   <entry>
@@ -885,6 +826,65 @@
         <tag>Java</tag>
         <tag>Java基础</tag>
         <tag>注解</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java基础之泛型</title>
+    <url>/2020/08/12/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E6%B3%9B%E5%9E%8B/</url>
+    <content><![CDATA[<h2 id="什么是泛型"><a href="#什么是泛型" class="headerlink" title="什么是泛型"></a>什么是泛型</h2><p>​    <strong>泛型</strong>可以按照字面简单理解为<strong>泛化的类型</strong>。</p>
+<blockquote>
+<p>类比到生活中，就是生产瓶子的厂商不给瓶子贴上包装，而是预留了包装的位置。等到灌装前再根据灌装的内容贴上不同的包装。</p>
+</blockquote>
+<p>​    即<strong>将类型明确的操作推迟到创建对象或者调用方法时</strong>，同时把<strong>类型当中参数一样传递</strong>。</p>
+<ul>
+<li><code>ArrayList&lt;E&gt;</code>称为<strong>泛型类型</strong>，其中的<code>E</code>称为类型参数变量，也可以叫做类型形参。</li>
+<li><code>ArrayList&lt;Integer&gt;</code>称为<strong>参数化类型</strong>，其中的<code>Integer</code>称为实际类型参数，也可以叫类型实参。</li>
+</ul>
+<h2 id="泛型的使用"><a href="#泛型的使用" class="headerlink" title="泛型的使用"></a>泛型的使用</h2><h3 id="1-泛型类"><a href="#1-泛型类" class="headerlink" title="1.泛型类"></a>1.泛型类</h3><p>​    语法格式：<code>[修饰符] class 类名&lt;泛型参数列表&gt;</code>，典型的代表就是各种集合类。泛型形参在定义成员变量以及成员方法中使用。</p>
+<p><strong>示例：</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//定义一个学生类，使用泛型形参T代表score的类型</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span>&lt;<span class="title">T</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> T score;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">(T score)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        <span class="keyword">this</span>.score = score;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getScore</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> score;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setScore</span><span class="params">(T score)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.score = score;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>创建对象：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//创建Student时再指定T的类型，可以实现score的不同表现方式</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Student&lt;String&gt; s1= <span class="keyword">new</span> Student&lt;String&gt;(<span class="string">&quot;A&quot;</span>);</span><br><span class="line">    Student&lt;Double&gt; s2= <span class="keyword">new</span> Student&lt;Double&gt;(<span class="number">89.5</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-泛型接口"><a href="#2-泛型接口" class="headerlink" title="2.泛型接口"></a>2.泛型接口</h3><p>​    泛型接口的定义与泛型类的定义相似。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Generator</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">next</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 传入泛型实参时：</span></span><br><span class="line"><span class="comment"> * 定义一个生产器实现这个接口,虽然我们只创建了一个泛型接口Generator&lt;T&gt;</span></span><br><span class="line"><span class="comment"> * 但是我们可以为T传入无数个实参，形成无数种类型的Generator接口。</span></span><br><span class="line"><span class="comment"> * 在实现类实现泛型接口时，如已将泛型类型传入实参类型，则所有使用泛型的地方都要替换成传入的实参类型</span></span><br><span class="line"><span class="comment"> * 即：Generator&lt;T&gt;，public T next();中的的T都要替换成传入的String类型。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FruitGenerator</span> <span class="keyword">implements</span> <span class="title">Generator</span>&lt;<span class="title">String</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String[] fruits = <span class="keyword">new</span> String[]&#123;<span class="string">&quot;Apple&quot;</span>, <span class="string">&quot;Banana&quot;</span>, <span class="string">&quot;Pear&quot;</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">next</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Random rand = <span class="keyword">new</span> Random();</span><br><span class="line">        <span class="keyword">return</span> fruits[rand.nextInt(<span class="number">3</span>)];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-泛型方法"><a href="#3-泛型方法" class="headerlink" title="3.泛型方法"></a>3.泛型方法</h3><p>​    如果泛型类/接口上的泛型形参不适用与某个方法时，可以单独设计泛型。这个方法<strong>可以是静态</strong>的。</p>
+<p>在调用泛型方法时，<strong>编译器会根据你的实参类型来确定泛型的类型</strong>。</p>
+<p>例如：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">java.util.Collection&lt;E&gt;中的</span></span><br><span class="line"><span class="comment">public abstract T[] toArray(T[] a)方法</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Collection&lt;String&gt; c = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">    c.add(<span class="string">&quot;a&quot;</span>);</span><br><span class="line">    c.add(<span class="string">&quot;b&quot;</span>);</span><br><span class="line"></span><br><span class="line">    String[] array = c.toArray(<span class="keyword">new</span> String[<span class="number">2</span>]);<span class="comment">//传入String数组编译器确定T为String</span></span><br><span class="line">    Object[] array2 = c.toArray(<span class="keyword">new</span> Object[<span class="number">2</span>]);<span class="comment">//传入Object数组编译器确定T为Object</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-泛型的上限"><a href="#4-泛型的上限" class="headerlink" title="4.泛型的上限"></a>4.泛型的上限</h3><p>​    泛型类或泛型接口以及泛型方法中的<strong>泛型形参可以设定上限</strong>，格式为：<code>T extends 上限类</code></p>
+<p>​    设定了上限之后，泛型实参只能为上限类本身或者上限类的子类。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//例如将第一个例子中的T设定上限为Number类</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span>&lt;<span class="title">T</span> <span class="keyword">extends</span> <span class="title">Number</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> T score;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">(T score)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        <span class="keyword">this</span>.score = score;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//创建对象指定为String时报错，因为String不是Number的子类</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Student&lt;String&gt; s1= <span class="keyword">new</span> Student&lt;String&gt;(<span class="string">&quot;A&quot;</span>);</span><br><span class="line">    Student&lt;Double&gt; s2= <span class="keyword">new</span> Student&lt;Double&gt;(<span class="number">89.5</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    指定上限还有另一种格式为：<code>T extends 上限类 &amp; 上限接口1 &amp; 上限接口2...</code></p>
+<p>​    这种指定方式要求泛型实参为上限类或子类并且实现这些接口或子接口。</p>
+<p>​    <strong>若未指定泛型实参则按照上限类处理，未设置上限按照<code>Object</code>处理</strong></p>
+<h3 id="5-通配符"><a href="#5-通配符" class="headerlink" title="5.通配符"></a>5.通配符</h3><p>​    通常在需要指定泛型但又未确定这个泛型类型时，可以使用通配符<code>?</code>来表示任意类型。</p>
+<p>例如：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//写一个遍历Collection中集合的方法，可以这样写</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(Collection&lt;?&gt; c)</span></span>&#123;<span class="comment">//此时形参中的Collection需要指定泛型，可以使用通配符代替</span></span><br><span class="line">    <span class="keyword">for</span>(Object object : c)&#123;</span><br><span class="line">        System.out.println(object);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    通配符可以设置上下限：</p>
+<p>设置上限：<code>&lt;? extends 上限&gt;</code></p>
+<p>设置下限：<code>&lt;? super 下限&gt;</code></p>
+<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><ul>
+<li><p>泛型中的<strong>泛型实参</strong>只能为<strong>引用数据类型</strong>。</p>
+</li>
+<li><p>泛型<strong>不能</strong>使用在<strong>静态成员</strong>中。</p>
+</li>
+<li><p>泛型只提供给编译器使用，编译完成后的<strong>class文件中不存在泛型</strong>，称为<strong>泛型擦除</strong>。</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>Java基础</tag>
+        <tag>泛型</tag>
       </tags>
   </entry>
   <entry>
@@ -1372,6 +1372,95 @@
       </tags>
   </entry>
   <entry>
+    <title>Web基础之CSS</title>
+    <url>/2020/09/02/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/</url>
+    <content><![CDATA[<p><strong>Web基础系列</strong>主要对Java开发中Web相关的内容(如<code>HTML</code>、<code>CSS</code>、<code>JavaScript</code>等)进行<strong>最基本的讲解</strong>，本系列其他文章请参考<a href="https://ykailh.github.io/tags/Web%E5%9F%BA%E7%A1%80/">Web基础</a> 。</p>
+<p>​    本文主要对<code>CSS</code>进行简单的了解，想要更详细的了解HTML可以参考这个教程<a href="https://www.runoob.com/css/css-tutorial.html">CSS教程</a> 。</p>
+<a id="more"></a>
+
+<h2 id="什么是CSS"><a href="#什么是CSS" class="headerlink" title="什么是CSS"></a>什么是CSS</h2><p>​    <strong>CSS</strong>的全称为（<strong>C</strong>ascading <strong>S</strong>tyle <strong>S</strong>heets）<strong>层叠样式表</strong>，它决定了HTML元素的显示方式。CSS 规则由两个主要部分构成：<strong>选择器</strong>，以及<strong>一条或多条声明</strong>:</p>
+<p>​    <img src="/image/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/CSS%E6%A0%BC%E5%BC%8F.jpg" alt="CSS格式"></p>
+<h2 id="CSS的插入"><a href="#CSS的插入" class="headerlink" title="CSS的插入"></a>CSS的插入</h2><p>​    根据CSS<strong>插入</strong>HTML文件的<strong>方式不同</strong>，分为<strong>外部样式表</strong>、<strong>内部样式表</strong>、<strong>内联样式</strong>。不同的方式有不同的插入格式。</p>
+<ul>
+<li><p><strong>外部样式表</strong></p>
+<p>​    将CSS语句写在一个后缀名为<code>.css</code>的文件中，然后在<code>&lt;head&gt;</code>标签内通过<code>&lt;link&gt;</code>标签引入CSS文件，<code>&lt;link&gt;</code>中的<code>rel</code>属性设置为<code>&quot;stylesheet&quot;</code>，<code>href</code>设置为CSS文件的路径。</p>
+<p>CSS文件示例(mystyle.css)：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">h1</span> &#123;<span class="attribute">color</span>:red;&#125;</span><br><span class="line"><span class="selector-tag">p</span> &#123;<span class="attribute">font-size</span>:<span class="number">30px</span>;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>HTML引入CSS：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span>    </span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>CSS外部样式表<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span> <span class="attr">href</span>=<span class="string">&quot;mystyle.css&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>h1标签内容<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>p标签内容<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    普通文本</span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>内部样式表</strong></p>
+<p>​    将CSS语句直接写在HTML文件<code>&lt;head&gt;</code>标签内的<code>&lt;style&gt;</code>标签中</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span>    </span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>CSS内部样式表<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span>&gt;</span></span><br><span class="line"><span class="css">    <span class="selector-tag">h1</span> &#123;<span class="attribute">color</span>:red;&#125;</span></span><br><span class="line"><span class="css">    <span class="selector-tag">p</span> &#123;<span class="attribute">font-size</span>:<span class="number">30px</span>;&#125;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>h1标签内容<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>p标签内容<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    普通文本</span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>内联样式</strong></p>
+<p>直接通过标签的<code>style</code>属性定义该标签内容的样式。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span>    </span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>CSS内联样式<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span> <span class="attr">style</span> = <span class="string">&quot;color:red&quot;</span>&gt;</span>h1标签内容<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">style</span> = <span class="string">&quot;font-size:30px&quot;</span>&gt;</span>p标签内容<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    普通文本</span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>上面三种方式都可以实现相同的效果：</p>
+<p>​    <img src="/image/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/%E6%A0%B7%E5%BC%8F%E8%A1%A8.png" alt="样式表"></p>
+<p>这三个样式同时存在时的优先级为：<strong>内联样式</strong>  &gt; <strong>内部样式表</strong> &gt; <strong>外部样式表</strong></p>
+<p>保持mystyle.css不变</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span>    </span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>样式优先级<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span> <span class="attr">href</span>=<span class="string">&quot;mystyle.css&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span>&gt;</span></span><br><span class="line"><span class="css">    <span class="selector-tag">h1</span> &#123;<span class="attribute">color</span>:yellow;&#125;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span> <span class="attr">style</span> = <span class="string">&quot;color:green&quot;</span>&gt;</span>测试优先级<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>​    <img src="/image/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/%E6%A0%B7%E5%BC%8F%E4%BC%98%E5%85%88%E7%BA%A7.png" alt="样式优先级"></p>
+<h2 id="CSS选择器"><a href="#CSS选择器" class="headerlink" title="CSS选择器"></a>CSS选择器</h2><p>​    主要介绍以下几种css选择器：</p>
+<ul>
+<li><p>标签选择器</p>
+<p>格式为：<code>标签名&#123;声明..&#125;</code>，对所有同名标签有效上面演示中均为标签选择器</p>
+</li>
+<li><p>类选择器</p>
+<p>格式为：<code>.类名&#123;声明..&#125;</code>,对所有标签中属性<code>class</code>的值为该类名的元素有效。</p>
+<p>可以使用<code>标签名.类名&#123;声明&#125;</code>来选择该标签内<code>class</code>的值为该类名的元素</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span>    </span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>类选择器<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span>&gt;</span></span><br><span class="line"><span class="css">    <span class="comment">/*选择class值为classname的元素*/</span></span></span><br><span class="line"><span class="css">    <span class="selector-class">.classname</span>&#123;<span class="attribute">color</span>:green;&#125;</span></span><br><span class="line"><span class="css">    <span class="comment">/*选择p标签中class值为classname的元素*/</span></span></span><br><span class="line"><span class="css">    <span class="selector-tag">p</span><span class="selector-class">.a</span>&#123;<span class="attribute">font-size</span>:<span class="number">30px</span>;&#125;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span> <span class="attr">class</span> = <span class="string">&quot;classname&quot;</span>&gt;</span>class为classname的h1标签<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span> = <span class="string">&quot;classname&quot;</span>&gt;</span>class为classname的p标签<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span> = <span class="string">&quot;a&quot;</span>&gt;</span>class为a的p标签<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>​    <img src="/image/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/%E7%B1%BB%E9%80%89%E6%8B%A9%E5%99%A8.png" alt="类选择器"></p>
+</li>
+<li><p>id选择器</p>
+<p>格式为：<code>#id值&#123;声明..&#125;</code>，只对id为此id值的元素有效。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span>    </span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>id选择器<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span>&gt;</span></span><br><span class="line"><span class="css">    <span class="comment">/*选择id值为p1的元素*/</span></span></span><br><span class="line"><span class="css">    <span class="selector-id">#p1</span>&#123;<span class="attribute">color</span>:green;&#125;</span></span><br><span class="line"><span class="css">    <span class="comment">/*选择id值为p2的元素*/</span></span></span><br><span class="line"><span class="css">    <span class="selector-id">#p2</span>&#123;<span class="attribute">font-size</span>:<span class="number">30px</span>;&#125;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>h1标签<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">id</span>=<span class="string">&quot;p1&quot;</span>&gt;</span>id值为p1的p标签<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">id</span>=<span class="string">&quot;p2&quot;</span>&gt;</span>id值为p2的p标签<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>​    <img src="/image/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/id%E9%80%89%E6%8B%A9%E5%99%A8.png" alt="id选择器"></p>
+</li>
+<li><p>属性选择器</p>
+<p>格式为：<code>[属性名]&#123;声明..&#125;</code>选择具有该属性的元素。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span>    </span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>属性选择器<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span>&gt;</span></span><br><span class="line"><span class="css">    <span class="comment">/*选择具有id属性的元素*/</span></span></span><br><span class="line"><span class="css">    <span class="selector-attr">[id]</span>&#123;<span class="attribute">color</span>:green;&#125;</span></span><br><span class="line"><span class="css">    <span class="comment">/*选择具有class属性的元素*/</span></span></span><br><span class="line"><span class="css">    <span class="selector-attr">[class]</span>&#123;<span class="attribute">font-size</span>:<span class="number">30px</span>;&#125;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>h1标签<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">id</span>=<span class="string">&quot;p1&quot;</span> <span class="attr">class</span>=<span class="string">&quot;p1&quot;</span>&gt;</span>id值为p1的p标签<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">id</span>=<span class="string">&quot;p2&quot;</span>&gt;</span>id值为p2的p标签<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>​    <img src="/image/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/%E5%B1%9E%E6%80%A7%E9%80%89%E6%8B%A9%E5%99%A8.png" alt="属性选择器"></p>
+</li>
+<li><p>组合选择器</p>
+<ul>
+<li><code>标签(名)1 标签(名)2</code>，选择标签1元素内的标签2元素。</li>
+<li><code>标签(名)1&gt;标签(名)2</code>，选择标签1元素内的标签2元素中的直接子元素。</li>
+<li><code>标签(名)1+标签(名)2</code>，选择紧接在标签1元素后的元素，且二者有相同父元素.</li>
+<li><code>标签(名)1~标签(名)2</code>，选择标签1元素后的所有标签2元素。</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span>    </span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>属性选择器<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span>&gt;</span></span><br><span class="line"><span class="css">    <span class="comment">/*以div p 为例，后续演示只有此处不同，省略代码*/</span></span></span><br><span class="line"><span class="css">    <span class="selector-tag">div</span> <span class="selector-tag">p</span>&#123;<span class="attribute">color</span>:red;&#125;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>div前的p元素<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span>&gt;</span>div内的p元素<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>span内的p元素<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>div后的p元素1<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>div后的p元素2<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>div p</code>结果：</p>
+<p>​    <img src="/image/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/%E7%BB%84%E5%90%88%E9%80%89%E6%8B%A9%E5%99%A81.png" alt="组合选择器1"></p>
+<p><code>div&gt;p</code>结果：</p>
+<p>​    <img src="/image/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/%E7%BB%84%E5%90%88%E9%80%89%E6%8B%A9%E5%99%A82.png" alt="组合选择器2"></p>
+<p><code>div+p</code>结果：</p>
+<p>​    <img src="/image/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/%E7%BB%84%E5%90%88%E9%80%89%E6%8B%A9%E5%99%A83.png" alt="组合选择器3"></p>
+<p><code>div~p</code>结果：</p>
+<p>​    <img src="/image/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/%E7%BB%84%E5%90%88%E9%80%89%E6%8B%A9%E5%99%A84.png" alt="组合选择器4"></p>
+</li>
+</ul>
+<h2 id="CSS常用样式"><a href="#CSS常用样式" class="headerlink" title="CSS常用样式"></a>CSS常用样式</h2>]]></content>
+      <categories>
+        <category>Web</category>
+      </categories>
+      <tags>
+        <tag>Web</tag>
+        <tag>Web基础</tag>
+        <tag>CSS</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Web基础之HTML</title>
     <url>/2020/09/01/Web%E5%9F%BA%E7%A1%80%E4%B9%8BHTML/</url>
     <content><![CDATA[<p>​    <strong>Web基础系列</strong>主要对Java开发中Web相关的内容(如<code>HTML</code>、<code>CSS</code>、<code>JavaScrip</code>t等)进行<strong>最基本的讲解</strong>，本系列其他文章请参考<a href="https://ykailh.github.io/tags/Web%E5%9F%BA%E7%A1%80/">Web基础</a> 。</p>
@@ -1626,95 +1715,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Web基础之CSS</title>
-    <url>/2020/09/02/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/</url>
-    <content><![CDATA[<p><strong>Web基础系列</strong>主要对Java开发中Web相关的内容(如<code>HTML</code>、<code>CSS</code>、<code>JavaScript</code>等)进行<strong>最基本的讲解</strong>，本系列其他文章请参考<a href="https://ykailh.github.io/tags/Web%E5%9F%BA%E7%A1%80/">Web基础</a> 。</p>
-<p>​    本文主要对<code>CSS</code>进行简单的了解，想要更详细的了解HTML可以参考这个教程<a href="https://www.runoob.com/css/css-tutorial.html">CSS教程</a> 。</p>
-<a id="more"></a>
-
-<h2 id="什么是CSS"><a href="#什么是CSS" class="headerlink" title="什么是CSS"></a>什么是CSS</h2><p>​    <strong>CSS</strong>的全称为（<strong>C</strong>ascading <strong>S</strong>tyle <strong>S</strong>heets）<strong>层叠样式表</strong>，它决定了HTML元素的显示方式。CSS 规则由两个主要部分构成：<strong>选择器</strong>，以及<strong>一条或多条声明</strong>:</p>
-<p>​    <img src="/image/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/CSS%E6%A0%BC%E5%BC%8F.jpg" alt="CSS格式"></p>
-<h2 id="CSS的插入"><a href="#CSS的插入" class="headerlink" title="CSS的插入"></a>CSS的插入</h2><p>​    根据CSS<strong>插入</strong>HTML文件的<strong>方式不同</strong>，分为<strong>外部样式表</strong>、<strong>内部样式表</strong>、<strong>内联样式</strong>。不同的方式有不同的插入格式。</p>
-<ul>
-<li><p><strong>外部样式表</strong></p>
-<p>​    将CSS语句写在一个后缀名为<code>.css</code>的文件中，然后在<code>&lt;head&gt;</code>标签内通过<code>&lt;link&gt;</code>标签引入CSS文件，<code>&lt;link&gt;</code>中的<code>rel</code>属性设置为<code>&quot;stylesheet&quot;</code>，<code>href</code>设置为CSS文件的路径。</p>
-<p>CSS文件示例(mystyle.css)：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">h1</span> &#123;<span class="attribute">color</span>:red;&#125;</span><br><span class="line"><span class="selector-tag">p</span> &#123;<span class="attribute">font-size</span>:<span class="number">30px</span>;&#125;</span><br></pre></td></tr></table></figure>
-
-<p>HTML引入CSS：</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span>    </span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>CSS外部样式表<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span> <span class="attr">href</span>=<span class="string">&quot;mystyle.css&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>h1标签内容<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>p标签内容<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    普通文本</span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>内部样式表</strong></p>
-<p>​    将CSS语句直接写在HTML文件<code>&lt;head&gt;</code>标签内的<code>&lt;style&gt;</code>标签中</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span>    </span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>CSS内部样式表<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span>&gt;</span></span><br><span class="line"><span class="css">    <span class="selector-tag">h1</span> &#123;<span class="attribute">color</span>:red;&#125;</span></span><br><span class="line"><span class="css">    <span class="selector-tag">p</span> &#123;<span class="attribute">font-size</span>:<span class="number">30px</span>;&#125;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>h1标签内容<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>p标签内容<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    普通文本</span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>内联样式</strong></p>
-<p>直接通过标签的<code>style</code>属性定义该标签内容的样式。</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span>    </span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>CSS内联样式<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span> <span class="attr">style</span> = <span class="string">&quot;color:red&quot;</span>&gt;</span>h1标签内容<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">style</span> = <span class="string">&quot;font-size:30px&quot;</span>&gt;</span>p标签内容<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    普通文本</span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<p>上面三种方式都可以实现相同的效果：</p>
-<p>​    <img src="/image/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/%E6%A0%B7%E5%BC%8F%E8%A1%A8.png" alt="样式表"></p>
-<p>这三个样式同时存在时的优先级为：<strong>内联样式</strong>  &gt; <strong>内部样式表</strong> &gt; <strong>外部样式表</strong></p>
-<p>保持mystyle.css不变</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span>    </span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>样式优先级<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span> <span class="attr">href</span>=<span class="string">&quot;mystyle.css&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span>&gt;</span></span><br><span class="line"><span class="css">    <span class="selector-tag">h1</span> &#123;<span class="attribute">color</span>:yellow;&#125;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span> <span class="attr">style</span> = <span class="string">&quot;color:green&quot;</span>&gt;</span>测试优先级<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>​    <img src="/image/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/%E6%A0%B7%E5%BC%8F%E4%BC%98%E5%85%88%E7%BA%A7.png" alt="样式优先级"></p>
-<h2 id="CSS选择器"><a href="#CSS选择器" class="headerlink" title="CSS选择器"></a>CSS选择器</h2><p>​    主要介绍以下几种css选择器：</p>
-<ul>
-<li><p>标签选择器</p>
-<p>格式为：<code>标签名&#123;声明..&#125;</code>，对所有同名标签有效上面演示中均为标签选择器</p>
-</li>
-<li><p>类选择器</p>
-<p>格式为：<code>.类名&#123;声明..&#125;</code>,对所有标签中属性<code>class</code>的值为该类名的元素有效。</p>
-<p>可以使用<code>标签名.类名&#123;声明&#125;</code>来选择该标签内<code>class</code>的值为该类名的元素</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span>    </span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>类选择器<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span>&gt;</span></span><br><span class="line"><span class="css">    <span class="comment">/*选择class值为classname的元素*/</span></span></span><br><span class="line"><span class="css">    <span class="selector-class">.classname</span>&#123;<span class="attribute">color</span>:green;&#125;</span></span><br><span class="line"><span class="css">    <span class="comment">/*选择p标签中class值为classname的元素*/</span></span></span><br><span class="line"><span class="css">    <span class="selector-tag">p</span><span class="selector-class">.a</span>&#123;<span class="attribute">font-size</span>:<span class="number">30px</span>;&#125;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span> <span class="attr">class</span> = <span class="string">&quot;classname&quot;</span>&gt;</span>class为classname的h1标签<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span> = <span class="string">&quot;classname&quot;</span>&gt;</span>class为classname的p标签<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span> = <span class="string">&quot;a&quot;</span>&gt;</span>class为a的p标签<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>​    <img src="/image/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/%E7%B1%BB%E9%80%89%E6%8B%A9%E5%99%A8.png" alt="类选择器"></p>
-</li>
-<li><p>id选择器</p>
-<p>格式为：<code>#id值&#123;声明..&#125;</code>，只对id为此id值的元素有效。</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span>    </span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>id选择器<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span>&gt;</span></span><br><span class="line"><span class="css">    <span class="comment">/*选择id值为p1的元素*/</span></span></span><br><span class="line"><span class="css">    <span class="selector-id">#p1</span>&#123;<span class="attribute">color</span>:green;&#125;</span></span><br><span class="line"><span class="css">    <span class="comment">/*选择id值为p2的元素*/</span></span></span><br><span class="line"><span class="css">    <span class="selector-id">#p2</span>&#123;<span class="attribute">font-size</span>:<span class="number">30px</span>;&#125;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>h1标签<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">id</span>=<span class="string">&quot;p1&quot;</span>&gt;</span>id值为p1的p标签<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">id</span>=<span class="string">&quot;p2&quot;</span>&gt;</span>id值为p2的p标签<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>​    <img src="/image/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/id%E9%80%89%E6%8B%A9%E5%99%A8.png" alt="id选择器"></p>
-</li>
-<li><p>属性选择器</p>
-<p>格式为：<code>[属性名]&#123;声明..&#125;</code>选择具有该属性的元素。</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span>    </span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>属性选择器<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span>&gt;</span></span><br><span class="line"><span class="css">    <span class="comment">/*选择具有id属性的元素*/</span></span></span><br><span class="line"><span class="css">    <span class="selector-attr">[id]</span>&#123;<span class="attribute">color</span>:green;&#125;</span></span><br><span class="line"><span class="css">    <span class="comment">/*选择具有class属性的元素*/</span></span></span><br><span class="line"><span class="css">    <span class="selector-attr">[class]</span>&#123;<span class="attribute">font-size</span>:<span class="number">30px</span>;&#125;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>h1标签<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">id</span>=<span class="string">&quot;p1&quot;</span> <span class="attr">class</span>=<span class="string">&quot;p1&quot;</span>&gt;</span>id值为p1的p标签<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">id</span>=<span class="string">&quot;p2&quot;</span>&gt;</span>id值为p2的p标签<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>​    <img src="/image/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/%E5%B1%9E%E6%80%A7%E9%80%89%E6%8B%A9%E5%99%A8.png" alt="属性选择器"></p>
-</li>
-<li><p>组合选择器</p>
-<ul>
-<li><code>标签(名)1 标签(名)2</code>，选择标签1元素内的标签2元素。</li>
-<li><code>标签(名)1&gt;标签(名)2</code>，选择标签1元素内的标签2元素中的直接子元素。</li>
-<li><code>标签(名)1+标签(名)2</code>，选择紧接在标签1元素后的元素，且二者有相同父元素.</li>
-<li><code>标签(名)1~标签(名)2</code>，选择标签1元素后的所有标签2元素。</li>
-</ul>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span>    </span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>属性选择器<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span>&gt;</span></span><br><span class="line"><span class="css">    <span class="comment">/*以div p 为例，后续演示只有此处不同，省略代码*/</span></span></span><br><span class="line"><span class="css">    <span class="selector-tag">div</span> <span class="selector-tag">p</span>&#123;<span class="attribute">color</span>:red;&#125;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>div前的p元素<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span>&gt;</span>div内的p元素<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>span内的p元素<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>div后的p元素1<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>div后的p元素2<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p><code>div p</code>结果：</p>
-<p>​    <img src="/image/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/%E7%BB%84%E5%90%88%E9%80%89%E6%8B%A9%E5%99%A81.png" alt="组合选择器1"></p>
-<p><code>div&gt;p</code>结果：</p>
-<p>​    <img src="/image/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/%E7%BB%84%E5%90%88%E9%80%89%E6%8B%A9%E5%99%A82.png" alt="组合选择器2"></p>
-<p><code>div+p</code>结果：</p>
-<p>​    <img src="/image/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/%E7%BB%84%E5%90%88%E9%80%89%E6%8B%A9%E5%99%A83.png" alt="组合选择器3"></p>
-<p><code>div~p</code>结果：</p>
-<p>​    <img src="/image/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/%E7%BB%84%E5%90%88%E9%80%89%E6%8B%A9%E5%99%A84.png" alt="组合选择器4"></p>
-</li>
-</ul>
-<h2 id="CSS常用样式"><a href="#CSS常用样式" class="headerlink" title="CSS常用样式"></a>CSS常用样式</h2>]]></content>
-      <categories>
-        <category>Web</category>
-      </categories>
-      <tags>
-        <tag>Web</tag>
-        <tag>Web基础</tag>
-        <tag>CSS</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>markdown常用语法</title>
     <url>/2020/08/05/markdown%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95/</url>
     <content><![CDATA[<h1 id="markdown常用语法"><a href="#markdown常用语法" class="headerlink" title="markdown常用语法"></a>markdown常用语法</h1><p>​    工欲善其事必先利其器，markdown作为最适合程序员的文本编辑格式，是写技术博客不可或缺的一环，花了一天时间学习了相关的语法，总结分享作为新博客的第一篇文章。</p>
@@ -1927,6 +1927,394 @@
         <tag>markdown</tag>
         <tag>Typora</tag>
         <tag>常用软件</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java基础之集合</title>
+    <url>/2020/08/11/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E9%9B%86%E5%90%88/</url>
+    <content><![CDATA[<p>​    <strong>本章内容主要是对Java中的集合的简单了解以及使用，在深入学习数据结构再进行学习和总结。</strong></p>
+<h1 id="集合简介"><a href="#集合简介" class="headerlink" title="集合简介"></a>集合简介</h1><h2 id="1-什么是集合"><a href="#1-什么是集合" class="headerlink" title="1.什么是集合"></a>1.什么是集合</h2><p>​    集合是用来存放<strong>数据的容器</strong>，主要有<code>set(集)</code>、<code>list(列表)</code>、<code>map(映射)</code>三种。</p>
+<p>​    与集合类似的还有之前接触到的数组，<strong>集合与数组的主要区别</strong>如下：</p>
+<ul>
+<li>数组的长度是固定的，集合的长度是可变的。</li>
+<li>数组可以存放基本数据类型也可以存放引用数据类型，集合只能存放引用数据类型。</li>
+<li>数据的读取速度快于集合，但占用连续的内存空间。</li>
+</ul>
+<h2 id="2-简单了解几个数据结构"><a href="#2-简单了解几个数据结构" class="headerlink" title="2.简单了解几个数据结构"></a>2.简单了解几个数据结构</h2><p>​    每个集合的<strong>底层存储方式</strong>可能都不同，导致了每个集合都有自己的<strong>性能特性</strong>，在实际使用中根据需求选择不同的集合。为了意识到这一点，简单介绍一些数据结构。</p>
+<ul>
+<li><p><strong>数组</strong></p>
+<p>​    数组的底层存储方式是根据数组的长度开辟<strong>一段连续的内存空间</strong>，将这段内存的<strong>首地址</strong>存放到以数组名为变量名的变量中，访问数据时根据<strong>首地址以及数组下标（偏移量）</strong>计算出数据所在的地址，访问数据。</p>
+<p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E9%9B%86%E5%90%88/%E6%95%B0%E7%BB%84.png" alt="数组"></p>
+</li>
+<li><p><strong>链表</strong></p>
+<p>​    链表的底层存储方式是，将数据存放到不要求内存连续的空间中，每个内存空间称为一个信息节点。信息节点除了包含存储的数据外还包含<strong>下一个节点的地址值</strong>，访问数据时需要<strong>从第一个节点开始</strong>，读取节点中的地址值，在根据这个地址值去查找下一个节点，以此类推<strong>直到查询到的数据为止</strong>。这样的链表称为<strong>单向链表</strong>。</p>
+<p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E9%9B%86%E5%90%88/%E5%8D%95%E5%90%91%E9%93%BE%E8%A1%A8.png" alt="单向链表"></p>
+<p>若在节点中同时存放上一个节点的地址，则从两侧均可访问链表，这样的链表称为双向链表。</p>
+<p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E9%9B%86%E5%90%88/%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8.png" alt="双向链表"></p>
+</li>
+<li><p><strong>二叉树</strong></p>
+<p>​    二叉树的底层存储方式同样是讲数据存放到节点中，节点中包含<strong>上一个节点（父节点）的地址值</strong>，以及<strong>另外两个子节点的地址值</strong>。</p>
+<p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E9%9B%86%E5%90%88/%E4%BA%8C%E5%8F%89%E6%A0%91.png" alt="二叉树"></p>
+<p>更多的数据结构以后再专门整理，主要目的是理解各个集合间的性能差异和原因。</p>
+</li>
+<li><p><strong>哈希表</strong></p>
+<p>哈希表的篇幅较长也比较复杂，推荐一篇小白向的文章：<a href="https://blog.csdn.net/sinat_33921105/article/details/103344078?utm_medium=distribute.wap_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-2.wap_blog_relevant_pic2&depth_1-utm_source=distribute.wap_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-2.wap_blog_relevant_pic2">一文彻底搞定哈希表</a>，可以快速简单理解哈希表。</p>
+</li>
+</ul>
+<h2 id="3-集合在Java中的实现"><a href="#3-集合在Java中的实现" class="headerlink" title="3.集合在Java中的实现"></a>3.集合在Java中的实现</h2><p>​    集合一般都需要增、删、改、查等基本功能，为此Java在<code>java.util</code>包下提供了两个接口（也可以称为结合的根接口），分别为针对对象的集合接口：<code>Collection</code>以及针对键值对的集合接口：<code>Map</code>。这两个接口都分别有许多实现类，提供了多种集合的选择。</p>
+<h1 id="Collection家族"><a href="#Collection家族" class="headerlink" title="Collection家族"></a>Collection家族</h1><p>​    Collection家族中包含<code>List</code>系列集合和<code>Set</code>系列集合，主要用于存放<strong>单值元素</strong>。</p>
+<h2 id="1-Collection提供的方法"><a href="#1-Collection提供的方法" class="headerlink" title="1.Collection提供的方法"></a>1.Collection提供的方法</h2><p>​    如上述所说，作为集合的根父类之一提供了一些集合通用的方法：</p>
+<table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>boolean add（E e）</td>
+<td>添加元素到集合末尾</td>
+</tr>
+<tr>
+<td>boolean addAll（Collection c）</td>
+<td>将集合c中元素添加到该集合中</td>
+</tr>
+<tr>
+<td>void clean()</td>
+<td>移除集合中的所有元素</td>
+</tr>
+<tr>
+<td>boolean contains(Object o)</td>
+<td>判断集合中是否有指定元素</td>
+</tr>
+<tr>
+<td>boolean containsAll(Collection&lt;?&gt; c)</td>
+<td>判断该集合是否拥有全部的集合c中的元素（判断c是否为子集）</td>
+</tr>
+<tr>
+<td>boolean remove(Object o)</td>
+<td>移除集合中的指定元素</td>
+</tr>
+<tr>
+<td>boolean removeAll(Collection&lt;?&gt; c)</td>
+<td>移除该集合中的同时存在于集合c中的元素（移除交集部分）</td>
+</tr>
+<tr>
+<td>int size()</td>
+<td>返回集合中的元素个数</td>
+</tr>
+<tr>
+<td>Object toArray()</td>
+<td>返回包含该集合所有元素的Object类型的数组</td>
+</tr>
+<tr>
+<td>&lt;T&gt;  &lt;T&gt;[] toArray(&lt;T&gt;[])</td>
+<td>返回包含该集合所有元素的指定类型的数组</td>
+</tr>
+<tr>
+<td>boolean isEmpty()</td>
+<td>判断是否为空集合（不包含元素）</td>
+</tr>
+<tr>
+<td>int hashCode()</td>
+<td>返回哈希值</td>
+</tr>
+<tr>
+<td>boolean equals(Object o)</td>
+<td>判断集合与指定元素是否相等</td>
+</tr>
+<tr>
+<td>Iterator&lt;E&gt; iterator()</td>
+<td>返回迭代器，迭代器的作用在之后说明。</td>
+</tr>
+</tbody></table>
+<h2 id="2-Collection集合的遍历"><a href="#2-Collection集合的遍历" class="headerlink" title="2.Collection集合的遍历"></a>2.Collection集合的遍历</h2><ul>
+<li><p><strong>方式一：</strong>返回元素的数组再遍历这个数组</p>
+<p>在没有学习迭代器之前使用的方法，也可以当做一种思路。</p>
+</li>
+<li><p><strong>方式二：</strong>使用迭代器遍历</p>
+<p>因为每个集合的底层存储方式的不同，导致无法使用统一的方式访问集合内的元素。所有Java提供了一个迭代器接口：<code>java.util.Iterator</code>，里面定义了几个方法分别为：</p>
+<table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>boolean hasNext()</td>
+<td>判断是否有可迭代的元素（判断是否有下一个元素）</td>
+</tr>
+<tr>
+<td>&lt;E&gt; next()</td>
+<td>返回迭代的下一个元素</td>
+</tr>
+<tr>
+<td>void remove()</td>
+<td>移除当前迭代器指向的元素（<strong>这个是默认方法</strong>）</td>
+</tr>
+</tbody></table>
+<p>不同的集合只需要在实现这个接口就可以<strong>解决不能统一访问方式</strong>的问题，实现方式一般是在集合类中定义一个<strong>内部类</strong>来实现这个接口，这也是设计模式之一的<strong>迭代器模式</strong>。</p>
+</li>
+<li><p><strong>方式三：</strong>使用<code>forearm</code>遍历</p>
+<p>可以使用一个<strong>特殊的for循环</strong>进行遍历，格式为<code>for(数据类型 临时变量名:集合名)</code>。使用forearm循环的前提是实现了<code>java.lang.Iterable</code>接口，这个接口中只有一个方法<strong>需要返回一个迭代器</strong>。所以forearm的实现其实也是<strong>依靠于迭代器</strong>的，只不过是使用上更加方便。</p>
+</li>
+</ul>
+<p><strong>若只需要遍历集合建议使用<code>forearm</code>，若涉及到删除则建议使用方式二。</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//ArrayList是Collection的一个实现类，后面会讲到</span></span><br><span class="line">    Collection&lt;String&gt; c = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">    c.add(<span class="string">&quot;a&quot;</span>);</span><br><span class="line">    c.add(<span class="string">&quot;b&quot;</span>);</span><br><span class="line">    c.add(<span class="string">&quot;c&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//转化为数组后再进行遍历</span></span><br><span class="line">    String[] cArray = c.toArray(<span class="keyword">new</span> String[<span class="number">1</span>]);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; cArray.length; i++) &#123;</span><br><span class="line">        System.out.println(cArray[i]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//使用迭代器进行遍历</span></span><br><span class="line">    Iterator&lt;String&gt; iterator = c.iterator();</span><br><span class="line">    <span class="keyword">while</span>(iterator.hasNext())&#123;</span><br><span class="line">        String str = iterator.next();</span><br><span class="line">        System.out.println(str);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//使用forearm遍历</span></span><br><span class="line">    <span class="keyword">for</span> (String str : cArray) &#123;</span><br><span class="line">        System.out.println(str);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-List系列集合"><a href="#3-List系列集合" class="headerlink" title="3.List系列集合"></a>3.List系列集合</h2><p>​    <code>List</code>为<code>Collection</code>的子接口，实现这个接口的集合具有元素<strong>有序</strong>、<strong>可重复</strong>的特点，一般称之为<strong>列表</strong>。</p>
+<h3 id="List提供的方法"><a href="#List提供的方法" class="headerlink" title="List提供的方法"></a>List提供的方法</h3><p>​    <code>LIst</code>中除了提供<code>Collection</code>中的方法外，还提供了以下方法：<strong>E为存储元素类型</strong></p>
+<table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>void add(int index , E element)</td>
+<td>将元素（按照下标）插入到指定位置</td>
+</tr>
+<tr>
+<td>boolean addAll（int index , Collection&lt;? extends E&gt; c）</td>
+<td>将列表c的所有元素插入到指定位置</td>
+</tr>
+<tr>
+<td>E get(int index)</td>
+<td>返回列表中指定的元素</td>
+</tr>
+<tr>
+<td>int indexOf(Object o)</td>
+<td>返回列表中o元素第一次出现的索引（下标），若没有该元素返回-1。</td>
+</tr>
+<tr>
+<td>int lastIndexOf(Object o)</td>
+<td>返回列表中o元素最后一次出现的索引（下标），若没有该元素返回-1。</td>
+</tr>
+<tr>
+<td>E remove（int index）</td>
+<td>根据下标删除指定元素，返回被删除的元素。</td>
+</tr>
+<tr>
+<td>E set(int index,E element)</td>
+<td>替换指定位置的元素，返回被替换的元素。</td>
+</tr>
+<tr>
+<td>List&lt;E&gt; subList(int feomIndex，int toIndex)</td>
+<td>返回包含列表fromIndex（包括）到toIndex（不包括）之间元素的新列表。</td>
+</tr>
+<tr>
+<td>ListIterator&lt;E&gt; listIterator()</td>
+<td>返回列表迭代器。</td>
+</tr>
+<tr>
+<td>ListIterator&lt;E&gt; listIterator(int index)</td>
+<td>返回从指定元素开始的列表迭代器。</td>
+</tr>
+</tbody></table>
+<p>其中最值得说明的是<code>ListIterator</code>，这是<code>Iterator</code>的一个子接口，是<code>List</code>集合专用的迭代器，提供了更多的方法，新增方法如下：</p>
+<table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>int nextIndex()</td>
+<td>返回列表中下一个元素的索引</td>
+</tr>
+<tr>
+<td>void add(E e)</td>
+<td>将元素插入列表</td>
+</tr>
+<tr>
+<td>boolean hasPrevious()</td>
+<td>逆向遍历列表，判断是否有可迭代元素。</td>
+</tr>
+<tr>
+<td>E previous()</td>
+<td>返回列表的前一个元素</td>
+</tr>
+<tr>
+<td>int previousIndex()</td>
+<td>返回上一个元素的索引</td>
+</tr>
+<tr>
+<td>void set(E e)</td>
+<td>替换列表中的元素</td>
+</tr>
+<tr>
+<td>void add(int index,E e)</td>
+<td>将元素插入到的指定位置（这个方法重载在集合类中）</td>
+</tr>
+<tr>
+<td>void set(int index,E e)</td>
+<td>将元素替换到的指定位置（这个方法重载在集合类中）</td>
+</tr>
+</tbody></table>
+<p>一般的List系列集合都可以使用索引操作，但实际性能根据底层存储方式的不同而不同。</p>
+<h3 id="List的常用实现类"><a href="#List的常用实现类" class="headerlink" title="List的常用实现类"></a>List的常用实现类</h3><ul>
+<li><p><strong>Vector（向量）</strong></p>
+<p><code>Vector</code>底层数据结构为<strong>数组</strong>，默认<strong>初始容量为10</strong>，超出容量时扩容为原来的<strong>2倍</strong>，最大的特点是它是<strong>线程安全</strong>的。提供改变初始容量的构造器和增量的构造器。</p>
+</li>
+<li><p><strong>ArrayList（动态数组）</strong></p>
+<p><code>ArrayList</code>底层数据结构为<strong>数组</strong>，默认<strong>初始容量为0</strong>，<strong>第一次使用时容量变为10</strong>，超出容量时扩容为原来的<strong>1.5倍</strong>，<strong>线程不安全。</strong>提供改变初始容量的构造器。</p>
+</li>
+<li><p><strong>Stack（栈）</strong></p>
+<p><code> Stack</code>是 <code> Vector</code>的子类，它的最大特点是<strong>后进先出</strong>，可以理解为一个朝上开口的箱子，最后放进去的东西在箱子的最上面，想要拿到箱子底部的东西就必须把上面的东西拿开。但它的底层仍旧为<strong>数组</strong>。</p>
+<p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E9%9B%86%E5%90%88/%E6%A0%88.jpg" alt="栈"></p>
+<p>相比于<code>Vector</code>多提供了<strong>栈独有的操作方法</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>E peek()</td>
+<td>查看栈顶对象</td>
+</tr>
+<tr>
+<td>E pop()</td>
+<td>移除并返回栈顶对象</td>
+</tr>
+<tr>
+<td>E push（E item）</td>
+<td>把对象放到栈顶（压栈），相当于add（E item）</td>
+</tr>
+<tr>
+<td>int search(Object o)</td>
+<td>返回对象在栈中的位置，以1位基数</td>
+</tr>
+<tr>
+<td>boolean empty()</td>
+<td>判断栈是否为空</td>
+</tr>
+</tbody></table>
+</li>
+<li><p><strong>LinkedList（双向链表）</strong></p>
+<p><code>LinkedList</code>的底层为<strong>双向链表</strong>，所以<strong>不推荐使用索引</strong>进行访问，是<strong>线程不安全</strong>的。除了操作双向链表的方法外，<code>LinkedList</code>还实现了<code>java.util.Deque</code>接口来支持用作<strong>双端队列</strong>、<strong>队列（先进先出）</strong>、<strong>单向链表</strong>、<strong>栈（后进先出）</strong>等各种数据结构，是一个十分强大的集合类。</p>
+</li>
+</ul>
+<h2 id="4-Set系列集合"><a href="#4-Set系列集合" class="headerlink" title="4.Set系列集合"></a>4.Set系列集合</h2><p>​    <code>Set</code>系列集合是<strong>部分有序</strong>、但都<strong>不可重复</strong>的，<code>Set</code>接口除了<code>Collection</code>提供的方法外<strong>没有额外提供方法</strong>。</p>
+<h3 id="Set的常用实现类"><a href="#Set的常用实现类" class="headerlink" title="Set的常用实现类"></a>Set的常用实现类</h3><p>​    Set系列底层对应与不同的<code>Map</code>系列集合，想要了解底层实现可以先学习<code>Map</code>系列集合。</p>
+<ul>
+<li><p><strong>HashSet</strong></p>
+<p><code>HashSet</code>实际为<code>HashMap</code>，元素无序且唯一。保证元素唯一的方式是<strong>先比较存储对象的哈希值</strong>，若<strong>哈希值相同</strong>再通过<code>equals()</code>方法比较是否相等。</p>
+</li>
+<li><p><strong>LinkedHashSet</strong></p>
+<p><code>LinkedHashSet</code>是<code>HaseSet</code>的子类,实际为<code>LinkedHashMap</code>，相比于父类增加了保证<strong>元素添加顺序</strong>的特性。</p>
+</li>
+<li><p><strong>TreeSet</strong></p>
+<p><code>TreeSet</code>实际为<code>TreeMap</code>，元素<strong>按照大小排序且保证唯一</strong>。通过元素大小判断的方式来保证元素的唯一性，若<strong>元素大小相等则认为是相同元素</strong>。要求存储的元素必须实现<code>java.lang.Comparable</code>接口或在创建<code>TreeSet</code> 时指定一个<code>java.util.Comparator</code>接口。</p>
+</li>
+</ul>
+<h2 id="5-Collection家族集合的选择"><a href="#5-Collection家族集合的选择" class="headerlink" title="5.Collection家族集合的选择"></a>5.Collection家族集合的选择</h2><p>​    根据不同集合的特性，简单的按照用途选择不同的集合如下图：</p>
+<p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E9%9B%86%E5%90%88/Collection%E9%9B%86%E5%90%88%E9%80%89%E6%8B%A9.png" alt="Collection集合选择"></p>
+<h1 id="Map家族"><a href="#Map家族" class="headerlink" title="Map家族"></a>Map家族</h1><p>​    <code>Map</code>系列集合主要用于存<strong>放键值对元素</strong>也叫做<strong>映射项（Entry）</strong>。</p>
+<h2 id="1-Mpa提供的方法"><a href="#1-Mpa提供的方法" class="headerlink" title="1.Mpa提供的方法"></a>1.Mpa提供的方法</h2><p>​    K为key的类型，V为value的类型</p>
+<table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>V  put(K key , V value)</td>
+<td>添加一个键值对，返回value的值。</td>
+</tr>
+<tr>
+<td>void putAll(Map&lt;? extends K, ? extends V&gt; m)</td>
+<td>将集合M的键值对添加到该集合中。</td>
+</tr>
+<tr>
+<td>V get(K key）</td>
+<td>返回key对应的value值</td>
+</tr>
+<tr>
+<td>V remove(Object key)</td>
+<td>根据key值删除键值对，返回被删除的value值。</td>
+</tr>
+<tr>
+<td>void clear()</td>
+<td>删除集合中的所有元素。</td>
+</tr>
+<tr>
+<td>boolean containsKey(Object key)</td>
+<td>判断Key是否存在</td>
+</tr>
+<tr>
+<td>boolean containsValue(Object Value)</td>
+<td>判断Value是否存在</td>
+</tr>
+<tr>
+<td>Set&lt;Map.Entry&lt;K,V&gt;&gt; entrySet()</td>
+<td>获取包含所有键值对的Set集合</td>
+</tr>
+<tr>
+<td>Set&lt;K&gt;  keySet()</td>
+<td>获取包含所有Key的Set集合</td>
+</tr>
+<tr>
+<td>Collection&lt;V&gt;  values()</td>
+<td>获取包含所有value值的Collection集合</td>
+</tr>
+<tr>
+<td>int size()</td>
+<td>获取集合中键值对数量</td>
+</tr>
+<tr>
+<td>boolean isEmpty()</td>
+<td>判断是否为空集合（不包含元素）</td>
+</tr>
+<tr>
+<td>int hashCode()</td>
+<td>返回哈希值</td>
+</tr>
+<tr>
+<td>boolean equals(Object o)</td>
+<td>判断集合与指定元素是否相等</td>
+</tr>
+</tbody></table>
+<h2 id="2-Map集合的遍历"><a href="#2-Map集合的遍历" class="headerlink" title="2.Map集合的遍历"></a>2.Map集合的遍历</h2><p>​    由于<code>Map</code>接口并没有实现<code>java.lang.Iterable</code>接口所以不能直接使用<code>foreach</code>遍历</p>
+<ul>
+<li><strong>方法一：</strong>调用<code>Collection&lt;V&gt;  values()</code>方法再遍历返回的集合</li>
+<li><strong>方法二：</strong>调用<code>Set\&lt;K&gt;  keySet()</code>方法再遍历返回的集合，在遍历中通过<code>V get(K key）</code>获取<code>value</code></li>
+<li><strong>方法三：</strong>调用<code>Set&lt;Map.Entry&lt;K,V&gt;&gt; entrySet()</code>方法再遍历返回的集合</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Map&lt;Integer, String&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">    map.put(<span class="number">1</span>, <span class="string">&quot;zhangsan&quot;</span>);</span><br><span class="line">    map.put(<span class="number">2</span>, <span class="string">&quot;lisi&quot;</span>);</span><br><span class="line">    map.put(<span class="number">3</span>, <span class="string">&quot;wangwu&quot;</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//方法一</span></span><br><span class="line">    Collection&lt;String&gt; values = map.values();</span><br><span class="line">    <span class="keyword">for</span> (String string : values) &#123;</span><br><span class="line">        System.out.println(string);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//方法二</span></span><br><span class="line">    Set&lt;Integer&gt; keySet = map.keySet();</span><br><span class="line">    <span class="keyword">for</span> (Integer integer : keySet) &#123;</span><br><span class="line">        System.out.println(map.get(integer));</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//方法三</span></span><br><span class="line">    Set&lt;Entry&lt;Integer,String&gt;&gt; entrySet = map.entrySet();</span><br><span class="line">    <span class="keyword">for</span> (Entry&lt;Integer, String&gt; entry : entrySet) &#123;</span><br><span class="line">        System.out.println(entry);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-Map的常用实现类"><a href="#3-Map的常用实现类" class="headerlink" title="3.Map的常用实现类"></a>3.Map的常用实现类</h2><p>​    <code>Map</code>系列的<code>key</code>均为<strong>唯一值</strong>。</p>
+<ul>
+<li><p><strong>Hashtable</strong></p>
+<p><code>Hashtable</code>是<strong>线程安全</strong>的，<code>key</code>和<code>value</code>不能为<code>null</code>，不保证元素插入顺序。</p>
+</li>
+<li><p><strong>HashMap</strong></p>
+<p><code>HashMap</code>是<strong>线程不安全</strong>的，<code>key</code>和<code>value</code>可以为<code>null</code>。除此之外基本上与<code>Hashtable</code>一致，类似<code>Vector</code>与<code>ArrayList</code>的关系。<code>Jdk1.8</code>之后底层实现为<strong>数组+链表/红黑树</strong>。</p>
+</li>
+<li><p><strong>LinkedHashMap</strong></p>
+<p><code>LinkedHashMap</code>为<code>HashMap</code>的子类，相比于父类增加了保证<strong>元素添加顺序</strong>的特性。</p>
+</li>
+<li><p><strong>TreeMap</strong></p>
+<p>键值对按照<code>key</code>的大小顺序进行排序。</p>
+</li>
+<li><p><strong>Properties</strong></p>
+<p><code>Properties</code>是<code>Hashtable</code>的子类，它的<code>key</code>与<code>value</code>均为<code>String</code>类型，常用于存储配置属性。添加了一些方法，遇到时再进行讲解。</p>
+</li>
+</ul>
+<p><strong><em>目前可以先了解使用，关于Map的底层实现留到源码分析时专门讲解</em></strong></p>
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>Java基础</tag>
+        <tag>集合</tag>
       </tags>
   </entry>
   <entry>
