@@ -80,6 +80,136 @@
     
     
     <article
+  id="post-Spring简单入门之Spring简介"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/09/20/Spring%E7%AE%80%E5%8D%95%E5%85%A5%E9%97%A8%E4%B9%8BSpring%E7%AE%80%E4%BB%8B/"
+    >Spring入门之Spring简介</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/09/20/Spring%E7%AE%80%E5%8D%95%E5%85%A5%E9%97%A8%E4%B9%8BSpring%E7%AE%80%E4%BB%8B/" class="article-date">
+  <time datetime="2020-09-20T04:01:20.000Z" itemprop="datePublished">2020-09-20</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Spring/">Spring</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="简单了解Spring"><a href="#简单了解Spring" class="headerlink" title="简单了解Spring"></a>简单了解Spring</h2><h3 id="1-什么是Spring"><a href="#1-什么是Spring" class="headerlink" title="1.什么是Spring"></a>1.什么是Spring</h3><p>​    Spring是一个<strong>开源框架</strong>，它可以通过简单的配置实现以前<strong>EJB容器</strong>（不了解可以跳过）的功能，它最核心的两个思想一个是<strong>IOC（控制反转）</strong>，一个是<strong>AOP（面向切面编程）</strong>。</p>
+<blockquote>
+<p>对于很多新的初学者，可能是第一次接触到框架的概念，简单来说框架就是一个半成品的组件，它对一些底层的代码进行了封装，使之变得简单易用。相当于框架已经帮助你完成了许多基础工作，你只需要集中精力完成系统的业务逻辑。</p>
+</blockquote>
+<h3 id="2-Spring的优良特性"><a href="#2-Spring的优良特性" class="headerlink" title="2.Spring的优良特性"></a>2.Spring的优良特性</h3><ul>
+<li><p><strong>非侵入式：</strong>基于Spring开发的应用中的对象可以<strong>不依赖</strong>于Spring的API。</p>
+</li>
+<li><p><strong>控制反转：IOC——Inversion of Control</strong>，指的是<strong>将对象的创建权交给 Spring 去创建</strong>。使用 Spring 之前，对象的创建都是由我们自己在代码中new创建。而使用 Spring 之后。对象的创建都是给了 Spring 框架。</p>
+</li>
+<li><p><strong>依赖注入：DI——Dependency Injection</strong>，是指依赖的对象不需要手动调用 setXX 方法去设置，而是通过配置赋值，<strong>它是IOC思想最经典的实现方式之一</strong>。</p>
+</li>
+<li><p><strong>面向切面编程：AOP——Aspect Oriented Programming</strong>，它关注的是横跨多个点的业务逻辑以外的功能，是对<strong>面向对象编程（OOP）</strong>的补充。</p>
+</li>
+<li><p><strong>容器：</strong>Spring 是一个容器，因为它包含并且管理应用对象的<strong>生命周期</strong>。</p>
+</li>
+<li><p><strong>组件化：</strong>Spring 实现了使用简单的组件配置组合成一个复杂的应用。在 Spring 中可以使用<strong>XML和Java注解组合</strong>这些对象。</p>
+</li>
+<li><p><strong>一站式：</strong>在 IOC 和 AOP 的基础上可以<strong>整合各种企业应用的开源框架和优秀的第三方类库</strong>（实际上 Spring 自身也提供了表述层的 SpringMVC 和持久层的 Spring JDBC）</p>
+</li>
+</ul>
+<blockquote>
+<p>这些特性可能只看概念可能体会不到这些好处，以后在学习和实际使用中加深理解。</p>
+</blockquote>
+<h2 id="Spring的体系结构"><a href="#Spring的体系结构" class="headerlink" title="Spring的体系结构"></a>Spring的体系结构</h2><p>​    Spring 有可能成为所有企业应用程序的一站式服务点，然而，Spring 是<strong>模块化</strong>的，<strong>允许你挑选和选择适用于你的模块，不必要把剩余部分也引入</strong>。</p>
+<p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E6%B3%A8%E8%A7%A3/Spring%E7%9A%84%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84.png" alt="Spring的体系结构"></p>
+<h3 id="1-核心容器"><a href="#1-核心容器" class="headerlink" title="1.核心容器"></a>1.核心容器</h3><p>核心容器由 <strong>spring-core，spring-beans，spring-context，spring-context-support和spring-expression</strong>（SpEL，Spring 表达式语言，Spring Expression Language）等模块组成，它们的细节如下：</p>
+<ul>
+<li><strong>spring-core</strong> 模块提供了框架的基本组成部分，包括 IoC 和依赖注入功能。</li>
+<li><strong>spring-beans</strong> 模块提供 BeanFactory，工厂模式的微妙实现，它移除了编码式单例的需要，并且可以把配置和依赖从实际编码逻辑中解耦。</li>
+<li><strong>context</strong> 模块建立在由 <strong>core</strong>和 <strong>beans</strong> 模块的基础上建立起来的，它以一种类似于 JNDI 注册的方式访问对象。Context 模块继承自 Bean 模块，并且添加了国际化（比如，使用资源束）、事件传播、资源加载和透明地创建上下文（比如，通过 Servelet 容器）等功能。Context 模块也支持 Java EE 的功能，比如 EJB、JMX 和远程调用等。<strong>ApplicationContext</strong> 接口是 Context 模块的焦点。<strong>spring-context-support</strong> 提供了对第三方库集成到 Spring 上下文的支持，比如缓存（EhCache, Guava, JCache）、邮件（JavaMail）、调度（CommonJ, Quartz）、模板引擎（FreeMarker, JasperReports, Velocity）等。</li>
+<li><strong>spring-expression</strong> 模块提供了强大的表达式语言，用于在运行时查询和操作对象图。它是 JSP2.1 规范中定义的统一表达式语言的扩展，支持 set 和 get 属性值、属性赋值、方法调用、访问数组集合及索引的内容、逻辑算术运算、命名变量、通过名字从 Spring IoC 容器检索对象，还支持列表的投影、选择以及聚合等。</li>
+</ul>
+<h3 id="2-数据访问-集成"><a href="#2-数据访问-集成" class="headerlink" title="2.数据访问/集成"></a>2.数据访问/集成</h3><ul>
+<li><strong>JDBC</strong> 模块提供了 JDBC 抽象层，它消除了冗长的 JDBC 编码和对数据库供应商特定错误代码的解析。</li>
+<li><strong>ORM</strong> 模块提供了对流行的对象关系映射 API 的集成，包括 JPA、JDO 和 Hibernate 等。通过此模块可以让这些 ORM 框架和 spring的其它功能整合，比如前面提及的事务管理。</li>
+<li><strong>OXM</strong> 模块提供了对 OXM 实现的支持，比如 JAXB、Castor、XML Beans、JiBX、XStream 等。</li>
+<li><strong>JMS</strong> 模块包含生产（produce）和消费（consume）消息的功能。从 Spring 4.1 开始，集成了 spring-messaging 模块。</li>
+<li><strong>事务</strong>模块为实现特殊接口类及所有的 POJO 支持编程式和声明式事务管理。（注：编程式事务需要自己写 beginTransaction()、commit()、rollback() 等事务管理方法，声明式事务是通过注解或配置由 spring 自动处理，编程式事务粒度更细）</li>
+</ul>
+<h3 id="3-Web"><a href="#3-Web" class="headerlink" title="3.Web"></a>3.Web</h3><ul>
+<li><strong>Web</strong> 模块提供面向 web 的基本功能和面向 web 的应用上下文，比如多部分（multipart）文件上传功能、使用 Servlet 监听器初始化 IoC 容器等。它还包括 HTTP 客户端以及 Spring 远程调用中与 web 相关的部分。</li>
+<li><strong>Web-MVC</strong> 模块为 web 应用提供了模型视图控制（MVC）和 REST Web服务的实现。Spring 的 MVC 框架可以使领域模型代码和 web 表单完全地分离，且可以与 Spring 框架的其它所有功能进行集成。</li>
+<li><strong>Web-Socket</strong> 模块为 WebSocket-based 提供了支持，而且在 web 应用程序中提供了客户端和服务器端之间通信的两种方式。</li>
+<li><strong>Web-Portlet</strong> 模块提供了用于 Portlet 环境的 MVC 实现，并反映了 spring-webmvc 模块的功能。</li>
+</ul>
+<h3 id="4-其他"><a href="#4-其他" class="headerlink" title="4.其他"></a>4.其他</h3><ul>
+<li><strong>AOP</strong> 模块提供了面向方面（切面）的编程实现，允许你定义方法拦截器和切入点对代码进行干净地解耦，从而使实现功能的代码彻底的解耦出来。使用源码级的元数据，可以用类似于.Net属性的方式合并行为信息到代码中。</li>
+<li><strong>Aspects</strong> 模块提供了与 <strong>AspectJ</strong> 的集成，这是一个功能强大且成熟的面向切面编程（AOP）框架。</li>
+<li><strong>Instrumentation</strong> 模块在一定的应用服务器中提供了类 instrumentation 的支持和类加载器的实现。</li>
+<li><strong>Messaging</strong> 模块为 STOMP 提供了支持作为在应用程序中 WebSocket 子协议的使用。它也支持一个注解编程模型，它是为了选路和处理来自 WebSocket 客户端的 STOMP 信息。</li>
+</ul>
+<h2 id="Spring环境配置"><a href="#Spring环境配置" class="headerlink" title="Spring环境配置"></a>Spring环境配置</h2><p>​    <strong>Spring所需安装以下程序;</strong></p>
+<ul>
+<li><p>JDK以及任意一个IDE，学习到框架这部分应该已经安装了这些。</p>
+</li>
+<li><p>安装 Apache Commons Logging API ：<strong><a target="_blank" rel="noopener" href="http://commons.apache.org/logging/">http://commons.apache.org/logging/</a></strong> </p>
+</li>
+<li><p>安装 Spring 框架库，可以根据自己使用的IDE百度对应的简化操作。</p>
+</li>
+</ul>
+<h2 id="Hello-World"><a href="#Hello-World" class="headerlink" title="Hello World"></a>Hello World</h2><p><strong>1.创建一个java项目，并导入Spring必须的jar包。</strong></p>
+<p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E6%B3%A8%E8%A7%A3/%E6%B7%BB%E5%8A%A0jar%E5%8C%85.png" alt="添加jar包"></p>
+<p><strong>2.编写实体类User</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ykailh.test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Integer id;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">getId</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> id;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setId</span><span class="params">(Integer id)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.id = id;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;User [id=&quot;</span> + id + <span class="string">&quot;, name=&quot;</span> + name + <span class="string">&quot;]&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>3.创建一个<strong>Spring bean configurationFile文件</strong>，这是一个<strong>xml文件</strong>，用于配置Spring所管理的类。</p>
+<p>通过<code>bean</code>标签的属性<code>id</code>设置唯一标识，<code>calss</code>为全类名。</p>
+<p>再通过<code>property</code>标签为成员属性赋值（也就是依赖注入），<code>name</code>为属性名，<code>value</code>为属性值。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.springframework.org/schema/beans&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd&quot;</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;user&quot;</span> <span class="attr">class</span>=<span class="string">&quot;com.ykailh.test.User&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;id&quot;</span> <span class="attr">value</span>=<span class="string">&quot;1001&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;name&quot;</span> <span class="attr">value</span>=<span class="string">&quot;zhangsan&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>4.创建一个测试类，并使用Spring的IOC容器管理对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ykailh.test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.context.ApplicationContext;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.support.ClassPathXmlApplicationContext;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//创建IOC容器，并制定配置文件</span></span><br><span class="line">        ApplicationContext ac = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">&quot;applicationContext.xml&quot;</span>);</span><br><span class="line">        <span class="comment">//通过id值获取对象</span></span><br><span class="line">        User user = (User)ac.getBean(<span class="string">&quot;user&quot;</span>);</span><br><span class="line">        System.out.println(user);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>运行结果：</strong></p>
+<blockquote>
+<p>User [id=1001, name=zhangsan]</p>
+</blockquote>
+<p>参考：<a target="_blank" rel="noopener" href="https://www.w3cschool.cn/wkspring/">Spring教程</a></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spring/" rel="tag">Spring</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spring%E5%85%A5%E9%97%A8/" rel="tag">Spring入门</a></li></ul>
+
+    </footer>
+  </div>
+
+    
+ 
+   
+</article>
+
+    
+    <article
   id="post-Web基础之CSS"
   class="article article-type-post"
   itemscope
@@ -1002,64 +1132,6 @@
     <footer class="article-footer">
        
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/" rel="tag">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java%E5%9F%BA%E7%A1%80/" rel="tag">Java基础</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%9B%86%E5%90%88/" rel="tag">集合</a></li></ul>
-
-    </footer>
-  </div>
-
-    
- 
-   
-</article>
-
-    
-    <article
-  id="post-Java基础之多线程"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/08/10/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%A4%9A%E7%BA%BF%E7%A8%8B/"
-    >Java基础之多线程</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2020/08/10/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="article-date">
-  <time datetime="2020-08-10T04:48:54.000Z" itemprop="datePublished">2020-08-10</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Java/">Java</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h1 id="相关的概念"><a href="#相关的概念" class="headerlink" title="相关的概念"></a>相关的概念</h1><ol>
-<li><p>进程</p>
-<p>​    进程是<strong>操作系统分配资源的最小单位</strong>。可以简单理解为每运行一个程序就是一个进程。进程之间的资源是独立的，无法直接共享。</p> 
-      <a class="article-more-link" href="/2020/08/10/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%A4%9A%E7%BA%BF%E7%A8%8B/"
-        >阅读更多...</a
-      >
-       
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/" rel="tag">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java%E5%9F%BA%E7%A1%80/" rel="tag">Java基础</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="tag">多线程</a></li></ul>
 
     </footer>
   </div>

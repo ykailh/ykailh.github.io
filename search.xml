@@ -301,6 +301,98 @@
       </tags>
   </entry>
   <entry>
+    <title>Java基础之字符串</title>
+    <url>/2020/08/09/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%AD%97%E7%AC%A6%E4%B8%B2/</url>
+    <content><![CDATA[<h1 id="字符串的特点"><a href="#字符串的特点" class="headerlink" title="字符串的特点"></a>字符串的特点</h1><p>​        <strong><em>以下说明及演示基于JDK1.8版本</em></strong></p>
+<ol>
+<li>字符串String类型本身是final声明的，字符串的对象也是不可变对象，意味着一旦进行修改，就会产生新对象。</li>
+<li>String对象内部是用数组进行保存的，在<strong>JDK1.9之前</strong>用的是字符数组<code>char[]</code>，<strong>JDK1.9之后</strong>使用的是字节数组<code>byte[]</code>。</li>
+</ol>
+<a id="more"></a>
+
+<ol start="3">
+<li>String类中这个<code>values</code>数组,同时由<code>final</code>和<code>private</code>修饰，意味着这个数组<strong>不可变并且不能通过外部进行操作</strong>，String类型提供的所有的方法都是用新对象来表示修改后内容的，所以<strong>保证了String对象的不可变</strong>。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//JDK1.8中String类的部分源码</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">String</span></span></span><br><span class="line"><span class="class">    <span class="keyword">implements</span> <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span>, <span class="title">Comparable</span>&lt;<span class="title">String</span>&gt;, <span class="title">CharSequence</span> </span>&#123;</span><br><span class="line">    <span class="comment">//使用char数组进行存储。</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">char</span> value[];</span><br><span class="line"></span><br><span class="line">    <span class="comment">//JDK1.8中只有char数组与哈希值，其他版本可能有所不同。</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> hash; <span class="comment">// Default to 0</span></span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>由于字符串对象设计为不可变，那么所以有<strong>字符串常量池</strong>来保存很多常量对象，<strong>JDK1.6以及之前</strong>，常量池设计在<strong>方法区</strong>当中。但由于字符串所占空间比较大，所以<strong>JDk1.7时</strong>将常量池移到了<strong>堆</strong>当中，<strong>JDk1.8</strong>后取消了<strong>方法区</strong>取而代之的是<strong>元空间</strong>，字符串常量池也在<strong>元空间</strong>当中。</li>
+</ol>
+<h1 id="字符串的比较"><a href="#字符串的比较" class="headerlink" title="字符串的比较"></a>字符串的比较</h1><h2 id="1"><a href="#1" class="headerlink" title="1.=="></a>1.==</h2><p>​    <code>==</code>用来比较对象的地址值，因为字符串特殊的存储方式，导致地址比较情况比较多。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str1 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line">String str2 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line">String str3 = <span class="keyword">new</span> String(<span class="string">&quot;A&quot;</span>);</span><br><span class="line">String str4 = <span class="keyword">new</span> String(<span class="string">&quot;A&quot;</span>).intern();</span><br><span class="line">System.out.println(str1 == str2);<span class="comment">//true</span></span><br><span class="line">System.out.println(str1 == str3);<span class="comment">//false</span></span><br><span class="line">System.out.println(str1 == str4);<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<p>​    <strong>内存示意图：</strong></p>
+<p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%AD%97%E7%AC%A6%E4%B8%B2/%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%86%85%E5%AD%98%E5%9B%BE.png" alt="字符串内存图"></p>
+<h2 id="2-equals"><a href="#2-equals" class="headerlink" title="2.equals()"></a>2.equals()</h2><p>​    <strong>用于比较对象的内容是否相同</strong>，因为String类型重写equals，区分大小写只要两个字符串的字符内容相同，就会返回true。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str1 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line">String str2 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line">String str3 = <span class="keyword">new</span> String(<span class="string">&quot;A&quot;</span>);</span><br><span class="line">System.out.println(str1.equals(str2));<span class="comment">//true</span></span><br><span class="line">System.out.println(str1.equals(str3));<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<p>查看一下String类中的<code>equals()</code>源码。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object anObject)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//判断是否指向同一个对象，如果是内容一定相同，返回ture</span></span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">this</span> == anObject) &#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    <span class="comment">//若传入参数不为String类则直接返回false</span></span><br><span class="line">      <span class="keyword">if</span> (anObject <span class="keyword">instanceof</span> String) &#123;</span><br><span class="line">          String anotherString = (String)anObject;</span><br><span class="line">          <span class="keyword">int</span> n = value.length;</span><br><span class="line">          <span class="comment">//判断字符串长度是否相等，不相等则一定不相同，返回false</span></span><br><span class="line">          <span class="keyword">if</span> (n == anotherString.value.length) &#123;</span><br><span class="line">              <span class="keyword">char</span> v1[] = value;</span><br><span class="line">              <span class="keyword">char</span> v2[] = anotherString.value;</span><br><span class="line">              <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">              <span class="comment">//逐个比较字符是否相等</span></span><br><span class="line">              <span class="keyword">while</span> (n-- != <span class="number">0</span>) &#123;</span><br><span class="line">                  <span class="keyword">if</span> (v1[i] != v2[i])</span><br><span class="line">                      <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">                  i++;</span><br><span class="line">              &#125;</span><br><span class="line">              <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>了避免空指针异常，若是与已知字符串做比较用已知字符串来调用方法。</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="string">&quot;已知字符串&quot;</span>.equals（）</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="3-equalsIgnoreCase"><a href="#3-equalsIgnoreCase" class="headerlink" title="3.equalsIgnoreCase()"></a>3.equalsIgnoreCase()</h2><p>​    <strong>用于不区分大小写的比较字符串内容</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">System.out.println(<span class="string">&quot;A&quot;</span>.equalsIgnoreCase(<span class="string">&quot;a&quot;</span>));<span class="comment">//ture</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="4-compareTo"><a href="#4-compareTo" class="headerlink" title="4.compareTo()"></a>4.compareTo()</h2><p>​    <strong>用于按照字符的Unicode编码值进行排序</strong>,String类型重写了<code>Comparable接口</code>的抽象方法。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">System.out.println(<span class="string">&quot;A&quot;</span>.compareTo(<span class="string">&quot;a&quot;</span>));<span class="comment">//-32</span></span><br><span class="line">System.out.println(<span class="string">&quot;AB&quot;</span>.compareTo(<span class="string">&quot;A&quot;</span>));<span class="comment">//1</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>源码如下:</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//String类中的compareTo方法</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compareTo</span><span class="params">(String anotherString)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> len1 = value.length;</span><br><span class="line">        <span class="keyword">int</span> len2 = anotherString.value.length;</span><br><span class="line">        <span class="keyword">int</span> lim = Math.min(len1, len2);</span><br><span class="line">        <span class="keyword">char</span> v1[] = value;</span><br><span class="line">        <span class="keyword">char</span> v2[] = anotherString.value;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> k = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (k &lt; lim) &#123;</span><br><span class="line">            <span class="keyword">char</span> c1 = v1[k];</span><br><span class="line">            <span class="keyword">char</span> c2 = v2[k];</span><br><span class="line">            <span class="keyword">if</span> (c1 != c2) &#123;</span><br><span class="line">                <span class="keyword">return</span> c1 - c2;</span><br><span class="line">            &#125;<span class="comment">//返回char的差值，说明按照Unicode编码值进行排序</span></span><br><span class="line">            k++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> len1 - len2;<span class="comment">//若一方为另一方的子字符串，则判定为较小的一方</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-compareToIgnoreCase"><a href="#5-compareToIgnoreCase" class="headerlink" title="5.compareToIgnoreCase()"></a>5.compareToIgnoreCase()</h2><p>​    <strong>用于不区分大小的情况下按照字符的Unicode编码值进行排序</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">System.out.println(<span class="string">&quot;A&quot;</span>.compareToIgnoreCase(<span class="string">&quot;a&quot;</span>));<span class="comment">//0</span></span><br><span class="line">System.out.println(<span class="string">&quot;AB&quot;</span>.compareToIgnoreCase(<span class="string">&quot;Ab&quot;</span>));<span class="comment">//0</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="字符串的拼接"><a href="#字符串的拼接" class="headerlink" title="字符串的拼接"></a>字符串的拼接</h1><h2 id="1-“-”连接符的实现"><a href="#1-“-”连接符的实现" class="headerlink" title="1.“+”连接符的实现"></a>1.“+”连接符的实现</h2><p>​    <strong>引入一段对API中String类的描述</strong></p>
+<blockquote>
+<p>Java 语言提供对字符串串联符号（”+”）以及将其他对象转换为字符串的特殊支持。字符串串联是通过 <code>StringBuilder</code>（或  <code>StringBuffer</code>）类及其 <code>append</code> 方法实现的。字符串转换是通过  <code>toString</code> 方法实现的，该方法由 <code>Object</code> 类定义，并可被 Java 中的所有类继承。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String s1 = <span class="keyword">new</span> String(<span class="string">&quot;A&quot;</span>);</span><br><span class="line">String s2 = <span class="keyword">new</span> String(<span class="string">&quot;B&quot;</span>);</span><br><span class="line">String s3 = s1 + s2;<span class="comment">//第三行的代码等价于第四行</span></span><br><span class="line">String s3 = (<span class="keyword">new</span> StringBuilder()).append(s1).append(s2).toString();</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-编译器对“-”的优化"><a href="#2-编译器对“-”的优化" class="headerlink" title="2.编译器对“+”的优化"></a>2.编译器对“+”的优化</h2><p>​    当**”+”两端均为编译期确定的字符串常量**时，编译器会进行相应的优化，直接将两个字符串常量拼接好，例如：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">System.out.println(<span class="string">&quot;Hello&quot;</span> + <span class="string">&quot;World&quot;</span>);</span><br><span class="line"><span class="comment">//编译器优化之后</span></span><br><span class="line">System.out.println(<span class="string">&quot;HelloWorld&quot;</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">String s1 =<span class="string">&quot;A&quot;</span> + <span class="string">&quot;B&quot;</span>;</span><br><span class="line">String s2 =<span class="string">&quot;AB&quot;</span>;</span><br><span class="line">System.out.println(s1 == s2);<span class="comment">//ture</span></span><br></pre></td></tr></table></figure>
+
+<p>​    除了常量字符串外，还有一种也情况是为编译期确定的字符串常量，就是有<code>final</code>修饰的<code>String变量</code>。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String s1 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line">String s2 = <span class="string">&quot;B&quot;</span>;</span><br><span class="line"><span class="comment">//此时s1，s2不是编译期间确定的字符串常量，依然通过StringBuilde的方式连接字符串</span></span><br><span class="line">String s3 = s1 + s2;</span><br><span class="line">System.out.println(s3 == <span class="string">&quot;AB&quot;</span>);<span class="comment">//false</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">final</span> String s1 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line"><span class="keyword">final</span> String s2 = <span class="string">&quot;B&quot;</span>;</span><br><span class="line">String s3 = s1 + s2;<span class="comment">//此时s1，s2在编译期间就确定为字符串常量</span></span><br><span class="line"><span class="comment">//等价于 String = “A” + “B”，String s2 =&quot;AB&quot;;</span></span><br><span class="line">System.out.println(s3 == <span class="string">&quot;AB&quot;</span>);<span class="comment">//ture</span></span><br></pre></td></tr></table></figure>
+
+<p>​    但也不是只要<code>final</code>修饰的<code>String变量</code>就一定是常量。例如下面这种情况。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">    <span class="keyword">final</span> String s1 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line">    <span class="keyword">final</span> String s2 = getS1();</span><br><span class="line">    String s3 = s1 + s2;</span><br><span class="line">    System.out.println(s3 == <span class="string">&quot;AB&quot;</span>);<span class="comment">//false</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">static</span> String <span class="title">getS1</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;B&quot;</span> ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-手动优化"><a href="#3-手动优化" class="headerlink" title="3.手动优化"></a>3.手动优化</h2><p>​    由于每次拼接非确定字符串时都需要隐式创建一个<code>StringBuilder对象</code>，如果存在需要<strong>大量循环拼接</strong>的情况则会在堆中创建大量的<code>StringBuilder对象</code>。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String s = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;<span class="number">10000</span>; i++) &#123;</span><br><span class="line">    s += <span class="string">&quot;abc&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    这种情况建议直接创建一个StringBuilder对象再使用append()方法手动拼接，最后再转为字符串，这样可以提高效率节省内存。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">StringBuilder sb = <span class="keyword">new</span> StringBuilder(<span class="string">&quot;abc&quot;</span>);</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10000</span>; i++) &#123;</span><br><span class="line">    sb.append(<span class="string">&quot;abc&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line">sb.toString();</span><br></pre></td></tr></table></figure>
+
+<h1 id="可变字符序列"><a href="#可变字符序列" class="headerlink" title="可变字符序列"></a>可变字符序列</h1><p>​    除了不可变的<code>String类</code>，java中还提供了可变字符序列的两个类：<code>StringBuilder类</code>和<code>StringBuffer类</code>。除了是否可变外这三个类的主要差别在运算性能和线程安全性上。</p>
+<h2 id="1-运算速度比较"><a href="#1-运算速度比较" class="headerlink" title="1.运算速度比较"></a>1.运算速度比较</h2><p>​    通常情况下：<code>StringBuilder</code> &gt;<code>StringBuffer</code>&gt;<code> String</code></p>
+<p>​    <code>String</code>是<code>final类</code>不能被继承且为字符串<strong>常量</strong>，而<code>StringBuilder</code>和<code>StringBuffer</code>均为字符串<strong>变量</strong>。<code>String</code>对象一旦创建便<strong>不可更改</strong>，而后两者是<strong>可更改的</strong>，它们只能通过构造函数来建立对象，且对象被建立以后将在内存中分配内存空间，并初始保存一个null，通过append方法向StringBuffer和StringBuilder中赋值。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line">System.out.println(str);</span><br><span class="line">str = str + <span class="string">&quot;de&quot;</span>;</span><br><span class="line">System.out.println(str);</span><br></pre></td></tr></table></figure>
+
+<p>​    上述代码先创建一个<code>String</code>对象str，并赋值abc给str，然后运行到第三行，JVM会再创建一个新的str对象，并将原有str的值和de加起来再赋值给新的str。而第一个创建的str对象被JVM的垃圾回收机制（GC）回收掉。所以str实际上并没有被更改，即<code>String</code>对象一旦创建就不可更改。所以Java中对<code>String</code>对象进行的操作实际上是一个<strong>不断创建并回收对象的过程</strong>，因此在运行速度上很慢。</p>
+<p>​    而<code>StringBuilder</code>比<code>StringBuffer</code>更快的源于没有了线程锁的损耗。</p>
+<h2 id="2-线程安全性"><a href="#2-线程安全性" class="headerlink" title="2.线程安全性"></a>2.线程安全性</h2><p>​    <code>StringBuffer</code>（线程安全的）</p>
+<p>​    <code>StringBuffer</code>中大部分方法由<code>synchronized</code>关键字修饰，在必要时可对方法进行同步，因此任意特定实例上的所有操作就好像是以串行顺序发生的，该顺序与所涉及的每个线程进行的方法调用顺序一致，所以是<strong>线程安全</strong>的。</p>
+<p>​    <code>StringBuilder</code>（非线程安全）</p>
+<p>​    该类在<code>JDK1.5</code>时新增提供一个与StringBuffer兼容的 API，但不能保证同步，所以在性能上较高。因此，在大多数情况下优先使用StringBuilder</p>
+<h2 id="3-总结"><a href="#3-总结" class="headerlink" title="3.总结"></a>3.总结</h2><p><code>String</code>：适用于少量的字符串操作。</p>
+<p><code>StringBuilder</code>：适用于单线程下在字符串缓冲区进行大量操作。</p>
+<p><code>StringBuffer</code>：适用于多线程下在字符串缓冲区进行大量操作。</p>
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>Java基础</tag>
+        <tag>字符串</tag>
+        <tag>String</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java基础之异常</title>
     <url>/2020/08/07/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%BC%82%E5%B8%B8/</url>
     <content><![CDATA[<h1 id="什么是异常"><a href="#什么是异常" class="headerlink" title="什么是异常"></a>什么是异常</h1><p>​    在一些情况下，由于<strong>非程序本身</strong>问题，例如:配置问题、错误输入、磁盘空间不足等等所导致的程序无法正常运行。</p>
@@ -404,86 +496,54 @@
       </tags>
   </entry>
   <entry>
-    <title>Java基础之字符串</title>
-    <url>/2020/08/09/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%AD%97%E7%AC%A6%E4%B8%B2/</url>
-    <content><![CDATA[<h1 id="字符串的特点"><a href="#字符串的特点" class="headerlink" title="字符串的特点"></a>字符串的特点</h1><p>​        <strong><em>以下说明及演示基于JDK1.8版本</em></strong></p>
-<ol>
-<li>字符串String类型本身是final声明的，字符串的对象也是不可变对象，意味着一旦进行修改，就会产生新对象。</li>
-<li>String对象内部是用数组进行保存的，在<strong>JDK1.9之前</strong>用的是字符数组<code>char[]</code>，<strong>JDK1.9之后</strong>使用的是字节数组<code>byte[]</code>。</li>
-</ol>
-<a id="more"></a>
-
-<ol start="3">
-<li>String类中这个<code>values</code>数组,同时由<code>final</code>和<code>private</code>修饰，意味着这个数组<strong>不可变并且不能通过外部进行操作</strong>，String类型提供的所有的方法都是用新对象来表示修改后内容的，所以<strong>保证了String对象的不可变</strong>。</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//JDK1.8中String类的部分源码</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">String</span></span></span><br><span class="line"><span class="class">    <span class="keyword">implements</span> <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span>, <span class="title">Comparable</span>&lt;<span class="title">String</span>&gt;, <span class="title">CharSequence</span> </span>&#123;</span><br><span class="line">    <span class="comment">//使用char数组进行存储。</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">char</span> value[];</span><br><span class="line"></span><br><span class="line">    <span class="comment">//JDK1.8中只有char数组与哈希值，其他版本可能有所不同。</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> hash; <span class="comment">// Default to 0</span></span><br></pre></td></tr></table></figure>
-
-<ol start="4">
-<li>由于字符串对象设计为不可变，那么所以有<strong>字符串常量池</strong>来保存很多常量对象，<strong>JDK1.6以及之前</strong>，常量池设计在<strong>方法区</strong>当中。但由于字符串所占空间比较大，所以<strong>JDk1.7时</strong>将常量池移到了<strong>堆</strong>当中，<strong>JDk1.8</strong>后取消了<strong>方法区</strong>取而代之的是<strong>元空间</strong>，字符串常量池也在<strong>元空间</strong>当中。</li>
-</ol>
-<h1 id="字符串的比较"><a href="#字符串的比较" class="headerlink" title="字符串的比较"></a>字符串的比较</h1><h2 id="1"><a href="#1" class="headerlink" title="1.=="></a>1.==</h2><p>​    <code>==</code>用来比较对象的地址值，因为字符串特殊的存储方式，导致地址比较情况比较多。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str1 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line">String str2 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line">String str3 = <span class="keyword">new</span> String(<span class="string">&quot;A&quot;</span>);</span><br><span class="line">String str4 = <span class="keyword">new</span> String(<span class="string">&quot;A&quot;</span>).intern();</span><br><span class="line">System.out.println(str1 == str2);<span class="comment">//true</span></span><br><span class="line">System.out.println(str1 == str3);<span class="comment">//false</span></span><br><span class="line">System.out.println(str1 == str4);<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
-
-<p>​    <strong>内存示意图：</strong></p>
-<p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%AD%97%E7%AC%A6%E4%B8%B2/%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%86%85%E5%AD%98%E5%9B%BE.png" alt="字符串内存图"></p>
-<h2 id="2-equals"><a href="#2-equals" class="headerlink" title="2.equals()"></a>2.equals()</h2><p>​    <strong>用于比较对象的内容是否相同</strong>，因为String类型重写equals，区分大小写只要两个字符串的字符内容相同，就会返回true。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str1 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line">String str2 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line">String str3 = <span class="keyword">new</span> String(<span class="string">&quot;A&quot;</span>);</span><br><span class="line">System.out.println(str1.equals(str2));<span class="comment">//true</span></span><br><span class="line">System.out.println(str1.equals(str3));<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
-
-<p>查看一下String类中的<code>equals()</code>源码。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object anObject)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//判断是否指向同一个对象，如果是内容一定相同，返回ture</span></span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">this</span> == anObject) &#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    <span class="comment">//若传入参数不为String类则直接返回false</span></span><br><span class="line">      <span class="keyword">if</span> (anObject <span class="keyword">instanceof</span> String) &#123;</span><br><span class="line">          String anotherString = (String)anObject;</span><br><span class="line">          <span class="keyword">int</span> n = value.length;</span><br><span class="line">          <span class="comment">//判断字符串长度是否相等，不相等则一定不相同，返回false</span></span><br><span class="line">          <span class="keyword">if</span> (n == anotherString.value.length) &#123;</span><br><span class="line">              <span class="keyword">char</span> v1[] = value;</span><br><span class="line">              <span class="keyword">char</span> v2[] = anotherString.value;</span><br><span class="line">              <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">              <span class="comment">//逐个比较字符是否相等</span></span><br><span class="line">              <span class="keyword">while</span> (n-- != <span class="number">0</span>) &#123;</span><br><span class="line">                  <span class="keyword">if</span> (v1[i] != v2[i])</span><br><span class="line">                      <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">                  i++;</span><br><span class="line">              &#125;</span><br><span class="line">              <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>了避免空指针异常，若是与已知字符串做比较用已知字符串来调用方法。</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="string">&quot;已知字符串&quot;</span>.equals（）</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="3-equalsIgnoreCase"><a href="#3-equalsIgnoreCase" class="headerlink" title="3.equalsIgnoreCase()"></a>3.equalsIgnoreCase()</h2><p>​    <strong>用于不区分大小写的比较字符串内容</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">System.out.println(<span class="string">&quot;A&quot;</span>.equalsIgnoreCase(<span class="string">&quot;a&quot;</span>));<span class="comment">//ture</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="4-compareTo"><a href="#4-compareTo" class="headerlink" title="4.compareTo()"></a>4.compareTo()</h2><p>​    <strong>用于按照字符的Unicode编码值进行排序</strong>,String类型重写了<code>Comparable接口</code>的抽象方法。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">System.out.println(<span class="string">&quot;A&quot;</span>.compareTo(<span class="string">&quot;a&quot;</span>));<span class="comment">//-32</span></span><br><span class="line">System.out.println(<span class="string">&quot;AB&quot;</span>.compareTo(<span class="string">&quot;A&quot;</span>));<span class="comment">//1</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>源码如下:</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//String类中的compareTo方法</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compareTo</span><span class="params">(String anotherString)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> len1 = value.length;</span><br><span class="line">        <span class="keyword">int</span> len2 = anotherString.value.length;</span><br><span class="line">        <span class="keyword">int</span> lim = Math.min(len1, len2);</span><br><span class="line">        <span class="keyword">char</span> v1[] = value;</span><br><span class="line">        <span class="keyword">char</span> v2[] = anotherString.value;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> k = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (k &lt; lim) &#123;</span><br><span class="line">            <span class="keyword">char</span> c1 = v1[k];</span><br><span class="line">            <span class="keyword">char</span> c2 = v2[k];</span><br><span class="line">            <span class="keyword">if</span> (c1 != c2) &#123;</span><br><span class="line">                <span class="keyword">return</span> c1 - c2;</span><br><span class="line">            &#125;<span class="comment">//返回char的差值，说明按照Unicode编码值进行排序</span></span><br><span class="line">            k++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> len1 - len2;<span class="comment">//若一方为另一方的子字符串，则判定为较小的一方</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="5-compareToIgnoreCase"><a href="#5-compareToIgnoreCase" class="headerlink" title="5.compareToIgnoreCase()"></a>5.compareToIgnoreCase()</h2><p>​    <strong>用于不区分大小的情况下按照字符的Unicode编码值进行排序</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">System.out.println(<span class="string">&quot;A&quot;</span>.compareToIgnoreCase(<span class="string">&quot;a&quot;</span>));<span class="comment">//0</span></span><br><span class="line">System.out.println(<span class="string">&quot;AB&quot;</span>.compareToIgnoreCase(<span class="string">&quot;Ab&quot;</span>));<span class="comment">//0</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="字符串的拼接"><a href="#字符串的拼接" class="headerlink" title="字符串的拼接"></a>字符串的拼接</h1><h2 id="1-“-”连接符的实现"><a href="#1-“-”连接符的实现" class="headerlink" title="1.“+”连接符的实现"></a>1.“+”连接符的实现</h2><p>​    <strong>引入一段对API中String类的描述</strong></p>
+    <title>Java基础之泛型</title>
+    <url>/2020/08/12/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E6%B3%9B%E5%9E%8B/</url>
+    <content><![CDATA[<h2 id="什么是泛型"><a href="#什么是泛型" class="headerlink" title="什么是泛型"></a>什么是泛型</h2><p>​    <strong>泛型</strong>可以按照字面简单理解为<strong>泛化的类型</strong>。</p>
 <blockquote>
-<p>Java 语言提供对字符串串联符号（”+”）以及将其他对象转换为字符串的特殊支持。字符串串联是通过 <code>StringBuilder</code>（或  <code>StringBuffer</code>）类及其 <code>append</code> 方法实现的。字符串转换是通过  <code>toString</code> 方法实现的，该方法由 <code>Object</code> 类定义，并可被 Java 中的所有类继承。</p>
+<p>类比到生活中，就是生产瓶子的厂商不给瓶子贴上包装，而是预留了包装的位置。等到灌装前再根据灌装的内容贴上不同的包装。</p>
 </blockquote>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String s1 = <span class="keyword">new</span> String(<span class="string">&quot;A&quot;</span>);</span><br><span class="line">String s2 = <span class="keyword">new</span> String(<span class="string">&quot;B&quot;</span>);</span><br><span class="line">String s3 = s1 + s2;<span class="comment">//第三行的代码等价于第四行</span></span><br><span class="line">String s3 = (<span class="keyword">new</span> StringBuilder()).append(s1).append(s2).toString();</span><br></pre></td></tr></table></figure>
+<p>​    即<strong>将类型明确的操作推迟到创建对象或者调用方法时</strong>，同时把<strong>类型当中参数一样传递</strong>。</p>
+<ul>
+<li><code>ArrayList&lt;E&gt;</code>称为<strong>泛型类型</strong>，其中的<code>E</code>称为类型参数变量，也可以叫做类型形参。</li>
+<li><code>ArrayList&lt;Integer&gt;</code>称为<strong>参数化类型</strong>，其中的<code>Integer</code>称为实际类型参数，也可以叫类型实参。</li>
+</ul>
+<h2 id="泛型的使用"><a href="#泛型的使用" class="headerlink" title="泛型的使用"></a>泛型的使用</h2><h3 id="1-泛型类"><a href="#1-泛型类" class="headerlink" title="1.泛型类"></a>1.泛型类</h3><p>​    语法格式：<code>[修饰符] class 类名&lt;泛型参数列表&gt;</code>，典型的代表就是各种集合类。泛型形参在定义成员变量以及成员方法中使用。</p>
+<p><strong>示例：</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//定义一个学生类，使用泛型形参T代表score的类型</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span>&lt;<span class="title">T</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> T score;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">(T score)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        <span class="keyword">this</span>.score = score;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getScore</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> score;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setScore</span><span class="params">(T score)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.score = score;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="2-编译器对“-”的优化"><a href="#2-编译器对“-”的优化" class="headerlink" title="2.编译器对“+”的优化"></a>2.编译器对“+”的优化</h2><p>​    当**”+”两端均为编译期确定的字符串常量**时，编译器会进行相应的优化，直接将两个字符串常量拼接好，例如：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">System.out.println(<span class="string">&quot;Hello&quot;</span> + <span class="string">&quot;World&quot;</span>);</span><br><span class="line"><span class="comment">//编译器优化之后</span></span><br><span class="line">System.out.println(<span class="string">&quot;HelloWorld&quot;</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">String s1 =<span class="string">&quot;A&quot;</span> + <span class="string">&quot;B&quot;</span>;</span><br><span class="line">String s2 =<span class="string">&quot;AB&quot;</span>;</span><br><span class="line">System.out.println(s1 == s2);<span class="comment">//ture</span></span><br></pre></td></tr></table></figure>
+<p>创建对象：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//创建Student时再指定T的类型，可以实现score的不同表现方式</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Student&lt;String&gt; s1= <span class="keyword">new</span> Student&lt;String&gt;(<span class="string">&quot;A&quot;</span>);</span><br><span class="line">    Student&lt;Double&gt; s2= <span class="keyword">new</span> Student&lt;Double&gt;(<span class="number">89.5</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>​    除了常量字符串外，还有一种也情况是为编译期确定的字符串常量，就是有<code>final</code>修饰的<code>String变量</code>。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String s1 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line">String s2 = <span class="string">&quot;B&quot;</span>;</span><br><span class="line"><span class="comment">//此时s1，s2不是编译期间确定的字符串常量，依然通过StringBuilde的方式连接字符串</span></span><br><span class="line">String s3 = s1 + s2;</span><br><span class="line">System.out.println(s3 == <span class="string">&quot;AB&quot;</span>);<span class="comment">//false</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">final</span> String s1 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line"><span class="keyword">final</span> String s2 = <span class="string">&quot;B&quot;</span>;</span><br><span class="line">String s3 = s1 + s2;<span class="comment">//此时s1，s2在编译期间就确定为字符串常量</span></span><br><span class="line"><span class="comment">//等价于 String = “A” + “B”，String s2 =&quot;AB&quot;;</span></span><br><span class="line">System.out.println(s3 == <span class="string">&quot;AB&quot;</span>);<span class="comment">//ture</span></span><br></pre></td></tr></table></figure>
+<h3 id="2-泛型接口"><a href="#2-泛型接口" class="headerlink" title="2.泛型接口"></a>2.泛型接口</h3><p>​    泛型接口的定义与泛型类的定义相似。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Generator</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">next</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 传入泛型实参时：</span></span><br><span class="line"><span class="comment"> * 定义一个生产器实现这个接口,虽然我们只创建了一个泛型接口Generator&lt;T&gt;</span></span><br><span class="line"><span class="comment"> * 但是我们可以为T传入无数个实参，形成无数种类型的Generator接口。</span></span><br><span class="line"><span class="comment"> * 在实现类实现泛型接口时，如已将泛型类型传入实参类型，则所有使用泛型的地方都要替换成传入的实参类型</span></span><br><span class="line"><span class="comment"> * 即：Generator&lt;T&gt;，public T next();中的的T都要替换成传入的String类型。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FruitGenerator</span> <span class="keyword">implements</span> <span class="title">Generator</span>&lt;<span class="title">String</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String[] fruits = <span class="keyword">new</span> String[]&#123;<span class="string">&quot;Apple&quot;</span>, <span class="string">&quot;Banana&quot;</span>, <span class="string">&quot;Pear&quot;</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">next</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Random rand = <span class="keyword">new</span> Random();</span><br><span class="line">        <span class="keyword">return</span> fruits[rand.nextInt(<span class="number">3</span>)];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>​    但也不是只要<code>final</code>修饰的<code>String变量</code>就一定是常量。例如下面这种情况。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">    <span class="keyword">final</span> String s1 = <span class="string">&quot;A&quot;</span>;</span><br><span class="line">    <span class="keyword">final</span> String s2 = getS1();</span><br><span class="line">    String s3 = s1 + s2;</span><br><span class="line">    System.out.println(s3 == <span class="string">&quot;AB&quot;</span>);<span class="comment">//false</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">static</span> String <span class="title">getS1</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;B&quot;</span> ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-泛型方法"><a href="#3-泛型方法" class="headerlink" title="3.泛型方法"></a>3.泛型方法</h3><p>​    如果泛型类/接口上的泛型形参不适用与某个方法时，可以单独设计泛型。这个方法<strong>可以是静态</strong>的。</p>
+<p>在调用泛型方法时，<strong>编译器会根据你的实参类型来确定泛型的类型</strong>。</p>
+<p>例如：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">java.util.Collection&lt;E&gt;中的</span></span><br><span class="line"><span class="comment">public abstract T[] toArray(T[] a)方法</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Collection&lt;String&gt; c = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">    c.add(<span class="string">&quot;a&quot;</span>);</span><br><span class="line">    c.add(<span class="string">&quot;b&quot;</span>);</span><br><span class="line"></span><br><span class="line">    String[] array = c.toArray(<span class="keyword">new</span> String[<span class="number">2</span>]);<span class="comment">//传入String数组编译器确定T为String</span></span><br><span class="line">    Object[] array2 = c.toArray(<span class="keyword">new</span> Object[<span class="number">2</span>]);<span class="comment">//传入Object数组编译器确定T为Object</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="3-手动优化"><a href="#3-手动优化" class="headerlink" title="3.手动优化"></a>3.手动优化</h2><p>​    由于每次拼接非确定字符串时都需要隐式创建一个<code>StringBuilder对象</code>，如果存在需要<strong>大量循环拼接</strong>的情况则会在堆中创建大量的<code>StringBuilder对象</code>。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String s = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;<span class="number">10000</span>; i++) &#123;</span><br><span class="line">    s += <span class="string">&quot;abc&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="4-泛型的上限"><a href="#4-泛型的上限" class="headerlink" title="4.泛型的上限"></a>4.泛型的上限</h3><p>​    泛型类或泛型接口以及泛型方法中的<strong>泛型形参可以设定上限</strong>，格式为：<code>T extends 上限类</code></p>
+<p>​    设定了上限之后，泛型实参只能为上限类本身或者上限类的子类。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//例如将第一个例子中的T设定上限为Number类</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span>&lt;<span class="title">T</span> <span class="keyword">extends</span> <span class="title">Number</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> T score;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">(T score)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        <span class="keyword">this</span>.score = score;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//创建对象指定为String时报错，因为String不是Number的子类</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Student&lt;String&gt; s1= <span class="keyword">new</span> Student&lt;String&gt;(<span class="string">&quot;A&quot;</span>);</span><br><span class="line">    Student&lt;Double&gt; s2= <span class="keyword">new</span> Student&lt;Double&gt;(<span class="number">89.5</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>​    这种情况建议直接创建一个StringBuilder对象再使用append()方法手动拼接，最后再转为字符串，这样可以提高效率节省内存。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">StringBuilder sb = <span class="keyword">new</span> StringBuilder(<span class="string">&quot;abc&quot;</span>);</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10000</span>; i++) &#123;</span><br><span class="line">    sb.append(<span class="string">&quot;abc&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line">sb.toString();</span><br></pre></td></tr></table></figure>
+<p>​    指定上限还有另一种格式为：<code>T extends 上限类 &amp; 上限接口1 &amp; 上限接口2...</code></p>
+<p>​    这种指定方式要求泛型实参为上限类或子类并且实现这些接口或子接口。</p>
+<p>​    <strong>若未指定泛型实参则按照上限类处理，未设置上限按照<code>Object</code>处理</strong></p>
+<h3 id="5-通配符"><a href="#5-通配符" class="headerlink" title="5.通配符"></a>5.通配符</h3><p>​    通常在需要指定泛型但又未确定这个泛型类型时，可以使用通配符<code>?</code>来表示任意类型。</p>
+<p>例如：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//写一个遍历Collection中集合的方法，可以这样写</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(Collection&lt;?&gt; c)</span></span>&#123;<span class="comment">//此时形参中的Collection需要指定泛型，可以使用通配符代替</span></span><br><span class="line">    <span class="keyword">for</span>(Object object : c)&#123;</span><br><span class="line">        System.out.println(object);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h1 id="可变字符序列"><a href="#可变字符序列" class="headerlink" title="可变字符序列"></a>可变字符序列</h1><p>​    除了不可变的<code>String类</code>，java中还提供了可变字符序列的两个类：<code>StringBuilder类</code>和<code>StringBuffer类</code>。除了是否可变外这三个类的主要差别在运算性能和线程安全性上。</p>
-<h2 id="1-运算速度比较"><a href="#1-运算速度比较" class="headerlink" title="1.运算速度比较"></a>1.运算速度比较</h2><p>​    通常情况下：<code>StringBuilder</code> &gt;<code>StringBuffer</code>&gt;<code> String</code></p>
-<p>​    <code>String</code>是<code>final类</code>不能被继承且为字符串<strong>常量</strong>，而<code>StringBuilder</code>和<code>StringBuffer</code>均为字符串<strong>变量</strong>。<code>String</code>对象一旦创建便<strong>不可更改</strong>，而后两者是<strong>可更改的</strong>，它们只能通过构造函数来建立对象，且对象被建立以后将在内存中分配内存空间，并初始保存一个null，通过append方法向StringBuffer和StringBuilder中赋值。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line">System.out.println(str);</span><br><span class="line">str = str + <span class="string">&quot;de&quot;</span>;</span><br><span class="line">System.out.println(str);</span><br></pre></td></tr></table></figure>
-
-<p>​    上述代码先创建一个<code>String</code>对象str，并赋值abc给str，然后运行到第三行，JVM会再创建一个新的str对象，并将原有str的值和de加起来再赋值给新的str。而第一个创建的str对象被JVM的垃圾回收机制（GC）回收掉。所以str实际上并没有被更改，即<code>String</code>对象一旦创建就不可更改。所以Java中对<code>String</code>对象进行的操作实际上是一个<strong>不断创建并回收对象的过程</strong>，因此在运行速度上很慢。</p>
-<p>​    而<code>StringBuilder</code>比<code>StringBuffer</code>更快的源于没有了线程锁的损耗。</p>
-<h2 id="2-线程安全性"><a href="#2-线程安全性" class="headerlink" title="2.线程安全性"></a>2.线程安全性</h2><p>​    <code>StringBuffer</code>（线程安全的）</p>
-<p>​    <code>StringBuffer</code>中大部分方法由<code>synchronized</code>关键字修饰，在必要时可对方法进行同步，因此任意特定实例上的所有操作就好像是以串行顺序发生的，该顺序与所涉及的每个线程进行的方法调用顺序一致，所以是<strong>线程安全</strong>的。</p>
-<p>​    <code>StringBuilder</code>（非线程安全）</p>
-<p>​    该类在<code>JDK1.5</code>时新增提供一个与StringBuffer兼容的 API，但不能保证同步，所以在性能上较高。因此，在大多数情况下优先使用StringBuilder</p>
-<h2 id="3-总结"><a href="#3-总结" class="headerlink" title="3.总结"></a>3.总结</h2><p><code>String</code>：适用于少量的字符串操作。</p>
-<p><code>StringBuilder</code>：适用于单线程下在字符串缓冲区进行大量操作。</p>
-<p><code>StringBuffer</code>：适用于多线程下在字符串缓冲区进行大量操作。</p>
+<p>​    通配符可以设置上下限：</p>
+<p>设置上限：<code>&lt;? extends 上限&gt;</code></p>
+<p>设置下限：<code>&lt;? super 下限&gt;</code></p>
+<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><ul>
+<li><p>泛型中的<strong>泛型实参</strong>只能为<strong>引用数据类型</strong>。</p>
+</li>
+<li><p>泛型<strong>不能</strong>使用在<strong>静态成员</strong>中。</p>
+</li>
+<li><p>泛型只提供给编译器使用，编译完成后的<strong>class文件中不存在泛型</strong>，称为<strong>泛型擦除</strong>。</p>
+</li>
+</ul>
 ]]></content>
       <categories>
         <category>Java</category>
@@ -491,8 +551,7 @@
       <tags>
         <tag>Java</tag>
         <tag>Java基础</tag>
-        <tag>字符串</tag>
-        <tag>String</tag>
+        <tag>泛型</tag>
       </tags>
   </entry>
   <entry>
@@ -826,65 +885,6 @@
         <tag>Java</tag>
         <tag>Java基础</tag>
         <tag>注解</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Java基础之泛型</title>
-    <url>/2020/08/12/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E6%B3%9B%E5%9E%8B/</url>
-    <content><![CDATA[<h2 id="什么是泛型"><a href="#什么是泛型" class="headerlink" title="什么是泛型"></a>什么是泛型</h2><p>​    <strong>泛型</strong>可以按照字面简单理解为<strong>泛化的类型</strong>。</p>
-<blockquote>
-<p>类比到生活中，就是生产瓶子的厂商不给瓶子贴上包装，而是预留了包装的位置。等到灌装前再根据灌装的内容贴上不同的包装。</p>
-</blockquote>
-<p>​    即<strong>将类型明确的操作推迟到创建对象或者调用方法时</strong>，同时把<strong>类型当中参数一样传递</strong>。</p>
-<ul>
-<li><code>ArrayList&lt;E&gt;</code>称为<strong>泛型类型</strong>，其中的<code>E</code>称为类型参数变量，也可以叫做类型形参。</li>
-<li><code>ArrayList&lt;Integer&gt;</code>称为<strong>参数化类型</strong>，其中的<code>Integer</code>称为实际类型参数，也可以叫类型实参。</li>
-</ul>
-<h2 id="泛型的使用"><a href="#泛型的使用" class="headerlink" title="泛型的使用"></a>泛型的使用</h2><h3 id="1-泛型类"><a href="#1-泛型类" class="headerlink" title="1.泛型类"></a>1.泛型类</h3><p>​    语法格式：<code>[修饰符] class 类名&lt;泛型参数列表&gt;</code>，典型的代表就是各种集合类。泛型形参在定义成员变量以及成员方法中使用。</p>
-<p><strong>示例：</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//定义一个学生类，使用泛型形参T代表score的类型</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span>&lt;<span class="title">T</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> T score;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">(T score)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        <span class="keyword">this</span>.score = score;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getScore</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> score;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setScore</span><span class="params">(T score)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.score = score;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>创建对象：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//创建Student时再指定T的类型，可以实现score的不同表现方式</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Student&lt;String&gt; s1= <span class="keyword">new</span> Student&lt;String&gt;(<span class="string">&quot;A&quot;</span>);</span><br><span class="line">    Student&lt;Double&gt; s2= <span class="keyword">new</span> Student&lt;Double&gt;(<span class="number">89.5</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-泛型接口"><a href="#2-泛型接口" class="headerlink" title="2.泛型接口"></a>2.泛型接口</h3><p>​    泛型接口的定义与泛型类的定义相似。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Generator</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">next</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 传入泛型实参时：</span></span><br><span class="line"><span class="comment"> * 定义一个生产器实现这个接口,虽然我们只创建了一个泛型接口Generator&lt;T&gt;</span></span><br><span class="line"><span class="comment"> * 但是我们可以为T传入无数个实参，形成无数种类型的Generator接口。</span></span><br><span class="line"><span class="comment"> * 在实现类实现泛型接口时，如已将泛型类型传入实参类型，则所有使用泛型的地方都要替换成传入的实参类型</span></span><br><span class="line"><span class="comment"> * 即：Generator&lt;T&gt;，public T next();中的的T都要替换成传入的String类型。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FruitGenerator</span> <span class="keyword">implements</span> <span class="title">Generator</span>&lt;<span class="title">String</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String[] fruits = <span class="keyword">new</span> String[]&#123;<span class="string">&quot;Apple&quot;</span>, <span class="string">&quot;Banana&quot;</span>, <span class="string">&quot;Pear&quot;</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">next</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Random rand = <span class="keyword">new</span> Random();</span><br><span class="line">        <span class="keyword">return</span> fruits[rand.nextInt(<span class="number">3</span>)];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="3-泛型方法"><a href="#3-泛型方法" class="headerlink" title="3.泛型方法"></a>3.泛型方法</h3><p>​    如果泛型类/接口上的泛型形参不适用与某个方法时，可以单独设计泛型。这个方法<strong>可以是静态</strong>的。</p>
-<p>在调用泛型方法时，<strong>编译器会根据你的实参类型来确定泛型的类型</strong>。</p>
-<p>例如：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">java.util.Collection&lt;E&gt;中的</span></span><br><span class="line"><span class="comment">public abstract T[] toArray(T[] a)方法</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Collection&lt;String&gt; c = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">    c.add(<span class="string">&quot;a&quot;</span>);</span><br><span class="line">    c.add(<span class="string">&quot;b&quot;</span>);</span><br><span class="line"></span><br><span class="line">    String[] array = c.toArray(<span class="keyword">new</span> String[<span class="number">2</span>]);<span class="comment">//传入String数组编译器确定T为String</span></span><br><span class="line">    Object[] array2 = c.toArray(<span class="keyword">new</span> Object[<span class="number">2</span>]);<span class="comment">//传入Object数组编译器确定T为Object</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="4-泛型的上限"><a href="#4-泛型的上限" class="headerlink" title="4.泛型的上限"></a>4.泛型的上限</h3><p>​    泛型类或泛型接口以及泛型方法中的<strong>泛型形参可以设定上限</strong>，格式为：<code>T extends 上限类</code></p>
-<p>​    设定了上限之后，泛型实参只能为上限类本身或者上限类的子类。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//例如将第一个例子中的T设定上限为Number类</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span>&lt;<span class="title">T</span> <span class="keyword">extends</span> <span class="title">Number</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> T score;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">(T score)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        <span class="keyword">this</span>.score = score;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//创建对象指定为String时报错，因为String不是Number的子类</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Student&lt;String&gt; s1= <span class="keyword">new</span> Student&lt;String&gt;(<span class="string">&quot;A&quot;</span>);</span><br><span class="line">    Student&lt;Double&gt; s2= <span class="keyword">new</span> Student&lt;Double&gt;(<span class="number">89.5</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>​    指定上限还有另一种格式为：<code>T extends 上限类 &amp; 上限接口1 &amp; 上限接口2...</code></p>
-<p>​    这种指定方式要求泛型实参为上限类或子类并且实现这些接口或子接口。</p>
-<p>​    <strong>若未指定泛型实参则按照上限类处理，未设置上限按照<code>Object</code>处理</strong></p>
-<h3 id="5-通配符"><a href="#5-通配符" class="headerlink" title="5.通配符"></a>5.通配符</h3><p>​    通常在需要指定泛型但又未确定这个泛型类型时，可以使用通配符<code>?</code>来表示任意类型。</p>
-<p>例如：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//写一个遍历Collection中集合的方法，可以这样写</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(Collection&lt;?&gt; c)</span></span>&#123;<span class="comment">//此时形参中的Collection需要指定泛型，可以使用通配符代替</span></span><br><span class="line">    <span class="keyword">for</span>(Object object : c)&#123;</span><br><span class="line">        System.out.println(object);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>​    通配符可以设置上下限：</p>
-<p>设置上限：<code>&lt;? extends 上限&gt;</code></p>
-<p>设置下限：<code>&lt;? super 下限&gt;</code></p>
-<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><ul>
-<li><p>泛型中的<strong>泛型实参</strong>只能为<strong>引用数据类型</strong>。</p>
-</li>
-<li><p>泛型<strong>不能</strong>使用在<strong>静态成员</strong>中。</p>
-</li>
-<li><p>泛型只提供给编译器使用，编译完成后的<strong>class文件中不存在泛型</strong>，称为<strong>泛型擦除</strong>。</p>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Java</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>Java基础</tag>
-        <tag>泛型</tag>
       </tags>
   </entry>
   <entry>
@@ -1369,6 +1369,96 @@
         <tag>SQL</tag>
         <tag>MySQL</tag>
         <tag>MySQL基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Spring入门之Spring简介</title>
+    <url>/2020/09/20/Spring%E7%AE%80%E5%8D%95%E5%85%A5%E9%97%A8%E4%B9%8BSpring%E7%AE%80%E4%BB%8B/</url>
+    <content><![CDATA[<h2 id="简单了解Spring"><a href="#简单了解Spring" class="headerlink" title="简单了解Spring"></a>简单了解Spring</h2><h3 id="1-什么是Spring"><a href="#1-什么是Spring" class="headerlink" title="1.什么是Spring"></a>1.什么是Spring</h3><p>​    Spring是一个<strong>开源框架</strong>，它可以通过简单的配置实现以前<strong>EJB容器</strong>（不了解可以跳过）的功能，它最核心的两个思想一个是<strong>IOC（控制反转）</strong>，一个是<strong>AOP（面向切面编程）</strong>。</p>
+<blockquote>
+<p>对于很多新的初学者，可能是第一次接触到框架的概念，简单来说框架就是一个半成品的组件，它对一些底层的代码进行了封装，使之变得简单易用。相当于框架已经帮助你完成了许多基础工作，你只需要集中精力完成系统的业务逻辑。</p>
+</blockquote>
+<h3 id="2-Spring的优良特性"><a href="#2-Spring的优良特性" class="headerlink" title="2.Spring的优良特性"></a>2.Spring的优良特性</h3><ul>
+<li><p><strong>非侵入式：</strong>基于Spring开发的应用中的对象可以<strong>不依赖</strong>于Spring的API。</p>
+</li>
+<li><p><strong>控制反转：IOC——Inversion of Control</strong>，指的是<strong>将对象的创建权交给 Spring 去创建</strong>。使用 Spring 之前，对象的创建都是由我们自己在代码中new创建。而使用 Spring 之后。对象的创建都是给了 Spring 框架。</p>
+</li>
+<li><p><strong>依赖注入：DI——Dependency Injection</strong>，是指依赖的对象不需要手动调用 setXX 方法去设置，而是通过配置赋值，<strong>它是IOC思想最经典的实现方式之一</strong>。</p>
+</li>
+<li><p><strong>面向切面编程：AOP——Aspect Oriented Programming</strong>，它关注的是横跨多个点的业务逻辑以外的功能，是对<strong>面向对象编程（OOP）</strong>的补充。</p>
+</li>
+<li><p><strong>容器：</strong>Spring 是一个容器，因为它包含并且管理应用对象的<strong>生命周期</strong>。</p>
+</li>
+<li><p><strong>组件化：</strong>Spring 实现了使用简单的组件配置组合成一个复杂的应用。在 Spring 中可以使用<strong>XML和Java注解组合</strong>这些对象。</p>
+</li>
+<li><p><strong>一站式：</strong>在 IOC 和 AOP 的基础上可以<strong>整合各种企业应用的开源框架和优秀的第三方类库</strong>（实际上 Spring 自身也提供了表述层的 SpringMVC 和持久层的 Spring JDBC）</p>
+</li>
+</ul>
+<blockquote>
+<p>这些特性可能只看概念可能体会不到这些好处，以后在学习和实际使用中加深理解。</p>
+</blockquote>
+<h2 id="Spring的体系结构"><a href="#Spring的体系结构" class="headerlink" title="Spring的体系结构"></a>Spring的体系结构</h2><p>​    Spring 有可能成为所有企业应用程序的一站式服务点，然而，Spring 是<strong>模块化</strong>的，<strong>允许你挑选和选择适用于你的模块，不必要把剩余部分也引入</strong>。</p>
+<p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E6%B3%A8%E8%A7%A3/Spring%E7%9A%84%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84.png" alt="Spring的体系结构"></p>
+<h3 id="1-核心容器"><a href="#1-核心容器" class="headerlink" title="1.核心容器"></a>1.核心容器</h3><p>核心容器由 <strong>spring-core，spring-beans，spring-context，spring-context-support和spring-expression</strong>（SpEL，Spring 表达式语言，Spring Expression Language）等模块组成，它们的细节如下：</p>
+<ul>
+<li><strong>spring-core</strong> 模块提供了框架的基本组成部分，包括 IoC 和依赖注入功能。</li>
+<li><strong>spring-beans</strong> 模块提供 BeanFactory，工厂模式的微妙实现，它移除了编码式单例的需要，并且可以把配置和依赖从实际编码逻辑中解耦。</li>
+<li><strong>context</strong> 模块建立在由 <strong>core</strong>和 <strong>beans</strong> 模块的基础上建立起来的，它以一种类似于 JNDI 注册的方式访问对象。Context 模块继承自 Bean 模块，并且添加了国际化（比如，使用资源束）、事件传播、资源加载和透明地创建上下文（比如，通过 Servelet 容器）等功能。Context 模块也支持 Java EE 的功能，比如 EJB、JMX 和远程调用等。<strong>ApplicationContext</strong> 接口是 Context 模块的焦点。<strong>spring-context-support</strong> 提供了对第三方库集成到 Spring 上下文的支持，比如缓存（EhCache, Guava, JCache）、邮件（JavaMail）、调度（CommonJ, Quartz）、模板引擎（FreeMarker, JasperReports, Velocity）等。</li>
+<li><strong>spring-expression</strong> 模块提供了强大的表达式语言，用于在运行时查询和操作对象图。它是 JSP2.1 规范中定义的统一表达式语言的扩展，支持 set 和 get 属性值、属性赋值、方法调用、访问数组集合及索引的内容、逻辑算术运算、命名变量、通过名字从 Spring IoC 容器检索对象，还支持列表的投影、选择以及聚合等。</li>
+</ul>
+<h3 id="2-数据访问-集成"><a href="#2-数据访问-集成" class="headerlink" title="2.数据访问/集成"></a>2.数据访问/集成</h3><ul>
+<li><strong>JDBC</strong> 模块提供了 JDBC 抽象层，它消除了冗长的 JDBC 编码和对数据库供应商特定错误代码的解析。</li>
+<li><strong>ORM</strong> 模块提供了对流行的对象关系映射 API 的集成，包括 JPA、JDO 和 Hibernate 等。通过此模块可以让这些 ORM 框架和 spring的其它功能整合，比如前面提及的事务管理。</li>
+<li><strong>OXM</strong> 模块提供了对 OXM 实现的支持，比如 JAXB、Castor、XML Beans、JiBX、XStream 等。</li>
+<li><strong>JMS</strong> 模块包含生产（produce）和消费（consume）消息的功能。从 Spring 4.1 开始，集成了 spring-messaging 模块。</li>
+<li><strong>事务</strong>模块为实现特殊接口类及所有的 POJO 支持编程式和声明式事务管理。（注：编程式事务需要自己写 beginTransaction()、commit()、rollback() 等事务管理方法，声明式事务是通过注解或配置由 spring 自动处理，编程式事务粒度更细）</li>
+</ul>
+<h3 id="3-Web"><a href="#3-Web" class="headerlink" title="3.Web"></a>3.Web</h3><ul>
+<li><strong>Web</strong> 模块提供面向 web 的基本功能和面向 web 的应用上下文，比如多部分（multipart）文件上传功能、使用 Servlet 监听器初始化 IoC 容器等。它还包括 HTTP 客户端以及 Spring 远程调用中与 web 相关的部分。</li>
+<li><strong>Web-MVC</strong> 模块为 web 应用提供了模型视图控制（MVC）和 REST Web服务的实现。Spring 的 MVC 框架可以使领域模型代码和 web 表单完全地分离，且可以与 Spring 框架的其它所有功能进行集成。</li>
+<li><strong>Web-Socket</strong> 模块为 WebSocket-based 提供了支持，而且在 web 应用程序中提供了客户端和服务器端之间通信的两种方式。</li>
+<li><strong>Web-Portlet</strong> 模块提供了用于 Portlet 环境的 MVC 实现，并反映了 spring-webmvc 模块的功能。</li>
+</ul>
+<h3 id="4-其他"><a href="#4-其他" class="headerlink" title="4.其他"></a>4.其他</h3><ul>
+<li><strong>AOP</strong> 模块提供了面向方面（切面）的编程实现，允许你定义方法拦截器和切入点对代码进行干净地解耦，从而使实现功能的代码彻底的解耦出来。使用源码级的元数据，可以用类似于.Net属性的方式合并行为信息到代码中。</li>
+<li><strong>Aspects</strong> 模块提供了与 <strong>AspectJ</strong> 的集成，这是一个功能强大且成熟的面向切面编程（AOP）框架。</li>
+<li><strong>Instrumentation</strong> 模块在一定的应用服务器中提供了类 instrumentation 的支持和类加载器的实现。</li>
+<li><strong>Messaging</strong> 模块为 STOMP 提供了支持作为在应用程序中 WebSocket 子协议的使用。它也支持一个注解编程模型，它是为了选路和处理来自 WebSocket 客户端的 STOMP 信息。</li>
+</ul>
+<h2 id="Spring环境配置"><a href="#Spring环境配置" class="headerlink" title="Spring环境配置"></a>Spring环境配置</h2><p>​    <strong>Spring所需安装以下程序;</strong></p>
+<ul>
+<li><p>JDK以及任意一个IDE，学习到框架这部分应该已经安装了这些。</p>
+</li>
+<li><p>安装 Apache Commons Logging API ：<strong><a href="http://commons.apache.org/logging/">http://commons.apache.org/logging/</a></strong> </p>
+</li>
+<li><p>安装 Spring 框架库，可以根据自己使用的IDE百度对应的简化操作。</p>
+</li>
+</ul>
+<h2 id="Hello-World"><a href="#Hello-World" class="headerlink" title="Hello World"></a>Hello World</h2><p><strong>1.创建一个java项目，并导入Spring必须的jar包。</strong></p>
+<p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E6%B3%A8%E8%A7%A3/%E6%B7%BB%E5%8A%A0jar%E5%8C%85.png" alt="添加jar包"></p>
+<p><strong>2.编写实体类User</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ykailh.test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Integer id;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">getId</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> id;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setId</span><span class="params">(Integer id)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.id = id;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;User [id=&quot;</span> + id + <span class="string">&quot;, name=&quot;</span> + name + <span class="string">&quot;]&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>3.创建一个<strong>Spring bean configurationFile文件</strong>，这是一个<strong>xml文件</strong>，用于配置Spring所管理的类。</p>
+<p>通过<code>bean</code>标签的属性<code>id</code>设置唯一标识，<code>calss</code>为全类名。</p>
+<p>再通过<code>property</code>标签为成员属性赋值（也就是依赖注入），<code>name</code>为属性名，<code>value</code>为属性值。</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.springframework.org/schema/beans&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd&quot;</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;user&quot;</span> <span class="attr">class</span>=<span class="string">&quot;com.ykailh.test.User&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;id&quot;</span> <span class="attr">value</span>=<span class="string">&quot;1001&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;name&quot;</span> <span class="attr">value</span>=<span class="string">&quot;zhangsan&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>4.创建一个测试类，并使用Spring的IOC容器管理对象。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ykailh.test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.context.ApplicationContext;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.support.ClassPathXmlApplicationContext;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//创建IOC容器，并制定配置文件</span></span><br><span class="line">        ApplicationContext ac = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">&quot;applicationContext.xml&quot;</span>);</span><br><span class="line">        <span class="comment">//通过id值获取对象</span></span><br><span class="line">        User user = (User)ac.getBean(<span class="string">&quot;user&quot;</span>);</span><br><span class="line">        System.out.println(user);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>运行结果：</strong></p>
+<blockquote>
+<p>User [id=1001, name=zhangsan]</p>
+</blockquote>
+<p>参考：<a href="https://www.w3cschool.cn/wkspring/">Spring教程</a></p>
+]]></content>
+      <categories>
+        <category>Spring</category>
+      </categories>
+      <tags>
+        <tag>Spring</tag>
+        <tag>Spring入门</tag>
       </tags>
   </entry>
   <entry>
