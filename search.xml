@@ -1372,9 +1372,195 @@
       </tags>
   </entry>
   <entry>
+    <title>Spring入门之IOC容器与bean</title>
+    <url>/2020/09/21/Spring%E5%85%A5%E9%97%A8%E4%B9%8BIOC%E5%AE%B9%E5%99%A8%E4%B8%8Ebean/</url>
+    <content><![CDATA[<p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E6%B3%A8%E8%A7%A3/Spring%E7%9A%84%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84.png" alt="Spring的体系结构"></p>
+<h2 id="IoC容器"><a href="#IoC容器" class="headerlink" title="IoC容器"></a>IoC容器</h2><h3 id="1-IoC容器的概念"><a href="#1-IoC容器的概念" class="headerlink" title="1.IoC容器的概念"></a>1.IoC容器的概念</h3><p>​    Spring 容器是 Spring 框架的<strong>核心</strong>。容器将<strong>创建对象</strong>，把它们<strong>连接</strong>在一起，<strong>配置</strong>它们，并<strong>管理</strong>他们的<strong>整个生命周期</strong>从创建到销毁。</p>
+<p>​    <strong>IOC 容器</strong>具有<strong>依赖注入功能</strong>的容器，它可以创建对象，IOC 容器负责实<strong>例化、定位、配置应用程序中的对象及建立这些对象间的依赖</strong>。通常new一个实例，控制权由程序员控制，而”控制反转”是指<strong>new实例工作</strong>不由程序员来做而是<strong>交给Spring容器</strong>来做。</p>
+<h3 id="2-Ioc容器的实现"><a href="#2-Ioc容器的实现" class="headerlink" title="2.Ioc容器的实现"></a>2.Ioc容器的实现</h3><p>​    在通过IOC容器<strong>读取Bean的实例之前</strong>，需要先将I<strong>OC容器本身实例化</strong>。</p>
+<p>Spring提供了IOC容器的两种实现方式：</p>
+<ul>
+<li><p><strong>BeanFactory：</strong></p>
+<p>​    它是<strong>最简单的容器</strong>，给 DI 提供了基本的支持，一般<strong>面向Spring内部</strong>，大量使用在<strong>整合第三方框架</strong>的反向兼容上。</p>
+</li>
+<li><p><strong>ApplicationContext：</strong></p>
+<p><code>ApplicationContext</code>为<code>BeanFactory</code>的子接口，相较于<code>BeanFactoy</code>增加了许多功能，通常情况下都建议使用<code>ApplicationContext</code>容器。</p>
+<p><code>ApplicationContext</code>还包含三个主要实现类：</p>
+<ul>
+<li><p><code>ClassPathXmlApplicationContext</code></p>
+<p>用于加载<strong>对应类路径下</strong>的XML格式的配置文件，你<strong>不需要</strong>提供 XML 文件的完整路径，只需正确配置 CLASSPATH 环境变量即可（例如HelloWorld中将Xml文件放置到项目下）。</p>
+</li>
+<li><p><code>FileSystemXmlApplicationContext</code></p>
+<p>用于加载<strong>文件系统中</strong>的XML格式的配置文件，你<strong>需要</strong>提供给构造器 XML 文件的<strong>完整路径</strong>。</p>
+</li>
+<li><p><code>WebXmlApplicationContext</code></p>
+<p>该容器会在一个 web 应用程序的范围内加载在 XML 文件中已被定义的 bean。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-获取Bean实例对象的方式"><a href="#3-获取Bean实例对象的方式" class="headerlink" title="3.获取Bean实例对象的方式"></a>3.获取Bean实例对象的方式</h3><p>​    创建容器的实例化对象，再通过这个对象调用<code>getBean</code>方法来获取Bean的实例化对象，介绍三种<code>getBean</code>重载形式。</p>
+<ul>
+<li><p><strong>通过名称（id）获取</strong>：<code>getBean(String)</code></p>
+<p>该方法的返回值类型为<code>Object</code>类型，在获取后需要将它转化为所需的类型。</p>
+</li>
+<li><p><strong>通过名称和类型获取Bean</strong>：<code>getBean(String,class)</code></p>
+<p>返回值为calss类型，相较于第一种方法更加安全，在编译时就可以发现错误。</p>
+</li>
+<li><p><strong>通过类型获取Bean：</strong><code>getBean(class)</code></p>
+<p>要求Xml中有且只有一个该类型的Bean，否则会报<code>BeanDefinitionStoreException</code>的异常。</p>
+</li>
+</ul>
+<h2 id="Bean的相关内容"><a href="#Bean的相关内容" class="headerlink" title="Bean的相关内容"></a>Bean的相关内容</h2><h3 id="1-Bean的定义"><a href="#1-Bean的定义" class="headerlink" title="1.Bean的定义"></a>1.Bean的定义</h3><p>​    Bean 是一个被实例化，组装，并通过 Spring IoC 容器所管理的对象。可以使用<strong>Xml文件</strong>和<strong>注解</strong>两个配置方式，以下演示全部基于Xml文件的形式演示，注解方式会有单独进行讲解。</p>
+<p>​    Bean的配置与之前在helloworld中一致，都是通过Bean标签进行配置，它还包含了一下属性。</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>class</td>
+<td>这个属性是强制性的，并且指定用来创建 bean 的 bean 类。</td>
+</tr>
+<tr>
+<td>name</td>
+<td>这个属性指定唯一的 bean 标识符。在基于 XML 的配置元数据中，你可以使用 ID 和/或 name 属性来指定 bean 标识符。</td>
+</tr>
+<tr>
+<td>scope</td>
+<td>这个属性指定由特定的 bean 定义创建的对象的作用域，它将会在 bean 作用域的章节中进行讨论。</td>
+</tr>
+<tr>
+<td>constructor-arg</td>
+<td>它是用来注入依赖关系的，并会在接下来的章节中进行讨论。</td>
+</tr>
+<tr>
+<td>properties</td>
+<td>它是用来注入依赖关系的，并会在接下来的章节中进行讨论。</td>
+</tr>
+<tr>
+<td>autowiring mode</td>
+<td>它是用来注入依赖关系的，并会在接下来的章节中进行讨论。</td>
+</tr>
+<tr>
+<td>lazy-initialization mode</td>
+<td>延迟初始化的 bean 告诉 IoC 容器在它第一次被请求时，而不是在启动时去创建一个 bean 实例。</td>
+</tr>
+<tr>
+<td>initialization 方法</td>
+<td>在 bean 的所有必需的属性被容器设置之后，调用回调方法。它将会在 bean 的生命周期章节中进行讨论。</td>
+</tr>
+<tr>
+<td>destruction 方法</td>
+<td>当包含该 bean 的容器被销毁时，使用回调方法。它将会在 bean 的生命周期章节中进行讨论。</td>
+</tr>
+</tbody></table>
+<h3 id="2-Bean的作用域"><a href="#2-Bean的作用域" class="headerlink" title="2.Bean的作用域"></a>2.Bean的作用域</h3><p>​    Bean的作用域指明了<strong>IoC容器中生产Bean的方式</strong>，在Xml文件中通过Bean标签的scope，<code>Spring</code>框架支持一下五个作用域：</p>
+<p>注意，如果你使用 <code>web-aware ApplicationContext </code>时，其中三个是可用的。   </p>
+<table>
+<thead>
+<tr>
+<th>作用域</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>singleton</td>
+<td>在spring IoC容器仅存在一个Bean实例，Bean以单例方式存在，默认值</td>
+</tr>
+<tr>
+<td>prototype</td>
+<td>每次从容器中调用Bean时，都返回一个新的实例，即每次调用getBean()时，相当于执行newXxxBean()</td>
+</tr>
+<tr>
+<td>request</td>
+<td>每次HTTP请求都会创建一个新的Bean，该作用域仅适用于WebApplicationContext环境</td>
+</tr>
+<tr>
+<td>session</td>
+<td>同一个HTTP Session共享一个Bean，不同Session使用不同的Bean，仅适用于WebApplicationContext环境</td>
+</tr>
+<tr>
+<td>global-session</td>
+<td>一般用于Portlet应用环境，该运用域仅适用于WebApplicationContext环境</td>
+</tr>
+</tbody></table>
+<p><strong>暂时先讨论前两个范围，当我们将讨论有关 web-aware Spring ApplicationContext 时，其余三个将被讨论。</strong></p>
+<p>延续helloworld中的User对象（只包含id和name两个成员属性），在Xml中配置两个对象分别为<code>singleton</code>和<code>prototype</code>。</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.springframework.org/schema/beans&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd&quot;</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;user1&quot;</span> <span class="attr">class</span>=<span class="string">&quot;com.ykailh.test.User&quot;</span> <span class="attr">scope</span>=<span class="string">&quot;singleton&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;id&quot;</span> <span class="attr">value</span>=<span class="string">&quot;1001&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;name&quot;</span> <span class="attr">value</span>=<span class="string">&quot;zhangsan&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;user2&quot;</span> <span class="attr">class</span>=<span class="string">&quot;com.ykailh.test.User&quot;</span> <span class="attr">scope</span>=<span class="string">&quot;prototype&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;id&quot;</span> <span class="attr">value</span>=<span class="string">&quot;1002&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;name&quot;</span> <span class="attr">value</span>=<span class="string">&quot;lisi&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>分别获取两次对象，对比它们的哈希值。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ykailh.test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.context.ApplicationContext;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.support.ClassPathXmlApplicationContext;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//创建IOC容器，并制定配置文件</span></span><br><span class="line">        ApplicationContext ac = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">&quot;applicationContext.xml&quot;</span>);</span><br><span class="line">        User user1A = ac.getBean(<span class="string">&quot;user1&quot;</span>, User.class);</span><br><span class="line">        User user1B = ac.getBean(<span class="string">&quot;user1&quot;</span>, User.class);</span><br><span class="line">        System.out.println(user1A == user1B);</span><br><span class="line">        </span><br><span class="line">        User user2A = ac.getBean(<span class="string">&quot;user2&quot;</span>, User.class);</span><br><span class="line">        User user2B = ac.getBean(<span class="string">&quot;user2&quot;</span>, User.class);</span><br><span class="line">        System.out.println(user2A == user2B);    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<blockquote>
+<p>true<br>false</p>
+</blockquote>
+<ul>
+<li><p>作用域为<code>singleton</code>的每次获取对象都返回的是同一个对象，若没有设置<code>scope</code>则默认为<code>singleton</code>。</p>
+</li>
+<li><p><code>作用域为singleton</code>时，实例化对象随着IoC容器的创建而创建，而<code>prototype</code>是在获取对象时创建。</p>
+</li>
+</ul>
+<h3 id="3-Bean的生命周期"><a href="#3-Bean的生命周期" class="headerlink" title="3.Bean的生命周期"></a>3.Bean的生命周期</h3><p>​    <strong>Spring IOC容器对bean的生命周期进行管理的过程：</strong></p>
+<p>​    ① 通过构造器或工厂方法创建bean实例</p>
+<p>​    ② 为bean的属性设置值和对其他bean的引用</p>
+<p>​    ③ 调用bean的初始化方法</p>
+<p>​    ④  bean可以使用了</p>
+<p>​    ⑤ 当容器关闭时，调用bean的销毁方法</p>
+<p>可以通过<code>init-method</code>以及<code>destroy-method</code>属性指定初始化和销毁方法。</p>
+<p><strong>User.java:</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ykailh.test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Integer id;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">User</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        System.out.println(<span class="string">&quot;调用构造方法&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">getId</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> id;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setId</span><span class="params">(Integer id)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.id = id;</span><br><span class="line">        System.out.println(<span class="string">&quot;调用set方法（依赖注入）&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;toString方法被执行&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//初始化与销毁方法（是普通的成员方法，与方法名无关）</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;init方法被执行&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">destroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;destroy方法被执行&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>applicationContext.xml:</strong></p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.springframework.org/schema/beans&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd&quot;</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;user&quot;</span> <span class="attr">class</span>=<span class="string">&quot;com.ykailh.test.User&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">init-method</span>=<span class="string">&quot;init&quot;</span> <span class="attr">destroy-method</span>=<span class="string">&quot;destroy&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;id&quot;</span> <span class="attr">value</span>=<span class="string">&quot;1001&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;name&quot;</span> <span class="attr">value</span>=<span class="string">&quot;zhangsan&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Test.java:</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ykailh.test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.context.support.ClassPathXmlApplicationContext;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"><span class="comment">//创建IOC容器，并制定配置文件，因为默认作用域为singleton，所以在创建容器时依次调用了构造方法和set方法和init方法</span></span><br><span class="line">        ClassPathXmlApplicationContext ac = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">&quot;applicationContext.xml&quot;</span>);</span><br><span class="line">        <span class="comment">//获取User的实例化对象</span></span><br><span class="line">        User user = ac.getBean(<span class="string">&quot;user&quot;</span>, User.class);</span><br><span class="line">        <span class="comment">//调用toString方法模拟使用过程</span></span><br><span class="line">        System.out.println(user);</span><br><span class="line">        <span class="comment">//关闭容器，bean被销毁，调用销毁方法</span></span><br><span class="line">        ac.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>运行结果：</strong></p>
+<blockquote>
+<p>…日志信息…</p>
+<p>调用构造方法<br>调用set方法（依赖注入）<br>init方法被执行<br>toString方法被执行<br>destroy方法被执行</p>
+</blockquote>
+<h3 id="4-后置处理器"><a href="#4-后置处理器" class="headerlink" title="4.后置处理器"></a>4.后置处理器</h3><p>​    后置处理器是一个<code>BeanPostProcessor</code>接口的实现类，它所定义的两个方法<code>postProcessBeforeInitialization </code>和<code>postProcessAfterInitialization</code>分别于<strong>Bean初始化前后执行</strong>，丰富了Bean的生命周期。这两个方法拥有两个形参分别<strong>为<code>Object</code> 形式的bean对象以及字符串形式的beanName（id）</strong>，以及需要一个<strong>Object类型返回值</strong>。可以理解为将bean对象放入到这两个方法中进行改造再将改造后的对象进行返回。</p>
+<p><strong>User.java：</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Integer id;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">User</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">getId</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> id;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setId</span><span class="params">(Integer id)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.id = id;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;User [id=&quot;</span> + id + <span class="string">&quot;, name=&quot;</span> + name + <span class="string">&quot;]&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;执行初始化方法&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>定义一个后置处理器<code>PostProcessorExample</code></strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.beans.BeansException;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.config.BeanPostProcessor;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PostProcessorExample</span> <span class="keyword">implements</span> <span class="title">BeanPostProcessor</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">postProcessBeforeInitialization</span><span class="params">(Object bean, String beanName)</span> <span class="keyword">throws</span> BeansException </span>&#123;</span><br><span class="line">        User user = (User) bean;</span><br><span class="line">        user.setId(user.getId()+<span class="number">100</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;后置处理器的初始化前方法生效，将id增加100&quot;</span>);</span><br><span class="line">        System.out.println(user);</span><br><span class="line">        <span class="keyword">return</span> user;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">postProcessAfterInitialization</span><span class="params">(Object bean, String beanName)</span> <span class="keyword">throws</span> BeansException </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;初始化后方法生效，判断beanName是否为user2&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span>(<span class="string">&quot;user2&quot;</span>.equals(beanName)) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;是&quot;</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;否&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> bean;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>定义后需要将后置处理器以Bean的形式配置到xml文件中，该后置处理器对该文件下的所有其他Bean有效。</strong></p>
+<p><strong>applicationContext.xml:</strong></p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.springframework.org/schema/beans&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd&quot;</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;user&quot;</span> <span class="attr">class</span>=<span class="string">&quot;com.ykailh.test.User&quot;</span> <span class="attr">init-method</span>=<span class="string">&quot;init&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;id&quot;</span> <span class="attr">value</span>=<span class="string">&quot;1001&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;name&quot;</span> <span class="attr">value</span>=<span class="string">&quot;zhangsan&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;user2&quot;</span> <span class="attr">class</span>=<span class="string">&quot;com.ykailh.test.User&quot;</span> <span class="attr">init-method</span>=<span class="string">&quot;init&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;id&quot;</span> <span class="attr">value</span>=<span class="string">&quot;1002&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;name&quot;</span> <span class="attr">value</span>=<span class="string">&quot;lisi&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">&lt;!-- 配置后置处理器 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">&quot;com.ykailh.test.PostProcessorExample&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Test.java：</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.context.support.ClassPathXmlApplicationContext;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//创建IOC容器，并制定配置文件</span></span><br><span class="line">        ClassPathXmlApplicationContext ac = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">&quot;applicationContext.xml&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>执行结果：</strong></p>
+<blockquote>
+<p>后置处理器的初始化前方法生效，将id增加100<br>User [id=1101, name=zhangsan]<br>执行初始化方法<br>初始化后方法生效，判断beanName是否为user2<br>否<br>后置处理器的初始化前方法生效，将id增加100<br>User [id=1102, name=lisi]<br>执行初始化方法<br>初始化后方法生效，判断beanName是否为user2<br>是</p>
+</blockquote>
+<p><strong>对user、user2均有效，且顺序为一个bean加载完成后再接着加载下一个bean</strong></p>
+]]></content>
+      <categories>
+        <category>Spring</category>
+      </categories>
+      <tags>
+        <tag>Spring</tag>
+        <tag>Spring入门</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Spring入门之Spring简介</title>
     <url>/2020/09/20/Spring%E7%AE%80%E5%8D%95%E5%85%A5%E9%97%A8%E4%B9%8BSpring%E7%AE%80%E4%BB%8B/</url>
-    <content><![CDATA[<h2 id="简单了解Spring"><a href="#简单了解Spring" class="headerlink" title="简单了解Spring"></a>简单了解Spring</h2><h3 id="1-什么是Spring"><a href="#1-什么是Spring" class="headerlink" title="1.什么是Spring"></a>1.什么是Spring</h3><p>​    Spring是一个<strong>开源框架</strong>，它可以通过简单的配置实现以前<strong>EJB容器</strong>（不了解可以跳过）的功能，它最核心的两个思想一个是<strong>IOC（控制反转）</strong>，一个是<strong>AOP（面向切面编程）</strong>。</p>
+    <content><![CDATA[<h2 id="简单了解Spring"><a href="#简单了解Spring" class="headerlink" title="简单了解Spring"></a>简单了解Spring</h2><h3 id="1-什么是Spring"><a href="#1-什么是Spring" class="headerlink" title="1.什么是Spring"></a>1.什么是Spring</h3><p>​    Spring是一个<strong>开源框架</strong>，它可以通过简单的配置实现以前<strong>EJB容器</strong>（不了解可以跳过）的功能，它最核心的两个思想一个是<strong>IoC（控制反转）</strong>，一个是<strong>AOP（面向切面编程）</strong>。</p>
+<a id="more"></a>
+
 <blockquote>
 <p>对于很多新的初学者，可能是第一次接触到框架的概念，简单来说框架就是一个半成品的组件，它对一些底层的代码进行了封装，使之变得简单易用。相当于框架已经帮助你完成了许多基础工作，你只需要集中精力完成系统的业务逻辑。</p>
 </blockquote>
