@@ -99,10 +99,11 @@
   
     <div class="article-entry" itemprop="articleBody">
        
-  <p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E6%B3%A8%E8%A7%A3/Spring%E7%9A%84%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84.png" alt="Spring的体系结构"></p>
-<h2 id="IoC容器"><a href="#IoC容器" class="headerlink" title="IoC容器"></a>IoC容器</h2><h3 id="1-IoC容器的概念"><a href="#1-IoC容器的概念" class="headerlink" title="1.IoC容器的概念"></a>1.IoC容器的概念</h3><p>​    Spring 容器是 Spring 框架的<strong>核心</strong>。容器将<strong>创建对象</strong>，把它们<strong>连接</strong>在一起，<strong>配置</strong>它们，并<strong>管理</strong>他们的<strong>整个生命周期</strong>从创建到销毁。</p>
+  <h2 id="IoC容器"><a href="#IoC容器" class="headerlink" title="IoC容器"></a>IoC容器</h2><h3 id="1-IoC容器的概念"><a href="#1-IoC容器的概念" class="headerlink" title="1.IoC容器的概念"></a>1.IoC容器的概念</h3><p>​    Spring 容器是 Spring 框架的<strong>核心</strong>。容器将<strong>创建对象</strong>，把它们<strong>连接</strong>在一起，<strong>配置</strong>它们，并<strong>管理</strong>他们的<strong>整个生命周期</strong>从创建到销毁。</p>
 <p>​    <strong>IOC 容器</strong>具有<strong>依赖注入功能</strong>的容器，它可以创建对象，IOC 容器负责实<strong>例化、定位、配置应用程序中的对象及建立这些对象间的依赖</strong>。通常new一个实例，控制权由程序员控制，而”控制反转”是指<strong>new实例工作</strong>不由程序员来做而是<strong>交给Spring容器</strong>来做。</p>
-<h3 id="2-Ioc容器的实现"><a href="#2-Ioc容器的实现" class="headerlink" title="2.Ioc容器的实现"></a>2.Ioc容器的实现</h3><p>​    在通过IOC容器<strong>读取Bean的实例之前</strong>，需要先将I<strong>OC容器本身实例化</strong>。</p>
+<a id="more"></a>
+
+<h3 id="2-Ioc容器的实现"><a href="#2-Ioc容器的实现" class="headerlink" title="2.Ioc容器的实现"></a>2.Ioc容器的实现</h3><p>​    在通过IOC容器<strong>读取Bean的实例之前</strong>，需要先将<strong>IOC容器本身实例化</strong>。</p>
 <p>Spring提供了IOC容器的两种实现方式：</p>
 <ul>
 <li><p><strong>BeanFactory：</strong></p>
@@ -124,6 +125,7 @@
 </ul>
 </li>
 </ul>
+<p><img src="/image/Spring%E5%85%A5%E9%97%A8%E4%B9%8BIOC%E5%AE%B9%E5%99%A8%E4%B8%8Ebean/IoC%E5%AE%B9%E5%99%A8%E7%BB%93%E6%9E%84.png" alt="IoC容器结构"></p>
 <h3 id="3-获取Bean实例对象的方式"><a href="#3-获取Bean实例对象的方式" class="headerlink" title="3.获取Bean实例对象的方式"></a>3.获取Bean实例对象的方式</h3><p>​    创建容器的实例化对象，再通过这个对象调用<code>getBean</code>方法来获取Bean的实例化对象，介绍三种<code>getBean</code>重载形式。</p>
 <ul>
 <li><p><strong>通过名称（id）获取</strong>：<code>getBean(String)</code></p>
@@ -335,6 +337,15 @@
 
    
   <nav class="article-nav">
+    
+      <a href="/2020/09/22/Spring%E5%85%A5%E9%97%A8%E4%B9%8B%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Spring入门之依赖注入
+          
+        </div>
+      </a>
     
     
       <a href="/2020/09/20/Spring%E7%AE%80%E5%8D%95%E5%85%A5%E9%97%A8%E4%B9%8BSpring%E7%AE%80%E4%BB%8B/" class="article-nav-link">

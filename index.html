@@ -80,6 +80,62 @@
     
     
     <article
+  id="post-Spring入门之依赖注入"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/09/22/Spring%E5%85%A5%E9%97%A8%E4%B9%8B%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/"
+    >Spring入门之依赖注入</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/09/22/Spring%E5%85%A5%E9%97%A8%E4%B9%8B%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/" class="article-date">
+  <time datetime="2020-09-22T05:03:20.000Z" itemprop="datePublished">2020-09-22</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Spring/">Spring</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="理解依赖注入"><a href="#理解依赖注入" class="headerlink" title="理解依赖注入"></a>理解依赖注入</h2><p>​    每个基于应用程序的 java 都有几个对象，由这些对象一起工作来呈现出终端用户所看到的工作的应用程序。当编写一个复杂的 Java 应用程序时，应用程序类应该尽可能独立于其他 Java 类来<strong>增加这些类重用的可能性</strong>，并且在做单元测试时，测试独立于其他类的独立性。<code>依赖注入（或有时称为布线）</code>有助于把这些类<strong>粘合在一起</strong>，同时<strong>保持他们独立</strong>。</p> 
+      <a class="article-more-link" href="/2020/09/22/Spring%E5%85%A5%E9%97%A8%E4%B9%8B%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/"
+        >阅读更多...</a
+      >
+       
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spring/" rel="tag">Spring</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spring%E5%85%A5%E9%97%A8/" rel="tag">Spring入门</a></li></ul>
+
+    </footer>
+  </div>
+
+    
+ 
+   
+</article>
+
+    
+    <article
   id="post-Spring入门之IOC容器与bean"
   class="article article-type-post"
   itemscope
@@ -110,179 +166,12 @@
       
     <div class="article-entry" itemprop="articleBody">
        
-  <p><img src="/image/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E6%B3%A8%E8%A7%A3/Spring%E7%9A%84%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84.png" alt="Spring的体系结构"></p>
-<h2 id="IoC容器"><a href="#IoC容器" class="headerlink" title="IoC容器"></a>IoC容器</h2><h3 id="1-IoC容器的概念"><a href="#1-IoC容器的概念" class="headerlink" title="1.IoC容器的概念"></a>1.IoC容器的概念</h3><p>​    Spring 容器是 Spring 框架的<strong>核心</strong>。容器将<strong>创建对象</strong>，把它们<strong>连接</strong>在一起，<strong>配置</strong>它们，并<strong>管理</strong>他们的<strong>整个生命周期</strong>从创建到销毁。</p>
-<p>​    <strong>IOC 容器</strong>具有<strong>依赖注入功能</strong>的容器，它可以创建对象，IOC 容器负责实<strong>例化、定位、配置应用程序中的对象及建立这些对象间的依赖</strong>。通常new一个实例，控制权由程序员控制，而”控制反转”是指<strong>new实例工作</strong>不由程序员来做而是<strong>交给Spring容器</strong>来做。</p>
-<h3 id="2-Ioc容器的实现"><a href="#2-Ioc容器的实现" class="headerlink" title="2.Ioc容器的实现"></a>2.Ioc容器的实现</h3><p>​    在通过IOC容器<strong>读取Bean的实例之前</strong>，需要先将I<strong>OC容器本身实例化</strong>。</p>
-<p>Spring提供了IOC容器的两种实现方式：</p>
-<ul>
-<li><p><strong>BeanFactory：</strong></p>
-<p>​    它是<strong>最简单的容器</strong>，给 DI 提供了基本的支持，一般<strong>面向Spring内部</strong>，大量使用在<strong>整合第三方框架</strong>的反向兼容上。</p>
-</li>
-<li><p><strong>ApplicationContext：</strong></p>
-<p><code>ApplicationContext</code>为<code>BeanFactory</code>的子接口，相较于<code>BeanFactoy</code>增加了许多功能，通常情况下都建议使用<code>ApplicationContext</code>容器。</p>
-<p><code>ApplicationContext</code>还包含三个主要实现类：</p>
-<ul>
-<li><p><code>ClassPathXmlApplicationContext</code></p>
-<p>用于加载<strong>对应类路径下</strong>的XML格式的配置文件，你<strong>不需要</strong>提供 XML 文件的完整路径，只需正确配置 CLASSPATH 环境变量即可（例如HelloWorld中将Xml文件放置到项目下）。</p>
-</li>
-<li><p><code>FileSystemXmlApplicationContext</code></p>
-<p>用于加载<strong>文件系统中</strong>的XML格式的配置文件，你<strong>需要</strong>提供给构造器 XML 文件的<strong>完整路径</strong>。</p>
-</li>
-<li><p><code>WebXmlApplicationContext</code></p>
-<p>该容器会在一个 web 应用程序的范围内加载在 XML 文件中已被定义的 bean。</p>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="3-获取Bean实例对象的方式"><a href="#3-获取Bean实例对象的方式" class="headerlink" title="3.获取Bean实例对象的方式"></a>3.获取Bean实例对象的方式</h3><p>​    创建容器的实例化对象，再通过这个对象调用<code>getBean</code>方法来获取Bean的实例化对象，介绍三种<code>getBean</code>重载形式。</p>
-<ul>
-<li><p><strong>通过名称（id）获取</strong>：<code>getBean(String)</code></p>
-<p>该方法的返回值类型为<code>Object</code>类型，在获取后需要将它转化为所需的类型。</p>
-</li>
-<li><p><strong>通过名称和类型获取Bean</strong>：<code>getBean(String,class)</code></p>
-<p>返回值为calss类型，相较于第一种方法更加安全，在编译时就可以发现错误。</p>
-</li>
-<li><p><strong>通过类型获取Bean：</strong><code>getBean(class)</code></p>
-<p>要求Xml中有且只有一个该类型的Bean，否则会报<code>BeanDefinitionStoreException</code>的异常。</p>
-</li>
-</ul>
-<h2 id="Bean的相关内容"><a href="#Bean的相关内容" class="headerlink" title="Bean的相关内容"></a>Bean的相关内容</h2><h3 id="1-Bean的定义"><a href="#1-Bean的定义" class="headerlink" title="1.Bean的定义"></a>1.Bean的定义</h3><p>​    Bean 是一个被实例化，组装，并通过 Spring IoC 容器所管理的对象。可以使用<strong>Xml文件</strong>和<strong>注解</strong>两个配置方式，以下演示全部基于Xml文件的形式演示，注解方式会有单独进行讲解。</p>
-<p>​    Bean的配置与之前在helloworld中一致，都是通过Bean标签进行配置，它还包含了一下属性。</p>
-<table>
-<thead>
-<tr>
-<th>属性</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>class</td>
-<td>这个属性是强制性的，并且指定用来创建 bean 的 bean 类。</td>
-</tr>
-<tr>
-<td>name</td>
-<td>这个属性指定唯一的 bean 标识符。在基于 XML 的配置元数据中，你可以使用 ID 和/或 name 属性来指定 bean 标识符。</td>
-</tr>
-<tr>
-<td>scope</td>
-<td>这个属性指定由特定的 bean 定义创建的对象的作用域，它将会在 bean 作用域的章节中进行讨论。</td>
-</tr>
-<tr>
-<td>constructor-arg</td>
-<td>它是用来注入依赖关系的，并会在接下来的章节中进行讨论。</td>
-</tr>
-<tr>
-<td>properties</td>
-<td>它是用来注入依赖关系的，并会在接下来的章节中进行讨论。</td>
-</tr>
-<tr>
-<td>autowiring mode</td>
-<td>它是用来注入依赖关系的，并会在接下来的章节中进行讨论。</td>
-</tr>
-<tr>
-<td>lazy-initialization mode</td>
-<td>延迟初始化的 bean 告诉 IoC 容器在它第一次被请求时，而不是在启动时去创建一个 bean 实例。</td>
-</tr>
-<tr>
-<td>initialization 方法</td>
-<td>在 bean 的所有必需的属性被容器设置之后，调用回调方法。它将会在 bean 的生命周期章节中进行讨论。</td>
-</tr>
-<tr>
-<td>destruction 方法</td>
-<td>当包含该 bean 的容器被销毁时，使用回调方法。它将会在 bean 的生命周期章节中进行讨论。</td>
-</tr>
-</tbody></table>
-<h3 id="2-Bean的作用域"><a href="#2-Bean的作用域" class="headerlink" title="2.Bean的作用域"></a>2.Bean的作用域</h3><p>​    Bean的作用域指明了<strong>IoC容器中生产Bean的方式</strong>，在Xml文件中通过Bean标签的scope，<code>Spring</code>框架支持一下五个作用域：</p>
-<p>注意，如果你使用 <code>web-aware ApplicationContext </code>时，其中三个是可用的。   </p>
-<table>
-<thead>
-<tr>
-<th>作用域</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>singleton</td>
-<td>在spring IoC容器仅存在一个Bean实例，Bean以单例方式存在，默认值</td>
-</tr>
-<tr>
-<td>prototype</td>
-<td>每次从容器中调用Bean时，都返回一个新的实例，即每次调用getBean()时，相当于执行newXxxBean()</td>
-</tr>
-<tr>
-<td>request</td>
-<td>每次HTTP请求都会创建一个新的Bean，该作用域仅适用于WebApplicationContext环境</td>
-</tr>
-<tr>
-<td>session</td>
-<td>同一个HTTP Session共享一个Bean，不同Session使用不同的Bean，仅适用于WebApplicationContext环境</td>
-</tr>
-<tr>
-<td>global-session</td>
-<td>一般用于Portlet应用环境，该运用域仅适用于WebApplicationContext环境</td>
-</tr>
-</tbody></table>
-<p><strong>暂时先讨论前两个范围，当我们将讨论有关 web-aware Spring ApplicationContext 时，其余三个将被讨论。</strong></p>
-<p>延续helloworld中的User对象（只包含id和name两个成员属性），在Xml中配置两个对象分别为<code>singleton</code>和<code>prototype</code>。</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.springframework.org/schema/beans&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd&quot;</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;user1&quot;</span> <span class="attr">class</span>=<span class="string">&quot;com.ykailh.test.User&quot;</span> <span class="attr">scope</span>=<span class="string">&quot;singleton&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;id&quot;</span> <span class="attr">value</span>=<span class="string">&quot;1001&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;name&quot;</span> <span class="attr">value</span>=<span class="string">&quot;zhangsan&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;user2&quot;</span> <span class="attr">class</span>=<span class="string">&quot;com.ykailh.test.User&quot;</span> <span class="attr">scope</span>=<span class="string">&quot;prototype&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;id&quot;</span> <span class="attr">value</span>=<span class="string">&quot;1002&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;name&quot;</span> <span class="attr">value</span>=<span class="string">&quot;lisi&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>分别获取两次对象，对比它们的哈希值。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ykailh.test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.context.ApplicationContext;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.support.ClassPathXmlApplicationContext;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//创建IOC容器，并制定配置文件</span></span><br><span class="line">        ApplicationContext ac = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">&quot;applicationContext.xml&quot;</span>);</span><br><span class="line">        User user1A = ac.getBean(<span class="string">&quot;user1&quot;</span>, User.class);</span><br><span class="line">        User user1B = ac.getBean(<span class="string">&quot;user1&quot;</span>, User.class);</span><br><span class="line">        System.out.println(user1A == user1B);</span><br><span class="line">        </span><br><span class="line">        User user2A = ac.getBean(<span class="string">&quot;user2&quot;</span>, User.class);</span><br><span class="line">        User user2B = ac.getBean(<span class="string">&quot;user2&quot;</span>, User.class);</span><br><span class="line">        System.out.println(user2A == user2B);    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>结果：</p>
-<blockquote>
-<p>true<br>false</p>
-</blockquote>
-<ul>
-<li><p>作用域为<code>singleton</code>的每次获取对象都返回的是同一个对象，若没有设置<code>scope</code>则默认为<code>singleton</code>。</p>
-</li>
-<li><p><code>作用域为singleton</code>时，实例化对象随着IoC容器的创建而创建，而<code>prototype</code>是在获取对象时创建。</p>
-</li>
-</ul>
-<h3 id="3-Bean的生命周期"><a href="#3-Bean的生命周期" class="headerlink" title="3.Bean的生命周期"></a>3.Bean的生命周期</h3><p>​    <strong>Spring IOC容器对bean的生命周期进行管理的过程：</strong></p>
-<p>​    ① 通过构造器或工厂方法创建bean实例</p>
-<p>​    ② 为bean的属性设置值和对其他bean的引用</p>
-<p>​    ③ 调用bean的初始化方法</p>
-<p>​    ④  bean可以使用了</p>
-<p>​    ⑤ 当容器关闭时，调用bean的销毁方法</p>
-<p>可以通过<code>init-method</code>以及<code>destroy-method</code>属性指定初始化和销毁方法。</p>
-<p><strong>User.java:</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ykailh.test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Integer id;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">User</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        System.out.println(<span class="string">&quot;调用构造方法&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">getId</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> id;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setId</span><span class="params">(Integer id)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.id = id;</span><br><span class="line">        System.out.println(<span class="string">&quot;调用set方法（依赖注入）&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;toString方法被执行&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//初始化与销毁方法（是普通的成员方法，与方法名无关）</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;init方法被执行&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">destroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;destroy方法被执行&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p><strong>applicationContext.xml:</strong></p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.springframework.org/schema/beans&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd&quot;</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;user&quot;</span> <span class="attr">class</span>=<span class="string">&quot;com.ykailh.test.User&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">init-method</span>=<span class="string">&quot;init&quot;</span> <span class="attr">destroy-method</span>=<span class="string">&quot;destroy&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;id&quot;</span> <span class="attr">value</span>=<span class="string">&quot;1001&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;name&quot;</span> <span class="attr">value</span>=<span class="string">&quot;zhangsan&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>Test.java:</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ykailh.test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.context.support.ClassPathXmlApplicationContext;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"><span class="comment">//创建IOC容器，并制定配置文件，因为默认作用域为singleton，所以在创建容器时依次调用了构造方法和set方法和init方法</span></span><br><span class="line">        ClassPathXmlApplicationContext ac = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">&quot;applicationContext.xml&quot;</span>);</span><br><span class="line">        <span class="comment">//获取User的实例化对象</span></span><br><span class="line">        User user = ac.getBean(<span class="string">&quot;user&quot;</span>, User.class);</span><br><span class="line">        <span class="comment">//调用toString方法模拟使用过程</span></span><br><span class="line">        System.out.println(user);</span><br><span class="line">        <span class="comment">//关闭容器，bean被销毁，调用销毁方法</span></span><br><span class="line">        ac.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p><strong>运行结果：</strong></p>
-<blockquote>
-<p>…日志信息…</p>
-<p>调用构造方法<br>调用set方法（依赖注入）<br>init方法被执行<br>toString方法被执行<br>destroy方法被执行</p>
-</blockquote>
-<h3 id="4-后置处理器"><a href="#4-后置处理器" class="headerlink" title="4.后置处理器"></a>4.后置处理器</h3><p>​    后置处理器是一个<code>BeanPostProcessor</code>接口的实现类，它所定义的两个方法<code>postProcessBeforeInitialization </code>和<code>postProcessAfterInitialization</code>分别于<strong>Bean初始化前后执行</strong>，丰富了Bean的生命周期。这两个方法拥有两个形参分别<strong>为<code>Object</code> 形式的bean对象以及字符串形式的beanName（id）</strong>，以及需要一个<strong>Object类型返回值</strong>。可以理解为将bean对象放入到这两个方法中进行改造再将改造后的对象进行返回。</p>
-<p><strong>User.java：</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Integer id;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">User</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">getId</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> id;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setId</span><span class="params">(Integer id)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.id = id;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;User [id=&quot;</span> + id + <span class="string">&quot;, name=&quot;</span> + name + <span class="string">&quot;]&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;执行初始化方法&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>定义一个后置处理器<code>PostProcessorExample</code></strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.beans.BeansException;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.config.BeanPostProcessor;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PostProcessorExample</span> <span class="keyword">implements</span> <span class="title">BeanPostProcessor</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">postProcessBeforeInitialization</span><span class="params">(Object bean, String beanName)</span> <span class="keyword">throws</span> BeansException </span>&#123;</span><br><span class="line">        User user = (User) bean;</span><br><span class="line">        user.setId(user.getId()+<span class="number">100</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;后置处理器的初始化前方法生效，将id增加100&quot;</span>);</span><br><span class="line">        System.out.println(user);</span><br><span class="line">        <span class="keyword">return</span> user;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">postProcessAfterInitialization</span><span class="params">(Object bean, String beanName)</span> <span class="keyword">throws</span> BeansException </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;初始化后方法生效，判断beanName是否为user2&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span>(<span class="string">&quot;user2&quot;</span>.equals(beanName)) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;是&quot;</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;否&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> bean;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>定义后需要将后置处理器以Bean的形式配置到xml文件中，该后置处理器对该文件下的所有其他Bean有效。</strong></p>
-<p><strong>applicationContext.xml:</strong></p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.springframework.org/schema/beans&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd&quot;</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;user&quot;</span> <span class="attr">class</span>=<span class="string">&quot;com.ykailh.test.User&quot;</span> <span class="attr">init-method</span>=<span class="string">&quot;init&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;id&quot;</span> <span class="attr">value</span>=<span class="string">&quot;1001&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;name&quot;</span> <span class="attr">value</span>=<span class="string">&quot;zhangsan&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;user2&quot;</span> <span class="attr">class</span>=<span class="string">&quot;com.ykailh.test.User&quot;</span> <span class="attr">init-method</span>=<span class="string">&quot;init&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;id&quot;</span> <span class="attr">value</span>=<span class="string">&quot;1002&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;name&quot;</span> <span class="attr">value</span>=<span class="string">&quot;lisi&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">&lt;!-- 配置后置处理器 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">&quot;com.ykailh.test.PostProcessorExample&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>Test.java：</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.context.support.ClassPathXmlApplicationContext;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//创建IOC容器，并制定配置文件</span></span><br><span class="line">        ClassPathXmlApplicationContext ac = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">&quot;applicationContext.xml&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>执行结果：</strong></p>
-<blockquote>
-<p>后置处理器的初始化前方法生效，将id增加100<br>User [id=1101, name=zhangsan]<br>执行初始化方法<br>初始化后方法生效，判断beanName是否为user2<br>否<br>后置处理器的初始化前方法生效，将id增加100<br>User [id=1102, name=lisi]<br>执行初始化方法<br>初始化后方法生效，判断beanName是否为user2<br>是</p>
-</blockquote>
-<p><strong>对user、user2均有效，且顺序为一个bean加载完成后再接着加载下一个bean</strong></p>
- 
+  <h2 id="IoC容器"><a href="#IoC容器" class="headerlink" title="IoC容器"></a>IoC容器</h2><h3 id="1-IoC容器的概念"><a href="#1-IoC容器的概念" class="headerlink" title="1.IoC容器的概念"></a>1.IoC容器的概念</h3><p>​    Spring 容器是 Spring 框架的<strong>核心</strong>。容器将<strong>创建对象</strong>，把它们<strong>连接</strong>在一起，<strong>配置</strong>它们，并<strong>管理</strong>他们的<strong>整个生命周期</strong>从创建到销毁。</p>
+<p>​    <strong>IOC 容器</strong>具有<strong>依赖注入功能</strong>的容器，它可以创建对象，IOC 容器负责实<strong>例化、定位、配置应用程序中的对象及建立这些对象间的依赖</strong>。通常new一个实例，控制权由程序员控制，而”控制反转”是指<strong>new实例工作</strong>不由程序员来做而是<strong>交给Spring容器</strong>来做。</p> 
+      <a class="article-more-link" href="/2020/09/21/Spring%E5%85%A5%E9%97%A8%E4%B9%8BIOC%E5%AE%B9%E5%99%A8%E4%B8%8Ebean/"
+        >阅读更多...</a
+      >
+       
       <!-- reward -->
       
     </div>
@@ -757,104 +646,6 @@
     <footer class="article-footer">
        
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MySQL/" rel="tag">MySQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MySQL%E5%9F%BA%E7%A1%80/" rel="tag">MySQL基础</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SQL/" rel="tag">SQL</a></li></ul>
-
-    </footer>
-  </div>
-
-    
- 
-   
-</article>
-
-    
-    <article
-  id="post-Java基础之泛型"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/08/12/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E6%B3%9B%E5%9E%8B/"
-    >Java基础之泛型</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2020/08/12/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E6%B3%9B%E5%9E%8B/" class="article-date">
-  <time datetime="2020-08-12T09:32:16.000Z" itemprop="datePublished">2020-08-12</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Java/">Java</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="什么是泛型"><a href="#什么是泛型" class="headerlink" title="什么是泛型"></a>什么是泛型</h2><p>​    <strong>泛型</strong>可以按照字面简单理解为<strong>泛化的类型</strong>。</p>
-<blockquote>
-<p>类比到生活中，就是生产瓶子的厂商不给瓶子贴上包装，而是预留了包装的位置。等到灌装前再根据灌装的内容贴上不同的包装。</p>
-</blockquote>
-<p>​    即<strong>将类型明确的操作推迟到创建对象或者调用方法时</strong>，同时把<strong>类型当中参数一样传递</strong>。</p>
-<ul>
-<li><code>ArrayList&lt;E&gt;</code>称为<strong>泛型类型</strong>，其中的<code>E</code>称为类型参数变量，也可以叫做类型形参。</li>
-<li><code>ArrayList&lt;Integer&gt;</code>称为<strong>参数化类型</strong>，其中的<code>Integer</code>称为实际类型参数，也可以叫类型实参。</li>
-</ul>
-<h2 id="泛型的使用"><a href="#泛型的使用" class="headerlink" title="泛型的使用"></a>泛型的使用</h2><h3 id="1-泛型类"><a href="#1-泛型类" class="headerlink" title="1.泛型类"></a>1.泛型类</h3><p>​    语法格式：<code>[修饰符] class 类名&lt;泛型参数列表&gt;</code>，典型的代表就是各种集合类。泛型形参在定义成员变量以及成员方法中使用。</p>
-<p><strong>示例：</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//定义一个学生类，使用泛型形参T代表score的类型</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span>&lt;<span class="title">T</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> T score;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">(T score)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        <span class="keyword">this</span>.score = score;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getScore</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> score;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setScore</span><span class="params">(T score)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.score = score;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>创建对象：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//创建Student时再指定T的类型，可以实现score的不同表现方式</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Student&lt;String&gt; s1= <span class="keyword">new</span> Student&lt;String&gt;(<span class="string">&quot;A&quot;</span>);</span><br><span class="line">    Student&lt;Double&gt; s2= <span class="keyword">new</span> Student&lt;Double&gt;(<span class="number">89.5</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-泛型接口"><a href="#2-泛型接口" class="headerlink" title="2.泛型接口"></a>2.泛型接口</h3><p>​    泛型接口的定义与泛型类的定义相似。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Generator</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">next</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 传入泛型实参时：</span></span><br><span class="line"><span class="comment"> * 定义一个生产器实现这个接口,虽然我们只创建了一个泛型接口Generator&lt;T&gt;</span></span><br><span class="line"><span class="comment"> * 但是我们可以为T传入无数个实参，形成无数种类型的Generator接口。</span></span><br><span class="line"><span class="comment"> * 在实现类实现泛型接口时，如已将泛型类型传入实参类型，则所有使用泛型的地方都要替换成传入的实参类型</span></span><br><span class="line"><span class="comment"> * 即：Generator&lt;T&gt;，public T next();中的的T都要替换成传入的String类型。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FruitGenerator</span> <span class="keyword">implements</span> <span class="title">Generator</span>&lt;<span class="title">String</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String[] fruits = <span class="keyword">new</span> String[]&#123;<span class="string">&quot;Apple&quot;</span>, <span class="string">&quot;Banana&quot;</span>, <span class="string">&quot;Pear&quot;</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">next</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Random rand = <span class="keyword">new</span> Random();</span><br><span class="line">        <span class="keyword">return</span> fruits[rand.nextInt(<span class="number">3</span>)];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="3-泛型方法"><a href="#3-泛型方法" class="headerlink" title="3.泛型方法"></a>3.泛型方法</h3><p>​    如果泛型类/接口上的泛型形参不适用与某个方法时，可以单独设计泛型。这个方法<strong>可以是静态</strong>的。</p>
-<p>在调用泛型方法时，<strong>编译器会根据你的实参类型来确定泛型的类型</strong>。</p>
-<p>例如：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">java.util.Collection&lt;E&gt;中的</span></span><br><span class="line"><span class="comment">public abstract T[] toArray(T[] a)方法</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Collection&lt;String&gt; c = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">    c.add(<span class="string">&quot;a&quot;</span>);</span><br><span class="line">    c.add(<span class="string">&quot;b&quot;</span>);</span><br><span class="line"></span><br><span class="line">    String[] array = c.toArray(<span class="keyword">new</span> String[<span class="number">2</span>]);<span class="comment">//传入String数组编译器确定T为String</span></span><br><span class="line">    Object[] array2 = c.toArray(<span class="keyword">new</span> Object[<span class="number">2</span>]);<span class="comment">//传入Object数组编译器确定T为Object</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="4-泛型的上限"><a href="#4-泛型的上限" class="headerlink" title="4.泛型的上限"></a>4.泛型的上限</h3><p>​    泛型类或泛型接口以及泛型方法中的<strong>泛型形参可以设定上限</strong>，格式为：<code>T extends 上限类</code></p>
-<p>​    设定了上限之后，泛型实参只能为上限类本身或者上限类的子类。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//例如将第一个例子中的T设定上限为Number类</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span>&lt;<span class="title">T</span> <span class="keyword">extends</span> <span class="title">Number</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> T score;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">(T score)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        <span class="keyword">this</span>.score = score;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//创建对象指定为String时报错，因为String不是Number的子类</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Student&lt;String&gt; s1= <span class="keyword">new</span> Student&lt;String&gt;(<span class="string">&quot;A&quot;</span>);</span><br><span class="line">    Student&lt;Double&gt; s2= <span class="keyword">new</span> Student&lt;Double&gt;(<span class="number">89.5</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>​    指定上限还有另一种格式为：<code>T extends 上限类 &amp; 上限接口1 &amp; 上限接口2...</code></p>
-<p>​    这种指定方式要求泛型实参为上限类或子类并且实现这些接口或子接口。</p>
-<p>​    <strong>若未指定泛型实参则按照上限类处理，未设置上限按照<code>Object</code>处理</strong></p>
-<h3 id="5-通配符"><a href="#5-通配符" class="headerlink" title="5.通配符"></a>5.通配符</h3><p>​    通常在需要指定泛型但又未确定这个泛型类型时，可以使用通配符<code>?</code>来表示任意类型。</p>
-<p>例如：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//写一个遍历Collection中集合的方法，可以这样写</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(Collection&lt;?&gt; c)</span></span>&#123;<span class="comment">//此时形参中的Collection需要指定泛型，可以使用通配符代替</span></span><br><span class="line">    <span class="keyword">for</span>(Object object : c)&#123;</span><br><span class="line">        System.out.println(object);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>​    通配符可以设置上下限：</p>
-<p>设置上限：<code>&lt;? extends 上限&gt;</code></p>
-<p>设置下限：<code>&lt;? super 下限&gt;</code></p>
-<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><ul>
-<li><p>泛型中的<strong>泛型实参</strong>只能为<strong>引用数据类型</strong>。</p>
-</li>
-<li><p>泛型<strong>不能</strong>使用在<strong>静态成员</strong>中。</p>
-</li>
-<li><p>泛型只提供给编译器使用，编译完成后的<strong>class文件中不存在泛型</strong>，称为<strong>泛型擦除</strong>。</p>
-</li>
-</ul>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/" rel="tag">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java%E5%9F%BA%E7%A1%80/" rel="tag">Java基础</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B3%9B%E5%9E%8B/" rel="tag">泛型</a></li></ul>
 
     </footer>
   </div>

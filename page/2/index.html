@@ -80,6 +80,104 @@
     
     
     <article
+  id="post-Java基础之泛型"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/08/12/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E6%B3%9B%E5%9E%8B/"
+    >Java基础之泛型</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/08/12/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E6%B3%9B%E5%9E%8B/" class="article-date">
+  <time datetime="2020-08-12T09:32:16.000Z" itemprop="datePublished">2020-08-12</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Java/">Java</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="什么是泛型"><a href="#什么是泛型" class="headerlink" title="什么是泛型"></a>什么是泛型</h2><p>​    <strong>泛型</strong>可以按照字面简单理解为<strong>泛化的类型</strong>。</p>
+<blockquote>
+<p>类比到生活中，就是生产瓶子的厂商不给瓶子贴上包装，而是预留了包装的位置。等到灌装前再根据灌装的内容贴上不同的包装。</p>
+</blockquote>
+<p>​    即<strong>将类型明确的操作推迟到创建对象或者调用方法时</strong>，同时把<strong>类型当中参数一样传递</strong>。</p>
+<ul>
+<li><code>ArrayList&lt;E&gt;</code>称为<strong>泛型类型</strong>，其中的<code>E</code>称为类型参数变量，也可以叫做类型形参。</li>
+<li><code>ArrayList&lt;Integer&gt;</code>称为<strong>参数化类型</strong>，其中的<code>Integer</code>称为实际类型参数，也可以叫类型实参。</li>
+</ul>
+<h2 id="泛型的使用"><a href="#泛型的使用" class="headerlink" title="泛型的使用"></a>泛型的使用</h2><h3 id="1-泛型类"><a href="#1-泛型类" class="headerlink" title="1.泛型类"></a>1.泛型类</h3><p>​    语法格式：<code>[修饰符] class 类名&lt;泛型参数列表&gt;</code>，典型的代表就是各种集合类。泛型形参在定义成员变量以及成员方法中使用。</p>
+<p><strong>示例：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//定义一个学生类，使用泛型形参T代表score的类型</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span>&lt;<span class="title">T</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> T score;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">(T score)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        <span class="keyword">this</span>.score = score;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getScore</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> score;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setScore</span><span class="params">(T score)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.score = score;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>创建对象：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//创建Student时再指定T的类型，可以实现score的不同表现方式</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Student&lt;String&gt; s1= <span class="keyword">new</span> Student&lt;String&gt;(<span class="string">&quot;A&quot;</span>);</span><br><span class="line">    Student&lt;Double&gt; s2= <span class="keyword">new</span> Student&lt;Double&gt;(<span class="number">89.5</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-泛型接口"><a href="#2-泛型接口" class="headerlink" title="2.泛型接口"></a>2.泛型接口</h3><p>​    泛型接口的定义与泛型类的定义相似。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Generator</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">next</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 传入泛型实参时：</span></span><br><span class="line"><span class="comment"> * 定义一个生产器实现这个接口,虽然我们只创建了一个泛型接口Generator&lt;T&gt;</span></span><br><span class="line"><span class="comment"> * 但是我们可以为T传入无数个实参，形成无数种类型的Generator接口。</span></span><br><span class="line"><span class="comment"> * 在实现类实现泛型接口时，如已将泛型类型传入实参类型，则所有使用泛型的地方都要替换成传入的实参类型</span></span><br><span class="line"><span class="comment"> * 即：Generator&lt;T&gt;，public T next();中的的T都要替换成传入的String类型。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FruitGenerator</span> <span class="keyword">implements</span> <span class="title">Generator</span>&lt;<span class="title">String</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String[] fruits = <span class="keyword">new</span> String[]&#123;<span class="string">&quot;Apple&quot;</span>, <span class="string">&quot;Banana&quot;</span>, <span class="string">&quot;Pear&quot;</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">next</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Random rand = <span class="keyword">new</span> Random();</span><br><span class="line">        <span class="keyword">return</span> fruits[rand.nextInt(<span class="number">3</span>)];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-泛型方法"><a href="#3-泛型方法" class="headerlink" title="3.泛型方法"></a>3.泛型方法</h3><p>​    如果泛型类/接口上的泛型形参不适用与某个方法时，可以单独设计泛型。这个方法<strong>可以是静态</strong>的。</p>
+<p>在调用泛型方法时，<strong>编译器会根据你的实参类型来确定泛型的类型</strong>。</p>
+<p>例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">java.util.Collection&lt;E&gt;中的</span></span><br><span class="line"><span class="comment">public abstract T[] toArray(T[] a)方法</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Collection&lt;String&gt; c = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">    c.add(<span class="string">&quot;a&quot;</span>);</span><br><span class="line">    c.add(<span class="string">&quot;b&quot;</span>);</span><br><span class="line"></span><br><span class="line">    String[] array = c.toArray(<span class="keyword">new</span> String[<span class="number">2</span>]);<span class="comment">//传入String数组编译器确定T为String</span></span><br><span class="line">    Object[] array2 = c.toArray(<span class="keyword">new</span> Object[<span class="number">2</span>]);<span class="comment">//传入Object数组编译器确定T为Object</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-泛型的上限"><a href="#4-泛型的上限" class="headerlink" title="4.泛型的上限"></a>4.泛型的上限</h3><p>​    泛型类或泛型接口以及泛型方法中的<strong>泛型形参可以设定上限</strong>，格式为：<code>T extends 上限类</code></p>
+<p>​    设定了上限之后，泛型实参只能为上限类本身或者上限类的子类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//例如将第一个例子中的T设定上限为Number类</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span>&lt;<span class="title">T</span> <span class="keyword">extends</span> <span class="title">Number</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> T score;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">(T score)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        <span class="keyword">this</span>.score = score;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//创建对象指定为String时报错，因为String不是Number的子类</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Student&lt;String&gt; s1= <span class="keyword">new</span> Student&lt;String&gt;(<span class="string">&quot;A&quot;</span>);</span><br><span class="line">    Student&lt;Double&gt; s2= <span class="keyword">new</span> Student&lt;Double&gt;(<span class="number">89.5</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    指定上限还有另一种格式为：<code>T extends 上限类 &amp; 上限接口1 &amp; 上限接口2...</code></p>
+<p>​    这种指定方式要求泛型实参为上限类或子类并且实现这些接口或子接口。</p>
+<p>​    <strong>若未指定泛型实参则按照上限类处理，未设置上限按照<code>Object</code>处理</strong></p>
+<h3 id="5-通配符"><a href="#5-通配符" class="headerlink" title="5.通配符"></a>5.通配符</h3><p>​    通常在需要指定泛型但又未确定这个泛型类型时，可以使用通配符<code>?</code>来表示任意类型。</p>
+<p>例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//写一个遍历Collection中集合的方法，可以这样写</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(Collection&lt;?&gt; c)</span></span>&#123;<span class="comment">//此时形参中的Collection需要指定泛型，可以使用通配符代替</span></span><br><span class="line">    <span class="keyword">for</span>(Object object : c)&#123;</span><br><span class="line">        System.out.println(object);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    通配符可以设置上下限：</p>
+<p>设置上限：<code>&lt;? extends 上限&gt;</code></p>
+<p>设置下限：<code>&lt;? super 下限&gt;</code></p>
+<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><ul>
+<li><p>泛型中的<strong>泛型实参</strong>只能为<strong>引用数据类型</strong>。</p>
+</li>
+<li><p>泛型<strong>不能</strong>使用在<strong>静态成员</strong>中。</p>
+</li>
+<li><p>泛型只提供给编译器使用，编译完成后的<strong>class文件中不存在泛型</strong>，称为<strong>泛型擦除</strong>。</p>
+</li>
+</ul>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/" rel="tag">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java%E5%9F%BA%E7%A1%80/" rel="tag">Java基础</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B3%9B%E5%9E%8B/" rel="tag">泛型</a></li></ul>
+
+    </footer>
+  </div>
+
+    
+ 
+   
+</article>
+
+    
+    <article
   id="post-Java基础之集合"
   class="article article-type-post"
   itemscope
