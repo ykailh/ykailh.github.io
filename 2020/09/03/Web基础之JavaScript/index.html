@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    Web基础之JavaScript |  
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+  
+  
+
+  
+
+<link rel="alternate" href="/atom.xml" title="Ykailh" type="application/atom+xml">
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-Web基础之JavaScript"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Web基础之JavaScript
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/09/03/Web%E5%9F%BA%E7%A1%80%E4%B9%8BJavaScript/" class="article-date">
+  <time datetime="2020-09-03T10:32:13.000Z" itemprop="datePublished">2020-09-03</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Web/">Web</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">2.6k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">10 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p><strong>Web基础系列</strong>主要对Java开发中Web相关的内容(如<code>HTML</code>、<code>CSS</code>、<code>JavaScript</code>等)进行<strong>最基本的讲解</strong>，本系列其他文章请参考<a target="_blank" rel="noopener" href="https://ykailh.github.io/tags/Web%E5%9F%BA%E7%A1%80/">Web基础</a> 。</p>
+<p>本文主要对<code>JavaScript</code>进行简单的了解，想要更详细的了解HTML可以参考这个教程<a target="_blank" rel="noopener" href="https://www.runoob.com/js/js-tutorial.html">JS教程</a> 。</p>
+<a id="more"></a>
+
+<h2 id="什么是JavaScript"><a href="#什么是JavaScript" class="headerlink" title="什么是JavaScript"></a>什么是JavaScript</h2><p>​    JavaScript是一门脚本语言，通常情况下配合HTML、CSS使用，实现页面的交互功能。它具有以下几个特性：</p>
+<ul>
+<li><p><strong>基于对象</strong></p>
+<p>JavaScript是一种基于对象的脚本语言,它不仅可以创建对象,也    能使用现有的对象。</p>
+</li>
+<li><p><strong>简单</strong></p>
+<p>JavaScript语言中采用的是弱类型的变量类型,对使用的数据类型未做    出严格的要求,是基于Java基本语句和控制的脚本语言。</p>
+</li>
+<li><p><strong>动态性</strong></p>
+<p>JavaScript是一种采用事件驱动的脚本语言,它不需要经过Web服务    器就可以对用户的输入做出响应。</p>
+</li>
+<li><p><strong>跨平台性</strong></p>
+<p>JavaScript脚本语言不依赖于操作系统,仅需要浏览器的支持。因    此一个JavaScript脚本在编写后可以带到任意机器上使用,前提是机器上的浏览器支    持JavaScript脚本语言,目前JavaScript已被大多数的浏览器所支持。</p>
+</li>
+</ul>
+<h2 id="JavaScript基本语法"><a href="#JavaScript基本语法" class="headerlink" title="JavaScript基本语法"></a>JavaScript基本语法</h2><h3 id="1-编写方式"><a href="#1-编写方式" class="headerlink" title="1.编写方式"></a>1.编写方式</h3><p>​    编写位置在HTML的hard或body元素的<code>&lt;script&gt;</code>标签中</p>
+<ul>
+<li><p>方式一：直接编写在标签中</p>
+</li>
+<li><p>方式二：先编写js文件再通过</p>
+</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>Insert title here<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 方式一 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span></span><br><span class="line">    js代码...</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 方式二 ，src属性中可以为相对路径或绝对路径 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;test.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>test.js:</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">...js代码</span><br></pre></td></tr></table></figure>
+
+<p><strong>需要注意：两种方式不能够混合使用。</strong></p>
+<h3 id="2-数据类型及变量定义"><a href="#2-数据类型及变量定义" class="headerlink" title="2.数据类型及变量定义"></a>2.数据类型及变量定义</h3><ul>
+<li><p><strong>数据类型：</strong></p>
+<table>
+<thead>
+<tr>
+<th>类型名</th>
+<th>对应类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>number</td>
+<td>数值类型</td>
+</tr>
+<tr>
+<td>string</td>
+<td>字符串类型</td>
+</tr>
+<tr>
+<td>object</td>
+<td>对象类型</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>布尔类型</td>
+</tr>
+<tr>
+<td>function</td>
+<td>函数类型</td>
+</tr>
+</tbody></table>
+</li>
+<li><p><strong>变量定义：</strong></p>
+</li>
+</ul>
+<p>​    JavaScript为弱类型语言，在声明变量时不需要指定数据类型，使用var关键字</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//声明变量</span></span><br><span class="line"><span class="keyword">var</span> i;</span><br><span class="line"><span class="comment">//声明变量并初始化</span></span><br><span class="line"><span class="keyword">var</span> j=<span class="number">0</span>;</span><br><span class="line"><span class="comment">//初始化为数值类型依然可以赋值其他类型的值，体现弱类型特性</span></span><br><span class="line">j = <span class="string">&quot;abc&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>特殊值：</strong></p>
+<p>JavaScript中存在三个特殊值：</p>
+<table>
+<thead>
+<tr>
+<th align="left">特殊值</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">undefined</td>
+<td>未定义。为初始化变量的默认值</td>
+</tr>
+<tr>
+<td align="left">null</td>
+<td>空值。</td>
+</tr>
+<tr>
+<td align="left">NaN</td>
+<td>非数字、非数值。在非数字类型运算时出现</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<h3 id="3-比较运算"><a href="#3-比较运算" class="headerlink" title="3.比较运算"></a>3.比较运算</h3><p>​    JavaScript中的大于小于等等比较均与java一致，唯一不同的是一下两种情况：</p>
+<p>​    ==：简单比较字面值</p>
+<p>​    ===：除了比较字面值外还会比较数据类型</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">123</span>;</span><br><span class="line"><span class="keyword">var</span> b = <span class="string">&quot;123&quot;</span></span><br><span class="line"></span><br><span class="line">a == b <span class="comment">//只比较字面量，结果为turn</span></span><br><span class="line">a === b <span class="comment">//除字面量外还比较数据类型，结果为false</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-逻辑运算"><a href="#4-逻辑运算" class="headerlink" title="4.逻辑运算"></a>4.逻辑运算</h3><p>​    与java不同，JavaScript更类似于c语言的<strong>所有数据类型都可以当做布尔类型</strong>来使用，其中：</p>
+<p>​    <strong>0、null、undefined、””(空字符串)都被认为是false。</strong></p>
+<p>​    JavaScript的逻辑运算结果也与java不同。</p>
+<ul>
+<li><p><strong>&amp;&amp; 且运算</strong></p>
+<ul>
+<li><p>当表达式全为turn时，结果为最后一个表达式的值。</p>
+</li>
+<li><p>遇到表达式为false时，结束运算，结果为这个表达式的值。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>|| 或运算</strong></p>
+<ul>
+<li><p>当表达式全为false时，结果为最后一个表达式的值。</p>
+</li>
+<li><p>遇到表达式为turn时，结束运算，结果为这个表达式的值。</p>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line"><span class="keyword">var</span> b = <span class="literal">true</span>;</span><br><span class="line"><span class="keyword">var</span> c = <span class="literal">false</span>;</span><br><span class="line"><span class="keyword">var</span> d = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//alert为弹窗函数</span></span><br><span class="line">alert(b &amp;&amp; a);<span class="comment">//abc</span></span><br><span class="line">alert(a &amp;&amp; d &amp;&amp; b);<span class="comment">//null</span></span><br><span class="line">alert(c || d);<span class="comment">//null</span></span><br><span class="line">alert(c || a || d);<span class="comment">//abc</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="5-数组"><a href="#5-数组" class="headerlink" title="5.数组"></a>5.数组</h3><p>​    JavaScript中的数组可以存放任意类型的值，同时数组的长度根据实际存储情况自动发生改变。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = [];<span class="comment">//定义一个空数组</span></span><br><span class="line"><span class="keyword">var</span> arr2 = [<span class="string">&quot;abc&quot;</span>,<span class="number">123</span>,<span class="literal">true</span>];<span class="comment">//定义一个数组并初始化</span></span><br><span class="line"></span><br><span class="line">alert(arr.length);<span class="comment">//0</span></span><br><span class="line">arr[<span class="number">3</span>] = <span class="string">&quot;abcd&quot;</span>;<span class="comment">//可以进行赋值操作，数组长度自动改变。</span></span><br><span class="line">alert(arr.length);<span class="comment">//4</span></span><br><span class="line">alert(arr[<span class="number">2</span>]);<span class="comment">//undefined</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="6-函数"><a href="#6-函数" class="headerlink" title="6.函数"></a>6.函数</h3><p>​    使用function，由于JavaScript为弱类型语言，在定义函数时直接指定参数名即可。定义具有返回值的方法和普通方法的语法一致，直接使用return返回即可。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//定义一个无参方法</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">method</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">//方法体</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//定义一个有参方法,另一种写法</span></span><br><span class="line"><span class="keyword">var</span> method2 = <span class="function"><span class="keyword">function</span>(<span class="params">a,b</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//方法体</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//定义一个有返回值的方法</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">method3</span>(<span class="params">a,b</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//方法体</span></span><br><span class="line">    <span class="keyword">return</span> a+b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//调用方法</span></span><br><span class="line">alert(method3(<span class="number">1</span>,<span class="number">2</span>));</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：JavaScript中不存在方法的重载，以重载的形式定义函数，会覆盖掉上一个同名函数。</strong></p>
+<ul>
+<li><p><strong>隐藏参数(arguments)</strong></p>
+<p>JavaScript中定义的方法都有一个隐藏参数arguments，它类似于java中的可变参数，参数存储于以arguments为名的数组存，所以即使调用方法时传入和参数列表不对应的参数个数方法依然可以执行。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//定义一个求和函数，其中有两个形参</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sum</span>(<span class="params">num1,num2</span>)</span>&#123;</span><br><span class="line">    alert(num1);<span class="comment">//第一个参数</span></span><br><span class="line">    alert(num2);<span class="comment">//第二个参数</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> result = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>; i&lt;<span class="built_in">arguments</span>.length; i++)&#123;</span><br><span class="line">        result += <span class="built_in">arguments</span>[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">alert(sum(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">6</span>,<span class="number">8</span>,<span class="number">10</span>,<span class="number">6</span>));<span class="comment">//40</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="7-对象"><a href="#7-对象" class="headerlink" title="7.对象"></a>7.对象</h3><p>​    对象定义语法：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 对象定义格式：</span></span><br><span class="line"><span class="comment"> * 方式一：</span></span><br><span class="line"><span class="comment"> * var 对象名 = new object()</span></span><br><span class="line"><span class="comment"> * 对象名.属性名 = 值;//定义对象属性</span></span><br><span class="line"><span class="comment"> * 对象名.方法名 = function()&#123;&#125;//定义对象方法</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> zs = <span class="keyword">new</span> object();</span><br><span class="line"><span class="comment">//定义属性</span></span><br><span class="line">zs.name = <span class="string">&quot;ZhangSan&quot;</span>;</span><br><span class="line">zs.age = <span class="number">18</span>;</span><br><span class="line"><span class="comment">//定义方法，可以在方法中使用this关键字</span></span><br><span class="line">zs.show = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    alert(<span class="string">&quot;姓名：&quot;</span>+ <span class="built_in">this</span>.name +<span class="string">&quot;年龄：&quot;</span> + <span class="built_in">this</span>.age);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 方式二：</span></span><br><span class="line"><span class="comment"> * var 对象名 = &#123;</span></span><br><span class="line"><span class="comment"> * 属性名 : 值,//定义对象属性,使用逗号间隔</span></span><br><span class="line"><span class="comment"> * 方法名 : function()&#123;&#125;//定义对象方法</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">var</span> zs2 = &#123;</span><br><span class="line">    name:ZhangSan,</span><br><span class="line">    age:<span class="number">18</span>,</span><br><span class="line">    show:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        alert(<span class="string">&quot;姓名：&quot;</span>+ <span class="built_in">this</span>.name +<span class="string">&quot;年龄：&quot;</span> + <span class="built_in">this</span>.age);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="8-事件"><a href="#8-事件" class="headerlink" title="8.事件"></a>8.事件</h3><p>​    事件是设备与页面进行交互的响应。</p>
+<ul>
+<li><p><strong>常用事件</strong></p>
+<ul>
+<li><p><strong>onload(加载完成事件)</strong></p>
+<p>常用于页面JS代码初始化操作。</p>
+</li>
+<li><p><strong>onclick(单击事件)</strong></p>
+<p>常用于按钮点击响应</p>
+</li>
+<li><p><strong>onblur(失去焦点时间)</strong></p>
+<p>常用于输入框失去焦点后验证输入内容是否合法</p>
+</li>
+<li><p><strong>onchange(内容发生改变)</strong></p>
+<p>常用于下拉列表和输入框改变内容后操作</p>
+</li>
+<li><p><strong>onsubmit(表单提交事件)</strong></p>
+<p>常用于表单提交前，验证表单项是否合法</p>
+</li>
+</ul>
+</li>
+<li><p><strong>事件注册</strong></p>
+<p>事件注册分为静态注册和动态注册两种，静态注册是直接通过标签中的属性注册事件。动态注册是先获取元素的对象在通过这个对象来注册事件。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>Insert title here<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span></span><br><span class="line"><span class="javascript">    <span class="comment">//静态函数所调用的函数</span></span></span><br><span class="line"><span class="javascript">    <span class="function"><span class="keyword">function</span> <span class="title">onclickFun</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="comment">//点击按钮后执行</span></span></span><br><span class="line"><span class="javascript">        alert(<span class="string">&quot;点击静态按钮&quot;</span>);</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line"><span class="javascript">    <span class="comment">//动态注册,在加载完成后再进行注册</span></span></span><br><span class="line"><span class="javascript">    <span class="built_in">window</span>.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line">        </span><br><span class="line"><span class="javascript">        <span class="comment">//通过document对象获取按钮元素的对象，document是JavaScript提供的一个对象，它包含了页面的信息。</span></span></span><br><span class="line"><span class="javascript">        <span class="keyword">var</span> buttonObject = <span class="built_in">document</span>.getElementById(<span class="string">&quot;button&quot;</span>);</span></span><br><span class="line"><span class="javascript">        <span class="comment">//通过对象.事件 = function()&#123;&#125;的方式注册事件</span></span></span><br><span class="line"><span class="javascript">        buttonObject.onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">            alert(<span class="string">&quot;点击动态按钮&quot;</span>)</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 通过onlick属性注册事件，可以直接写代码，但为了代码可读性一般是封装到一个函数中 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">onclick</span>=<span class="string">&quot;onclickFun()&quot;</span>&gt;</span>静态注册<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">&quot;button&quot;</span>&gt;</span>动态注册<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="9-DOM"><a href="#9-DOM" class="headerlink" title="9.DOM"></a>9.DOM</h3><p>​    DOM（Document Object Model）文本对象模型，是将文本对象化后的结果。当网页被加载时，浏览器会创建页面的文档对象模型。</p>
+<p>​    上述演示中所使用的<code>document</code>对象是<strong>HTML DOM</strong> 模型被构造为<strong>对象</strong>的树的结果，它包含了HTML所有元素的对象化信息，使用他可以让JavaScript拥有获取和操作HTML内容的能力。</p>
+<ul>
+<li><p><strong>document常用方法</strong></p>
+<ul>
+<li><p><strong>getElementById(elementId):</strong></p>
+<p>通过标签id属性查找dom对象</p>
+</li>
+<li><p><strong>getElementByName(elementId):</strong></p>
+<p>通过标签name属性查找dom对象</p>
+</li>
+<li><p><strong>getElementByTagName(tagname):</strong></p>
+<p>通过标签名属性查找dom对象</p>
+</li>
+</ul>
+<p><strong>这三个方法建议按从上到下的优先级使用</strong></p>
+<ul>
+<li><p><strong>createElement(tagName)</strong></p>
+<p>根据标签名创建一个标签对象</p>
+</li>
+</ul>
+<p>更多方法和属性建议查阅API文档</p>
+</li>
+<li><p><strong>document属性</strong></p>
+<p>后来，在 HTML DOM Level 3，加入了更多对象、集合和属性。</p>
+<table>
+<thead>
+<tr>
+<th align="left">属性</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">document.anchors</td>
+<td align="left">返回拥有 name 属性的所有 <code>&lt;a&gt; </code>元素。</td>
+</tr>
+<tr>
+<td align="left">document.applets</td>
+<td align="left">返回所有 <code>&lt;applet&gt; </code>元素（HTML5 不建议使用）</td>
+</tr>
+<tr>
+<td align="left">document.baseURI</td>
+<td align="left">返回文档的绝对基准 URI</td>
+</tr>
+<tr>
+<td align="left">document.body</td>
+<td align="left">返回 <code>&lt;body&gt; </code>元素</td>
+</tr>
+<tr>
+<td align="left">document.cookie</td>
+<td align="left">返回文档的 cookie</td>
+</tr>
+<tr>
+<td align="left">document.doctype</td>
+<td align="left">返回文档的 doctype</td>
+</tr>
+<tr>
+<td align="left">document.documentElement</td>
+<td align="left">返回 <code>&lt;html&gt; </code>元素</td>
+</tr>
+<tr>
+<td align="left">document.documentMode</td>
+<td align="left">返回浏览器使用的模式</td>
+</tr>
+<tr>
+<td align="left">document.documentURI</td>
+<td align="left">返回文档的 URI</td>
+</tr>
+<tr>
+<td align="left">document.domain</td>
+<td align="left">返回文档服务器的域名</td>
+</tr>
+<tr>
+<td align="left">document.domConfig</td>
+<td align="left">废弃。返回 DOM 配置</td>
+</tr>
+<tr>
+<td align="left">document.embeds</td>
+<td align="left">返回所有<code>&lt;embed&gt;</code>元素</td>
+</tr>
+<tr>
+<td align="left">document.forms</td>
+<td align="left">返回所有 <code>&lt;form&gt; </code>元素</td>
+</tr>
+<tr>
+<td align="left">document.head</td>
+<td align="left">返回 <code>&lt;head&gt; </code>元素</td>
+</tr>
+<tr>
+<td align="left">document.images</td>
+<td align="left">返回所有 <code>&lt;img&gt; </code>元素</td>
+</tr>
+<tr>
+<td align="left">document.implementation</td>
+<td align="left">返回 DOM 实现</td>
+</tr>
+<tr>
+<td align="left">document.inputEncoding</td>
+<td align="left">返回文档的编码（字符集）</td>
+</tr>
+<tr>
+<td align="left">document.lastModified</td>
+<td align="left">返回文档更新的日期和时间</td>
+</tr>
+<tr>
+<td align="left">document.links</td>
+<td align="left">返回拥有 href 属性的所有 <code>&lt;area&gt; </code>和 <code>&lt;a&gt; </code>元素</td>
+</tr>
+<tr>
+<td align="left">document.readyState</td>
+<td align="left">返回文档的（加载）状态</td>
+</tr>
+<tr>
+<td align="left">document.referrer</td>
+<td align="left">返回引用的 URI（链接文档）</td>
+</tr>
+<tr>
+<td align="left">document.scripts</td>
+<td align="left">返回所有 <code>&lt;script&gt; </code>元素</td>
+</tr>
+<tr>
+<td align="left">document.strictErrorChecking</td>
+<td align="left">返回是否强制执行错误检查</td>
+</tr>
+<tr>
+<td align="left">document.title</td>
+<td align="left">返回 <code>&lt;title&gt; </code>元素</td>
+</tr>
+<tr>
+<td align="left">document.URL</td>
+<td align="left">返回文档的完整 URL</td>
+</tr>
+</tbody></table>
+</li>
+<li><p><strong>HTML DOM属性</strong></p>
+<p>每个HTML的元素都可以理解为一个节点，主要关注的是标签属性的节点信息。</p>
+<table>
+<thead>
+<tr>
+<th>属性名</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>childNodes</td>
+<td>当前节点的所有子节点</td>
+</tr>
+<tr>
+<td>firstChild</td>
+<td>当前节点的第一个子节点</td>
+</tr>
+<tr>
+<td>lastChild</td>
+<td>当前节点的最后一个子节点</td>
+</tr>
+<tr>
+<td>parentNode</td>
+<td>当前节点的父节点</td>
+</tr>
+<tr>
+<td>nextSibling</td>
+<td>当前节点的下一个节点</td>
+</tr>
+<tr>
+<td>previousSibling</td>
+<td>当前节点的上一个节点</td>
+</tr>
+<tr>
+<td>className</td>
+<td>标签的class属性</td>
+</tr>
+<tr>
+<td>innerHTML</td>
+<td>标签内的内容</td>
+</tr>
+<tr>
+<td>innerText</td>
+<td>标签内的文本</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2020/09/03/Web%E5%9F%BA%E7%A1%80%E4%B9%8BJavaScript/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Web/" rel="tag">Web</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Web%E5%9F%BA%E7%A1%80/" rel="tag">Web基础</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/09/20/Spring%E7%AE%80%E5%8D%95%E5%85%A5%E9%97%A8%E4%B9%8BSpring%E7%AE%80%E4%BB%8B/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Spring入门之Spring简介
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/09/02/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Web基础之CSS</div>
+      </a>
+    
+  </nav>
+
+   
+<!-- valine评论 -->
+<div id="vcomments-box">
+  <div id="vcomments"></div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script>
+<script>
+  new Valine({
+    el: "#vcomments",
+    app_id: "",
+    app_key: "",
+    path: window.location.pathname,
+    avatar: "monsterid",
+    placeholder: "给我的文章加点评论吧~",
+    recordIP: true,
+  });
+  const infoEle = document.querySelector("#vcomments .info");
+  if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+    infoEle.childNodes.forEach(function (item) {
+      item.parentNode.removeChild(item);
+    });
+  }
+</script>
+<style>
+  #vcomments-box {
+    padding: 5px 30px;
+  }
+
+  @media screen and (max-width: 800px) {
+    #vcomments-box {
+      padding: 5px 0px;
+    }
+  }
+
+  #vcomments-box #vcomments {
+    background-color: #fff;
+  }
+
+  .v .vlist .vcard .vh {
+    padding-right: 20px;
+  }
+
+  .v .vlist .vcard {
+    padding-left: 10px;
+  }
+</style>
+
+ 
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2020
+        <i class="ri-heart-fill heart_icon"></i> Ykailh
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        Powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="division">|</span>
+        Theme - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Ykailh"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+
+<link rel="stylesheet" href="/css/clipboard.css">
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>
