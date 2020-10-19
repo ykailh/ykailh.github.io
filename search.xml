@@ -404,65 +404,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Java基础之泛型</title>
-    <url>/2020/08/12/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E6%B3%9B%E5%9E%8B/</url>
-    <content><![CDATA[<h2 id="什么是泛型"><a href="#什么是泛型" class="headerlink" title="什么是泛型"></a>什么是泛型</h2><p>​    <strong>泛型</strong>可以按照字面简单理解为<strong>泛化的类型</strong>。</p>
-<blockquote>
-<p>类比到生活中，就是生产瓶子的厂商不给瓶子贴上包装，而是预留了包装的位置。等到灌装前再根据灌装的内容贴上不同的包装。</p>
-</blockquote>
-<p>​    即<strong>将类型明确的操作推迟到创建对象或者调用方法时</strong>，同时把<strong>类型当中参数一样传递</strong>。</p>
-<ul>
-<li><code>ArrayList&lt;E&gt;</code>称为<strong>泛型类型</strong>，其中的<code>E</code>称为类型参数变量，也可以叫做类型形参。</li>
-<li><code>ArrayList&lt;Integer&gt;</code>称为<strong>参数化类型</strong>，其中的<code>Integer</code>称为实际类型参数，也可以叫类型实参。</li>
-</ul>
-<h2 id="泛型的使用"><a href="#泛型的使用" class="headerlink" title="泛型的使用"></a>泛型的使用</h2><h3 id="1-泛型类"><a href="#1-泛型类" class="headerlink" title="1.泛型类"></a>1.泛型类</h3><p>​    语法格式：<code>[修饰符] class 类名&lt;泛型参数列表&gt;</code>，典型的代表就是各种集合类。泛型形参在定义成员变量以及成员方法中使用。</p>
-<p><strong>示例：</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//定义一个学生类，使用泛型形参T代表score的类型</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span>&lt;<span class="title">T</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> T score;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">(T score)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        <span class="keyword">this</span>.score = score;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getScore</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> score;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setScore</span><span class="params">(T score)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.score = score;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>创建对象：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//创建Student时再指定T的类型，可以实现score的不同表现方式</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Student&lt;String&gt; s1= <span class="keyword">new</span> Student&lt;String&gt;(<span class="string">&quot;A&quot;</span>);</span><br><span class="line">    Student&lt;Double&gt; s2= <span class="keyword">new</span> Student&lt;Double&gt;(<span class="number">89.5</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-泛型接口"><a href="#2-泛型接口" class="headerlink" title="2.泛型接口"></a>2.泛型接口</h3><p>​    泛型接口的定义与泛型类的定义相似。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Generator</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">next</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 传入泛型实参时：</span></span><br><span class="line"><span class="comment"> * 定义一个生产器实现这个接口,虽然我们只创建了一个泛型接口Generator&lt;T&gt;</span></span><br><span class="line"><span class="comment"> * 但是我们可以为T传入无数个实参，形成无数种类型的Generator接口。</span></span><br><span class="line"><span class="comment"> * 在实现类实现泛型接口时，如已将泛型类型传入实参类型，则所有使用泛型的地方都要替换成传入的实参类型</span></span><br><span class="line"><span class="comment"> * 即：Generator&lt;T&gt;，public T next();中的的T都要替换成传入的String类型。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FruitGenerator</span> <span class="keyword">implements</span> <span class="title">Generator</span>&lt;<span class="title">String</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String[] fruits = <span class="keyword">new</span> String[]&#123;<span class="string">&quot;Apple&quot;</span>, <span class="string">&quot;Banana&quot;</span>, <span class="string">&quot;Pear&quot;</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">next</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Random rand = <span class="keyword">new</span> Random();</span><br><span class="line">        <span class="keyword">return</span> fruits[rand.nextInt(<span class="number">3</span>)];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="3-泛型方法"><a href="#3-泛型方法" class="headerlink" title="3.泛型方法"></a>3.泛型方法</h3><p>​    如果泛型类/接口上的泛型形参不适用与某个方法时，可以单独设计泛型。这个方法<strong>可以是静态</strong>的。</p>
-<p>在调用泛型方法时，<strong>编译器会根据你的实参类型来确定泛型的类型</strong>。</p>
-<p>例如：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">java.util.Collection&lt;E&gt;中的</span></span><br><span class="line"><span class="comment">public abstract T[] toArray(T[] a)方法</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Collection&lt;String&gt; c = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">    c.add(<span class="string">&quot;a&quot;</span>);</span><br><span class="line">    c.add(<span class="string">&quot;b&quot;</span>);</span><br><span class="line"></span><br><span class="line">    String[] array = c.toArray(<span class="keyword">new</span> String[<span class="number">2</span>]);<span class="comment">//传入String数组编译器确定T为String</span></span><br><span class="line">    Object[] array2 = c.toArray(<span class="keyword">new</span> Object[<span class="number">2</span>]);<span class="comment">//传入Object数组编译器确定T为Object</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="4-泛型的上限"><a href="#4-泛型的上限" class="headerlink" title="4.泛型的上限"></a>4.泛型的上限</h3><p>​    泛型类或泛型接口以及泛型方法中的<strong>泛型形参可以设定上限</strong>，格式为：<code>T extends 上限类</code></p>
-<p>​    设定了上限之后，泛型实参只能为上限类本身或者上限类的子类。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//例如将第一个例子中的T设定上限为Number类</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span>&lt;<span class="title">T</span> <span class="keyword">extends</span> <span class="title">Number</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> T score;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">(T score)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        <span class="keyword">this</span>.score = score;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//创建对象指定为String时报错，因为String不是Number的子类</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Student&lt;String&gt; s1= <span class="keyword">new</span> Student&lt;String&gt;(<span class="string">&quot;A&quot;</span>);</span><br><span class="line">    Student&lt;Double&gt; s2= <span class="keyword">new</span> Student&lt;Double&gt;(<span class="number">89.5</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>​    指定上限还有另一种格式为：<code>T extends 上限类 &amp; 上限接口1 &amp; 上限接口2...</code></p>
-<p>​    这种指定方式要求泛型实参为上限类或子类并且实现这些接口或子接口。</p>
-<p>​    <strong>若未指定泛型实参则按照上限类处理，未设置上限按照<code>Object</code>处理</strong></p>
-<h3 id="5-通配符"><a href="#5-通配符" class="headerlink" title="5.通配符"></a>5.通配符</h3><p>​    通常在需要指定泛型但又未确定这个泛型类型时，可以使用通配符<code>?</code>来表示任意类型。</p>
-<p>例如：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//写一个遍历Collection中集合的方法，可以这样写</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(Collection&lt;?&gt; c)</span></span>&#123;<span class="comment">//此时形参中的Collection需要指定泛型，可以使用通配符代替</span></span><br><span class="line">    <span class="keyword">for</span>(Object object : c)&#123;</span><br><span class="line">        System.out.println(object);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>​    通配符可以设置上下限：</p>
-<p>设置上限：<code>&lt;? extends 上限&gt;</code></p>
-<p>设置下限：<code>&lt;? super 下限&gt;</code></p>
-<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><ul>
-<li><p>泛型中的<strong>泛型实参</strong>只能为<strong>引用数据类型</strong>。</p>
-</li>
-<li><p>泛型<strong>不能</strong>使用在<strong>静态成员</strong>中。</p>
-</li>
-<li><p>泛型只提供给编译器使用，编译完成后的<strong>class文件中不存在泛型</strong>，称为<strong>泛型擦除</strong>。</p>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Java</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>Java基础</tag>
-        <tag>泛型</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Java基础之字符串</title>
     <url>/2020/08/09/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%AD%97%E7%AC%A6%E4%B8%B2/</url>
     <content><![CDATA[<h1 id="字符串的特点"><a href="#字符串的特点" class="headerlink" title="字符串的特点"></a>字符串的特点</h1><p>​        <strong><em>以下说明及演示基于JDK1.8版本</em></strong></p>
@@ -552,6 +493,65 @@
         <tag>Java基础</tag>
         <tag>字符串</tag>
         <tag>String</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java基础之泛型</title>
+    <url>/2020/08/12/Java%E5%9F%BA%E7%A1%80%E4%B9%8B%E6%B3%9B%E5%9E%8B/</url>
+    <content><![CDATA[<h2 id="什么是泛型"><a href="#什么是泛型" class="headerlink" title="什么是泛型"></a>什么是泛型</h2><p>​    <strong>泛型</strong>可以按照字面简单理解为<strong>泛化的类型</strong>。</p>
+<blockquote>
+<p>类比到生活中，就是生产瓶子的厂商不给瓶子贴上包装，而是预留了包装的位置。等到灌装前再根据灌装的内容贴上不同的包装。</p>
+</blockquote>
+<p>​    即<strong>将类型明确的操作推迟到创建对象或者调用方法时</strong>，同时把<strong>类型当中参数一样传递</strong>。</p>
+<ul>
+<li><code>ArrayList&lt;E&gt;</code>称为<strong>泛型类型</strong>，其中的<code>E</code>称为类型参数变量，也可以叫做类型形参。</li>
+<li><code>ArrayList&lt;Integer&gt;</code>称为<strong>参数化类型</strong>，其中的<code>Integer</code>称为实际类型参数，也可以叫类型实参。</li>
+</ul>
+<h2 id="泛型的使用"><a href="#泛型的使用" class="headerlink" title="泛型的使用"></a>泛型的使用</h2><h3 id="1-泛型类"><a href="#1-泛型类" class="headerlink" title="1.泛型类"></a>1.泛型类</h3><p>​    语法格式：<code>[修饰符] class 类名&lt;泛型参数列表&gt;</code>，典型的代表就是各种集合类。泛型形参在定义成员变量以及成员方法中使用。</p>
+<p><strong>示例：</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//定义一个学生类，使用泛型形参T代表score的类型</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span>&lt;<span class="title">T</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> T score;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">(T score)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        <span class="keyword">this</span>.score = score;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getScore</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> score;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setScore</span><span class="params">(T score)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.score = score;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>创建对象：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//创建Student时再指定T的类型，可以实现score的不同表现方式</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Student&lt;String&gt; s1= <span class="keyword">new</span> Student&lt;String&gt;(<span class="string">&quot;A&quot;</span>);</span><br><span class="line">    Student&lt;Double&gt; s2= <span class="keyword">new</span> Student&lt;Double&gt;(<span class="number">89.5</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-泛型接口"><a href="#2-泛型接口" class="headerlink" title="2.泛型接口"></a>2.泛型接口</h3><p>​    泛型接口的定义与泛型类的定义相似。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Generator</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">next</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 传入泛型实参时：</span></span><br><span class="line"><span class="comment"> * 定义一个生产器实现这个接口,虽然我们只创建了一个泛型接口Generator&lt;T&gt;</span></span><br><span class="line"><span class="comment"> * 但是我们可以为T传入无数个实参，形成无数种类型的Generator接口。</span></span><br><span class="line"><span class="comment"> * 在实现类实现泛型接口时，如已将泛型类型传入实参类型，则所有使用泛型的地方都要替换成传入的实参类型</span></span><br><span class="line"><span class="comment"> * 即：Generator&lt;T&gt;，public T next();中的的T都要替换成传入的String类型。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FruitGenerator</span> <span class="keyword">implements</span> <span class="title">Generator</span>&lt;<span class="title">String</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String[] fruits = <span class="keyword">new</span> String[]&#123;<span class="string">&quot;Apple&quot;</span>, <span class="string">&quot;Banana&quot;</span>, <span class="string">&quot;Pear&quot;</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">next</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Random rand = <span class="keyword">new</span> Random();</span><br><span class="line">        <span class="keyword">return</span> fruits[rand.nextInt(<span class="number">3</span>)];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-泛型方法"><a href="#3-泛型方法" class="headerlink" title="3.泛型方法"></a>3.泛型方法</h3><p>​    如果泛型类/接口上的泛型形参不适用与某个方法时，可以单独设计泛型。这个方法<strong>可以是静态</strong>的。</p>
+<p>在调用泛型方法时，<strong>编译器会根据你的实参类型来确定泛型的类型</strong>。</p>
+<p>例如：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">java.util.Collection&lt;E&gt;中的</span></span><br><span class="line"><span class="comment">public abstract T[] toArray(T[] a)方法</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Collection&lt;String&gt; c = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">    c.add(<span class="string">&quot;a&quot;</span>);</span><br><span class="line">    c.add(<span class="string">&quot;b&quot;</span>);</span><br><span class="line"></span><br><span class="line">    String[] array = c.toArray(<span class="keyword">new</span> String[<span class="number">2</span>]);<span class="comment">//传入String数组编译器确定T为String</span></span><br><span class="line">    Object[] array2 = c.toArray(<span class="keyword">new</span> Object[<span class="number">2</span>]);<span class="comment">//传入Object数组编译器确定T为Object</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-泛型的上限"><a href="#4-泛型的上限" class="headerlink" title="4.泛型的上限"></a>4.泛型的上限</h3><p>​    泛型类或泛型接口以及泛型方法中的<strong>泛型形参可以设定上限</strong>，格式为：<code>T extends 上限类</code></p>
+<p>​    设定了上限之后，泛型实参只能为上限类本身或者上限类的子类。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//例如将第一个例子中的T设定上限为Number类</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span>&lt;<span class="title">T</span> <span class="keyword">extends</span> <span class="title">Number</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> T score;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">(T score)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        <span class="keyword">this</span>.score = score;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//创建对象指定为String时报错，因为String不是Number的子类</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Student&lt;String&gt; s1= <span class="keyword">new</span> Student&lt;String&gt;(<span class="string">&quot;A&quot;</span>);</span><br><span class="line">    Student&lt;Double&gt; s2= <span class="keyword">new</span> Student&lt;Double&gt;(<span class="number">89.5</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    指定上限还有另一种格式为：<code>T extends 上限类 &amp; 上限接口1 &amp; 上限接口2...</code></p>
+<p>​    这种指定方式要求泛型实参为上限类或子类并且实现这些接口或子接口。</p>
+<p>​    <strong>若未指定泛型实参则按照上限类处理，未设置上限按照<code>Object</code>处理</strong></p>
+<h3 id="5-通配符"><a href="#5-通配符" class="headerlink" title="5.通配符"></a>5.通配符</h3><p>​    通常在需要指定泛型但又未确定这个泛型类型时，可以使用通配符<code>?</code>来表示任意类型。</p>
+<p>例如：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//写一个遍历Collection中集合的方法，可以这样写</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(Collection&lt;?&gt; c)</span></span>&#123;<span class="comment">//此时形参中的Collection需要指定泛型，可以使用通配符代替</span></span><br><span class="line">    <span class="keyword">for</span>(Object object : c)&#123;</span><br><span class="line">        System.out.println(object);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    通配符可以设置上下限：</p>
+<p>设置上限：<code>&lt;? extends 上限&gt;</code></p>
+<p>设置下限：<code>&lt;? super 下限&gt;</code></p>
+<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><ul>
+<li><p>泛型中的<strong>泛型实参</strong>只能为<strong>引用数据类型</strong>。</p>
+</li>
+<li><p>泛型<strong>不能</strong>使用在<strong>静态成员</strong>中。</p>
+</li>
+<li><p>泛型只提供给编译器使用，编译完成后的<strong>class文件中不存在泛型</strong>，称为<strong>泛型擦除</strong>。</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>Java基础</tag>
+        <tag>泛型</tag>
       </tags>
   </entry>
   <entry>
@@ -2238,7 +2238,10 @@
 <li><p><strong>事件注册</strong></p>
 <p>事件注册分为静态注册和动态注册两种，静态注册是直接通过标签中的属性注册事件。动态注册是先获取元素的对象在通过这个对象来注册事件。</p>
 <figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>Insert title here<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span></span><br><span class="line"><span class="javascript">    <span class="comment">//静态函数所调用的函数</span></span></span><br><span class="line"><span class="javascript">    <span class="function"><span class="keyword">function</span> <span class="title">onclickFun</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="comment">//点击按钮后执行</span></span></span><br><span class="line"><span class="javascript">        alert(<span class="string">&quot;点击静态按钮&quot;</span>);</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line"><span class="javascript">    <span class="comment">//动态注册,在加载完成后再进行注册</span></span></span><br><span class="line"><span class="javascript">    <span class="built_in">window</span>.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line">        </span><br><span class="line"><span class="javascript">        <span class="comment">//通过document对象获取按钮元素的对象，document是JavaScript提供的一个对象，它包含了页面的信息。</span></span></span><br><span class="line"><span class="javascript">        <span class="keyword">var</span> buttonObject = <span class="built_in">document</span>.getElementById(<span class="string">&quot;button&quot;</span>);</span></span><br><span class="line"><span class="javascript">        <span class="comment">//通过对象.事件 = function()&#123;&#125;的方式注册事件</span></span></span><br><span class="line"><span class="javascript">        buttonObject.onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">            alert(<span class="string">&quot;点击动态按钮&quot;</span>)</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 通过onlick属性注册事件，可以直接写代码，但为了代码可读性一般是封装到一个函数中 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">onclick</span>=<span class="string">&quot;onclickFun()&quot;</span>&gt;</span>静态注册<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">&quot;button&quot;</span>&gt;</span>动态注册<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
+</li>
+<li><p><strong>事件对象</strong></p>
+<p>jQuery提供了一个事件对象，他封装了事件触发的详细信息，想要获取它只需要在绑定事件的函数的参数列表定义一个参数，这个参数一般命名为event。</p>
+<p>他的详细属性含义请参考：<a href="https://www.w3school.com.cn/jsref/dom_obj_event.asp%EF%BC%9B">https://www.w3school.com.cn/jsref/dom_obj_event.asp；</a></p>
 </li>
 </ul>
 <h3 id="9-DOM"><a href="#9-DOM" class="headerlink" title="9.DOM"></a>9.DOM</h3><p>​    DOM（Document Object Model）文本对象模型，是将文本对象化后的结果。当网页被加载时，浏览器会创建页面的文档对象模型。</p>
@@ -2646,165 +2649,6 @@
         <tag>markdown</tag>
         <tag>Typora</tag>
         <tag>常用软件</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>MySQL基础之SQL语法(DML)</title>
-    <url>/2020/08/21/MySQL%E5%9F%BA%E7%A1%80%E4%B9%8BSQL%E8%AF%AD%E6%B3%95(DML)/</url>
-    <content><![CDATA[<h2 id="SQL的分类"><a href="#SQL的分类" class="headerlink" title="SQL的分类"></a>SQL的分类</h2><p>​    根据SQL语句的<strong>作用</strong>将SQL语句分为<strong>三大类：</strong></p>
-<ul>
-<li>DDL —  数据定义语言（Data Define Language）<a href="https://ykailh.github.io/2020/08/20/MySQL%E5%9F%BA%E7%A1%80%E4%B9%8BSQL%E8%AF%AD%E6%B3%95(DDL)/">DDL链接</a></li>
-<li>DML — 数据操纵语言（Data Manipulation Language）</li>
-<li>DCL —  数据控制语言（Data Control Language）</li>
-</ul>
-<p><strong>本文主要讲解DML</strong>，DML语句一般用于对<strong>数据</strong>进行增删改查，对应于<code>INSERT（新增）</code>、<code>DELETE（删除）</code>、<code>UPDATE（更新）</code>、<code>SELECT（查询）</code>。</p>
-<a id="more"></a>
-
-<p>​                                                                                                                        <strong><em>使用MySQL5.7演示</em></strong></p>
-<h2 id="INSERT"><a href="#INSERT" class="headerlink" title="INSERT"></a>INSERT</h2><p>​    <strong>用于插入数据</strong></p>
-<p>​    格式：<code>INSERT INTO [数据库名.]表名[(字段列表)] VALUES(数据列表),(数据列表二)....; </code></p>
-<p><strong>注意事项：</strong></p>
-<ul>
-<li><p>在已经使用（<code>USE</code>）数据库的情况下对<strong>本数据库的表</strong>插入数据可以省略[<code>数据库名.</code>]，下面类似情况不再强调。</p>
-</li>
-<li><p>数据列表要与字段列表<strong>一 一对应</strong>，字段/数据之间使用<code>,</code>隔开。</p>
-</li>
-<li><p>若<strong>省略字段列表则默认为全部字段</strong>。</p>
-</li>
-<li><p>可以<strong>同时添加多组数据</strong>，将同组数据写在同一<code>()</code>内，并以<code>,</code>间隔开。</p>
-</li>
-<li><p>对于<strong>含有默认值的字段</strong>，若想在插入数据时<strong>使用默认值</strong>可以在数据列表的<strong>对应位置</strong>中用<code>DEFAULT</code>。</p>
-</li>
-<li><p>对于字段列表外的字段的数值，若该字段有默认值则为默认值，若没有默认值则为NULL。</p>
-</li>
-</ul>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#创建一个表格用于测试</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> avengers(</span><br><span class="line">            <span class="keyword">id</span> <span class="built_in">INT</span>,</span><br><span class="line">            <span class="keyword">name</span> <span class="built_in">VARCHAR</span>(<span class="number">20</span>),</span><br><span class="line">            race <span class="built_in">VARCHAR</span>(<span class="number">5</span>) <span class="keyword">DEFAULT</span> <span class="string">&#x27;其他&#x27;</span>,</span><br><span class="line">            fighting_capacity <span class="built_in">INT</span> </span><br><span class="line">            );</span><br><span class="line"><span class="comment">#未指定字段列表，默认为全字段,含有默认值的字段可以使用DEFAULT代替</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> avengers <span class="keyword">VALUES</span>(<span class="number">1</span>,<span class="string">&#x27;钢铁侠&#x27;</span>,<span class="string">&#x27;人类&#x27;</span>,<span class="number">12000</span>),(<span class="number">2</span>,<span class="string">&#x27;幻视&#x27;</span>,<span class="keyword">DEFAULT</span>,<span class="number">8000</span>);</span><br><span class="line"><span class="comment">#给自定字段赋值，同一行中未赋值的有默认值为默认值，没有则为NULL</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> avengers(<span class="keyword">id</span>,<span class="keyword">name</span>) <span class="keyword">VALUES</span>(<span class="number">3</span>,<span class="string">&#x27;雷神&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">#查询表验证</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> avengers;</span><br><span class="line">+<span class="comment">------+-----------+--------+-------------------+</span></span><br><span class="line">| id   | name      | race   | fighting_capacity |</span><br><span class="line">+<span class="comment">------+-----------+--------+-------------------+</span></span><br><span class="line">|    1 | 钢铁侠     | 人类   |             12000 |</span><br><span class="line">|    2 | 幻视       | 其他   |              8000 |</span><br><span class="line">|    3 | 雷神       | 其他   |              NULL |</span><br><span class="line">+<span class="comment">------+-----------+--------+-------------------+</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="DELETE"><a href="#DELETE" class="headerlink" title="DELETE"></a>DELETE</h2><p>​    <strong>用于删除表中数据</strong></p>
-<p>​    格式：<code>DELETE FROM [数据库名.]表名称 [WHERE 条件]</code></p>
-<p><strong>注意事项：</strong></p>
-<ul>
-<li>若语句中没有写<code>WHERE 条件</code>会将<strong>整个表的数据删除</strong>，但会<strong>保留表结构</strong>，务必<strong>谨慎使用</strong>。</li>
-<li>删除条件恒为真时效果相当于不写条件，例如<code>DELETE FROM [数据库名.]表名称 WHERE 2 &gt; 1</code>。</li>
-</ul>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#删除avengers表中Fighting_capacity字段值为NULL的数据</span></span><br><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> avengers <span class="keyword">where</span> Fighting_capacity <span class="keyword">IS</span> <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> avengers;</span><br><span class="line">+<span class="comment">------+-----------+--------+-------------------+</span></span><br><span class="line">| id   | name      | race   | fighting_capacity |</span><br><span class="line">+<span class="comment">------+-----------+--------+-------------------+</span></span><br><span class="line">|    1 | 钢铁侠    | 人类   |             12000 |</span><br><span class="line">|    2 | 幻视      | 其他   |              8000 |</span><br><span class="line">+<span class="comment">------+-----------+--------+-------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#不写条件则会把表清空</span></span><br><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> avengers;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> avengers;</span><br><span class="line">Empty <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line"><span class="comment">#只清空了数据，表依然保留在数据库中。</span></span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">TABLES</span>;</span><br><span class="line">+<span class="comment">----------------+</span></span><br><span class="line">| Tables_in_test |</span><br><span class="line">+<span class="comment">----------------+</span></span><br><span class="line">| avengers       |      |</span><br><span class="line">+<span class="comment">----------------+</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="UPDATE"><a href="#UPDATE" class="headerlink" title="UPDATE"></a>UPDATE</h2><p><strong>用于修改表中数据</strong></p>
-<p>​    格式：<code>UPDATE [数据库名.]表名称 SET 字段名 = 新值，字段名2 = 新值 ... [WHERE 条件]</code></p>
-<p><strong>注意事项：</strong></p>
-<ul>
-<li>若语句中没有写<code>WHERE 条件</code>会将<strong>修改所有该字段的值</strong>，务必<strong>谨慎使用</strong>。</li>
-<li>删除条件恒为真时效果相当于不写条件，例如<code>UPDATE.... WHERE 1</code>。</li>
-</ul>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#演示DELETE时清空了表格的数据，先添加回来</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> avengers <span class="keyword">VALUES</span></span><br><span class="line">(<span class="number">1</span>,<span class="string">&#x27;钢铁侠&#x27;</span>,<span class="string">&#x27;人类&#x27;</span>,<span class="number">12000</span>),</span><br><span class="line">(<span class="number">2</span>,<span class="string">&#x27;幻视&#x27;</span>,<span class="keyword">DEFAULT</span>,<span class="number">8000</span>),</span><br><span class="line">(<span class="number">3</span>,<span class="string">&#x27;雷神&#x27;</span>,<span class="string">&#x27;神族&#x27;</span>,<span class="number">14000</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> avengers;</span><br><span class="line">+<span class="comment">------+-----------+--------+-------------------+</span></span><br><span class="line">| id   | name      | race   | fighting_capacity |</span><br><span class="line">+<span class="comment">------+-----------+--------+-------------------+</span></span><br><span class="line">|    1 | 钢铁侠    | 人类   |             12000 |</span><br><span class="line">|    2 | 幻视      | 其他   |              8000 |</span><br><span class="line">|    3 | 雷神      | 神族   |             14000 |</span><br><span class="line">+<span class="comment">------+-----------+--------+-------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#将雷神的name改为觉醒雷神，Fighting_capacity增加6000；</span></span><br><span class="line"><span class="keyword">UPDATE</span> avengers <span class="keyword">SET</span> <span class="keyword">name</span> = <span class="string">&#x27;觉醒雷神&#x27;</span>, fighting_capacity = fighting_capacity +<span class="number">6000</span> <span class="keyword">WHERE</span> <span class="keyword">name</span> = <span class="string">&#x27;雷神&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> avengers;</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+</span></span><br><span class="line">| id   | name         | race   | fighting_capacity |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+</span></span><br><span class="line">|    1 | 钢铁侠       | 人类   |             12000 |</span><br><span class="line">|    2 | 幻视         | 其他   |              8000 |</span><br><span class="line">|    3 | 觉醒雷神     | 神族   |             20000 |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#不写条件则会改变整个字段的值，下面语句将fighting_capacity字段的值都增加3000</span></span><br><span class="line"><span class="keyword">UPDATE</span> avengers <span class="keyword">SET</span> fighting_capacity = fighting_capacity +<span class="number">3000</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> avengers;</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+</span></span><br><span class="line">| id   | name         | race   | fighting_capacity |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+</span></span><br><span class="line">|    1 | 钢铁侠       | 人类   |             15000 |</span><br><span class="line">|    2 | 幻视         | 其他   |             11000 |</span><br><span class="line">|    3 | 觉醒雷神     | 神族   |             23000 |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="SELECT"><a href="#SELECT" class="headerlink" title="SELECT"></a>SELECT</h2><p><strong>用于查询数据</strong></p>
-<p>​    格式：<code>SELECT 查询内容 [FROM 查询范围] [WHERE 筛选条件] [GROUP BY 分组依据] [HAVING 分组后的筛选] [ORDER BY 排序] [LIMIT 获取行的数量]</code></p>
-<h3 id="1-SELECT的六大子句"><a href="#1-SELECT的六大子句" class="headerlink" title="1.SELECT的六大子句"></a>1.SELECT的六大子句</h3><p>​    <strong>若子句同时出现需要严格按照以下顺序：</strong></p>
-<ul>
-<li><p><code>FROM</code></p>
-<p><code>FROM</code>后面跟的是查询范围，一般为多行多列的结构，比如表。</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#例如上面查询整个表格的信息所使用到的，查询avengers表</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> avengers;</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+</span></span><br><span class="line">| id   | name         | race   | fighting_capacity |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+</span></span><br><span class="line">|    1 | 钢铁侠       | 人类   |             15000 |</span><br><span class="line">|    2 | 幻视         | 其他   |             11000 |</span><br><span class="line">|    3 | 觉醒雷神     | 神族   |             23000 |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p><code>WHERE</code></p>
-<p><code>WHERE</code>后跟的内容为筛选条件，注意不能使用分组函数。</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#查询avengers表中fighting_capacity字段值大于12000的所有字段信息</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> avengers <span class="keyword">WHERE</span> fighting_capacity &gt; <span class="number">12000</span>;</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+</span></span><br><span class="line">| id   | name         | race   | fighting_capacity |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+</span></span><br><span class="line">|    1 | 钢铁侠       | 人类   |             15000 |</span><br><span class="line">|    3 | 觉醒雷神     | 神族   |             23000 |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p><code>GROUP BY</code></p>
-<p><code>GROUP BY</code>后跟的内容为分组的信息，一般为一个或多个字段。需要注意的是查询内容尽量不要出现与分组后的内容无关的信息。</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#为了方便演示在avengers添加字段did表示所属组织的id号,并添加一些信息</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> avengers <span class="keyword">ADD</span> did <span class="built_in">INT</span>;</span><br><span class="line"><span class="keyword">UPDATE</span> avengers <span class="keyword">SET</span> did = <span class="number">1</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="number">1</span> <span class="keyword">OR</span> <span class="keyword">id</span> = <span class="number">3</span>;</span><br><span class="line"><span class="keyword">UPDATE</span> avengers <span class="keyword">SET</span> did = <span class="number">2</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> avengers <span class="keyword">VALUES</span></span><br><span class="line">(<span class="number">4</span>,<span class="string">&#x27;绿巨人&#x27;</span>,<span class="string">&#x27;其他&#x27;</span>,<span class="number">13000</span>,<span class="number">1</span>),</span><br><span class="line">(<span class="number">5</span>,<span class="string">&#x27;猩红女巫&#x27;</span>,<span class="string">&#x27;人类&#x27;</span>,<span class="number">20000</span>,<span class="number">2</span>),</span><br><span class="line">(<span class="number">6</span>,<span class="string">&#x27;星爵&#x27;</span>,<span class="string">&#x27;神族&#x27;</span>,<span class="number">6000</span>,<span class="number">2</span>),</span><br><span class="line">(<span class="number">7</span>,<span class="string">&#x27;美国队长&#x27;</span>,<span class="string">&#x27;人类&#x27;</span>,<span class="number">10000</span>,<span class="number">1</span>);</span><br><span class="line"><span class="comment">#修改后的表格</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> avengers;</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+------+</span></span><br><span class="line">| id   | name         | race   | fighting_capacity | did  |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+------+</span></span><br><span class="line">|    1 | 钢铁侠       | 人类   |             15000 |    1 |</span><br><span class="line">|    2 | 幻视         | 其他   |             11000 |    2 |</span><br><span class="line">|    3 | 觉醒雷神     | 神族   |             23000 |    1 |</span><br><span class="line">|    4 | 绿巨人       | 其他   |             13000 |    1 |</span><br><span class="line">|    5 | 猩红女巫     | 人类   |             20000 |    2 |</span><br><span class="line">|    6 | 星爵         | 神族   |              6000 |    2 |</span><br><span class="line">|    7 | 美国队长     | 人类   |             10000 |    1 |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#分组后分组依据字段只出现唯一的值，例如查询以did分组后的did字段</span></span><br><span class="line"><span class="keyword">SELECT</span> did <span class="keyword">FROM</span> avengers <span class="keyword">GROUP</span> <span class="keyword">BY</span> did;</span><br><span class="line">+<span class="comment">------+</span></span><br><span class="line">| did  |</span><br><span class="line">+<span class="comment">------+</span></span><br><span class="line">|    1 |</span><br><span class="line">|    2 |</span><br><span class="line">+<span class="comment">------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#但上面的作用不太明显，一般会配合筛选函数使用，如下是以did为分组并统计不同did的行数总和。</span></span><br><span class="line"><span class="keyword">SELECT</span> did <span class="keyword">AS</span> <span class="string">&quot;组织id&quot;</span>, <span class="keyword">COUNT</span>(*) <span class="keyword">AS</span> <span class="string">&quot;组织人数&quot;</span> <span class="keyword">FROM</span> avengers <span class="keyword">GROUP</span> <span class="keyword">BY</span> did;</span><br><span class="line">+<span class="comment">----------+--------------+</span></span><br><span class="line">| 组织id   | 组织人数     |</span><br><span class="line">+<span class="comment">----------+--------------+</span></span><br><span class="line">|        1 |            4 |</span><br><span class="line">|        2 |            3 |</span><br><span class="line">+<span class="comment">----------+--------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#GROUP BY 后还可以跟多个字段，分组的依据为字段的组合为唯一，类似于复合唯一键的约束效果。</span></span><br><span class="line"><span class="keyword">SELECT</span> did <span class="keyword">AS</span> <span class="string">&quot;组织id&quot;</span>, race <span class="keyword">AS</span> <span class="string">&#x27;种族&#x27;</span>,<span class="keyword">COUNT</span>(*) <span class="keyword">AS</span> <span class="string">&quot;人数&quot;</span> <span class="keyword">FROM</span> avengers <span class="keyword">GROUP</span> <span class="keyword">BY</span> did, race;</span><br><span class="line">+<span class="comment">----------+--------+--------+</span></span><br><span class="line">| 组织id   | 种族   | 人数   |</span><br><span class="line">+<span class="comment">----------+--------+--------+</span></span><br><span class="line">|        1 | 人类   |      2 |</span><br><span class="line">|        1 | 其他   |      1 |</span><br><span class="line">|        1 | 神族   |      1 |</span><br><span class="line">|        2 | 人类   |      1 |</span><br><span class="line">|        2 | 其他   |      1 |</span><br><span class="line">|        2 | 神族   |      1 |</span><br><span class="line">+<span class="comment">----------+--------+--------+</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p><code>HAVING</code></p>
-<p>在分组后再次对分组的结果进行筛选，和<code>WHERE</code>的最大区别是<code>HAVING</code>可以使用分组函数</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#例如在以did和race分组后筛选did值为1的数据</span></span><br><span class="line"><span class="keyword">SELECT</span> did <span class="keyword">AS</span> <span class="string">&quot;组织id&quot;</span>, race <span class="keyword">AS</span> <span class="string">&#x27;种族&#x27;</span>,<span class="keyword">COUNT</span>(*) <span class="keyword">AS</span> <span class="string">&quot;人数&quot;</span> <span class="keyword">FROM</span> avengers <span class="keyword">GROUP</span> <span class="keyword">BY</span> did, race <span class="keyword">HAVING</span> did = <span class="number">1</span>;</span><br><span class="line">+<span class="comment">----------+--------+--------+</span></span><br><span class="line">| 组织id   | 种族   | 人数   |</span><br><span class="line">+<span class="comment">----------+--------+--------+</span></span><br><span class="line">|        1 | 人类   |      2 |</span><br><span class="line">|        1 | 其他   |      1 |</span><br><span class="line">|        1 | 神族   |      1 |</span><br><span class="line">+<span class="comment">----------+--------+--------+</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p><code>ORDER BY</code></p>
-<p>​    用于将数据进行排序，格式为：<code>ORDER BY 字段名 升序/降序</code>,<code>DESC</code>为降序，<code>ASC</code>为升序，默认为升序。</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#查询所有成员信息 按照fighting_capacity 进行升序排序</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> avengers <span class="keyword">ORDER</span> <span class="keyword">BY</span> fighting_capacity;</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+------+</span></span><br><span class="line">| id   | name         | race   | fighting_capacity | did  |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+------+</span></span><br><span class="line">|    6 | 星爵         | 神族   |              6000 |    2 |</span><br><span class="line">|    7 | 美国队长     | 人类   |             10000 |    1 |</span><br><span class="line">|    2 | 幻视         | 其他   |             11000 |    2 |</span><br><span class="line">|    4 | 绿巨人       | 其他   |             13000 |    1 |</span><br><span class="line">|    1 | 钢铁侠       | 人类   |             15000 |    1 |</span><br><span class="line">|    5 | 猩红女巫     | 人类   |             20000 |    2 |</span><br><span class="line">|    3 | 觉醒雷神     | 神族   |             23000 |    1 |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#ORDER BY后可以跟多个排序字段，并可分别指定升降序，后面的排序是在前面排序的结果上进行排序的。</span></span><br><span class="line"><span class="comment">#例如查询所有成员信息 按照did进行升序排列的情况下按照fighting_capacity进行降序排列</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> avengers <span class="keyword">ORDER</span> <span class="keyword">BY</span> did <span class="keyword">ASC</span>,fighting_capacity <span class="keyword">DESC</span>;</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+------+</span></span><br><span class="line">| id   | name         | race   | fighting_capacity | did  |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+------+</span></span><br><span class="line">|    3 | 觉醒雷神     | 神族   |             23000 |    1 |</span><br><span class="line">|    1 | 钢铁侠       | 人类   |             15000 |    1 |</span><br><span class="line">|    4 | 绿巨人       | 其他   |             13000 |    1 |</span><br><span class="line">|    7 | 美国队长     | 人类   |             10000 |    1 |</span><br><span class="line">|    5 | 猩红女巫     | 人类   |             20000 |    2 |</span><br><span class="line">|    2 | 幻视         | 其他   |             11000 |    2 |</span><br><span class="line">|    6 | 星爵         | 神族   |              6000 |    2 |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+------+</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p><code>LIMIT</code></p>
-<p>用于指定取数据的行数以及数量，格式：<code>LIMIT 开始取数据的行数，取数据的数量</code></p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#在按照fighting_capacity排序的情况下取前三条记录</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> avengers <span class="keyword">ORDER</span> <span class="keyword">BY</span> fighting_capacity <span class="keyword">LIMIT</span> <span class="number">0</span>,<span class="number">3</span>;</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+------+</span></span><br><span class="line">| id   | name         | race   | fighting_capacity | did  |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+------+</span></span><br><span class="line">|    6 | 星爵         | 神族   |              6000 |    2 |</span><br><span class="line">|    7 | 美国队长     | 人类   |             10000 |    1 |</span><br><span class="line">|    2 | 幻视         | 其他   |             11000 |    2 |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+------+</span></span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h3 id="2-关联查询"><a href="#2-关联查询" class="headerlink" title="2.关联查询"></a>2.关联查询</h3><p>​    关联查询是指在查询两个或两个表以上的关联数据，用于规定筛选范围，所以语句在<code>FROM</code>从句后。</p>
-<p>以两个表为例一共有以下七种情况：</p>
-<p><img src="/image/MySQL%E5%9F%BA%E7%A1%80%E4%B9%8BSQL%E8%AF%AD%E6%B3%95(DML)/%E5%85%B3%E8%81%94%E6%9F%A5%E8%AF%A2%E7%A4%BA%E6%84%8F%E5%9B%BE.jpg" alt="关联查询示意图"></p>
-<p>​    按照表的连接关系进行讲解，为了方便演示定义一个组织表department 。</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#为了方便演示，向添加avengers表中添加两条数据，并创建department表。</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> avengers <span class="keyword">VALUES</span>(<span class="number">8</span>,<span class="string">&#x27;黑豹&#x27;</span>,<span class="string">&#x27;其他&#x27;</span>,<span class="number">13000</span>,<span class="literal">NULL</span>),(<span class="number">9</span>,<span class="string">&#x27;灭霸&#x27;</span>,<span class="string">&#x27;其他&#x27;</span>,<span class="number">30000</span>,<span class="number">3</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> department(</span><br><span class="line">    did <span class="built_in">INT</span>, <span class="comment">#组织编号</span></span><br><span class="line">    dname <span class="built_in">VARCHAR</span>(<span class="number">10</span>), <span class="comment">#组织名</span></span><br><span class="line">    ddescribe <span class="built_in">VARCHAR</span>(<span class="number">50</span>) <span class="comment">#组织描述</span></span><br><span class="line">);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> department <span class="keyword">VALUES</span></span><br><span class="line">(<span class="number">1</span>,<span class="string">&#x27;初代复仇者&#x27;</span>,<span class="string">&#x27;包含复仇者联盟的最初六人&#x27;</span>),</span><br><span class="line">(<span class="number">2</span>,<span class="string">&#x27;新复仇者&#x27;</span>,<span class="string">&#x27;除复联最初六人外的成员&#x27;</span>),</span><br><span class="line">(<span class="number">5</span>,<span class="string">&#x27;测试did为5&#x27;</span>,<span class="string">&#x27;没有成员属于这个组织&#x27;</span>),</span><br><span class="line">(<span class="literal">NULL</span>,<span class="string">&#x27;测试did为NULL&#x27;</span>,<span class="string">&#x27;did为NULL&#x27;</span>);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p><code>INNER JOIN</code></p>
-<p>内连接，可以实现查询A∩B的效果，格式如下：</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#若涉及到重名的字段列表则需要全写为 表名.字段名</span></span><br><span class="line"><span class="keyword">SELECT</span> 字段列表</span><br><span class="line"><span class="keyword">FROM</span> A表 <span class="keyword">INNER</span> <span class="keyword">JOIN</span> B表</span><br><span class="line"><span class="keyword">ON</span> 关联条件</span><br><span class="line"><span class="keyword">WHERE</span> 等其他子句;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#查询英雄以did作为关联条件进行内连接查询</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span>,<span class="keyword">name</span>,avengers.did,dname <span class="keyword">FROM</span> avengers <span class="keyword">INNER</span> <span class="keyword">JOIN</span> department <span class="keyword">ON</span> avengers.did = department.did;</span><br><span class="line">+<span class="comment">------+--------------+------+-----------------+</span></span><br><span class="line">| id   | name         | did  | dname           |</span><br><span class="line">+<span class="comment">------+--------------+------+-----------------+</span></span><br><span class="line">|    1 | 钢铁侠       |    1 | 初代复仇者      |</span><br><span class="line">|    2 | 幻视         |    2 | 新复仇者        |</span><br><span class="line">|    3 | 觉醒雷神     |    1 | 初代复仇者      |</span><br><span class="line">|    4 | 绿巨人       |    1 | 初代复仇者      |</span><br><span class="line">|    5 | 猩红女巫     |    2 | 新复仇者        |</span><br><span class="line">|    6 | 星爵         |    2 | 新复仇者        |</span><br><span class="line">|    7 | 美国队长     |    1 | 初代复仇者      |</span><br><span class="line">+<span class="comment">------+--------------+------+-----------------+</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p><code>LEFT JOIN</code></p>
-<p>左外连接，可以实现<code>A</code>以及<code>A - A∩B</code>的效果，格式如下:</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#实现查询结果是A</span></span><br><span class="line"><span class="keyword">SELECT</span> 字段列表</span><br><span class="line"><span class="keyword">FROM</span> A表 <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> B表</span><br><span class="line"><span class="keyword">ON</span> 关联条件</span><br><span class="line"><span class="keyword">WHERE</span> 等其他子句;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#实现A -  A∩B</span></span><br><span class="line"><span class="keyword">SELECT</span> 字段列表</span><br><span class="line"><span class="keyword">FROM</span> A表 <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> B表</span><br><span class="line"><span class="keyword">ON</span> 关联条件</span><br><span class="line"><span class="keyword">WHERE</span> 关联字段 <span class="keyword">IS</span> <span class="literal">NULL</span> <span class="keyword">AND</span> 等其他子句;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#A示例，与内连接最大的不同是以A中的did为主进行匹配，可以查询出did不匹配部分的数据</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span>,<span class="keyword">name</span>,avengers.did,dname <span class="keyword">FROM</span> avengers <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> department <span class="keyword">ON</span> avengers.did = department.did;</span><br><span class="line">+<span class="comment">------+--------------+------+-----------------+</span></span><br><span class="line">| id   | name         | did  | dname           |</span><br><span class="line">+<span class="comment">------+--------------+------+-----------------+</span></span><br><span class="line">|    1 | 钢铁侠       |    1 | 初代复仇者      |</span><br><span class="line">|    3 | 觉醒雷神     |    1 | 初代复仇者      |</span><br><span class="line">|    4 | 绿巨人       |    1 | 初代复仇者      |</span><br><span class="line">|    7 | 美国队长     |    1 | 初代复仇者      |</span><br><span class="line">|    2 | 幻视         |    2 | 新复仇者        |</span><br><span class="line">|    5 | 猩红女巫     |    2 | 新复仇者        |</span><br><span class="line">|    6 | 星爵         |    2 | 新复仇者        |</span><br><span class="line">|    8 | 黑豹         | NULL | NULL            |</span><br><span class="line">|    9 | 灭霸         |    3 | NULL            |</span><br><span class="line">+<span class="comment">------+--------------+------+-----------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#A - A∩B 示例，将两者上面查询的两种结果相减则</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span>,<span class="keyword">name</span>,avengers.did,dname <span class="keyword">FROM</span> avengers <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> department <span class="keyword">ON</span> avengers.did = department.did</span><br><span class="line"><span class="keyword">WHERE</span> department.did <span class="keyword">IS</span> <span class="literal">NULL</span>;</span><br><span class="line">+<span class="comment">------+--------+------+-------+</span></span><br><span class="line">| id   | name   | did  | dname |</span><br><span class="line">+<span class="comment">------+--------+------+-------+</span></span><br><span class="line">|    8 | 黑豹   | NULL | NULL  |</span><br><span class="line">|    9 | 灭霸   |    3 | NULL  |</span><br><span class="line">+<span class="comment">------+--------+------+-------+</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p><code>RIGHT JOIN</code></p>
-<p>左外连接，可以实现<code>B</code>以及<code>B - A∩B</code>的效果，格式如下:</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#实现查询结果是B</span></span><br><span class="line"><span class="keyword">SELECT</span> 字段列表</span><br><span class="line"><span class="keyword">FROM</span> A表 <span class="keyword">RIGHT</span> <span class="keyword">JOIN</span> B表</span><br><span class="line"><span class="keyword">ON</span> 关联条件</span><br><span class="line"><span class="keyword">WHERE</span> 等其他子句;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#实现B -  A∩B</span></span><br><span class="line"><span class="keyword">SELECT</span> 字段列表</span><br><span class="line"><span class="keyword">FROM</span> A表 <span class="keyword">RIGHT</span> <span class="keyword">JOIN</span> B表</span><br><span class="line"><span class="keyword">ON</span> 关联条件</span><br><span class="line"><span class="keyword">WHERE</span> 关联字段 <span class="keyword">IS</span> <span class="literal">NULL</span> <span class="keyword">AND</span> 等其他子句;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">  <span class="comment">#查询B，为了更好显示效果将左外连接的语句中avengers.did修改为department.did</span></span><br><span class="line">  <span class="keyword">SELECT</span> <span class="keyword">id</span>,<span class="keyword">name</span>,department.did,dname <span class="keyword">FROM</span> avengers <span class="keyword">RIGHT</span> <span class="keyword">JOIN</span> department <span class="keyword">ON</span> avengers.did = department.did;</span><br><span class="line">+<span class="comment">------+--------------+------+------------------+</span></span><br><span class="line">  | id   | name         | did  | dname            |</span><br><span class="line">  +<span class="comment">------+--------------+------+------------------+</span></span><br><span class="line">  |    1 | 钢铁侠       |    1 | 初代复仇者       |</span><br><span class="line">  |    2 | 幻视         |    2 | 新复仇者         |</span><br><span class="line">  |    3 | 觉醒雷神     |    1 | 初代复仇者       |</span><br><span class="line">  |    4 | 绿巨人       |    1 | 初代复仇者       |</span><br><span class="line">  |    5 | 猩红女巫     |    2 | 新复仇者         |</span><br><span class="line">  |    6 | 星爵         |    2 | 新复仇者         |</span><br><span class="line">  |    7 | 美国队长     |    1 | 初代复仇者       |</span><br><span class="line">  | NULL | NULL         |    5 | 测试did为5       |</span><br><span class="line">  | NULL | NULL         | NULL | 测试did为NULL    |</span><br><span class="line">  +<span class="comment">------+--------------+------+------------------+</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment">#实现B -  A∩B</span></span><br><span class="line">  <span class="keyword">SELECT</span> <span class="keyword">id</span>,<span class="keyword">name</span>,department.did,dname <span class="keyword">FROM</span> avengers <span class="keyword">RIGHT</span> <span class="keyword">JOIN</span> department <span class="keyword">ON</span> avengers.did = department.did</span><br><span class="line">   <span class="keyword">WHERE</span> avengers.did <span class="keyword">IS</span> <span class="literal">NULL</span>;</span><br><span class="line">   +<span class="comment">------+------+------+------------------+</span></span><br><span class="line">  | id   | name | did  | dname            |</span><br><span class="line">  +<span class="comment">------+------+------+------------------+</span></span><br><span class="line">  | NULL | NULL |    5 | 测试did为5       |</span><br><span class="line">  | NULL | NULL | NULL | 测试did为NULL    |</span><br><span class="line">  +<span class="comment">------+------+------+------------------+</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p><code>FULL OUTER JOIN</code></p>
-<p>全外连接，可以实现<code>A∪B</code>以及<code>A∪B - A∩B</code>，MySQL暂不支持，但能通过<code>UNION</code>实现一样的效果，<code>UNION</code>的作用为合并两个查询结果。</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#实现A∪B，使用 A的结果 UNION B的结果</span></span><br><span class="line"><span class="keyword">SELECT</span> 字段列表</span><br><span class="line"><span class="keyword">FROM</span> A表 <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> B表</span><br><span class="line"><span class="keyword">ON</span> 关联条件</span><br><span class="line"><span class="keyword">WHERE</span> 等其他子句;</span><br><span class="line"></span><br><span class="line">UNION</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> 字段列表</span><br><span class="line"><span class="keyword">FROM</span> A表 <span class="keyword">RIGHT</span> <span class="keyword">JOIN</span> B表</span><br><span class="line"><span class="keyword">ON</span> 关联条件</span><br><span class="line"><span class="keyword">WHERE</span> 等其他子句;</span><br><span class="line"></span><br><span class="line"><span class="comment">#实现A∪B -  A∩B，使用 (A -  A∩B)的结果  UNION （B - A∩B）的结果</span></span><br><span class="line"><span class="keyword">SELECT</span> 字段列表</span><br><span class="line"><span class="keyword">FROM</span> A表 <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> B表</span><br><span class="line"><span class="keyword">ON</span> 关联条件</span><br><span class="line"><span class="keyword">WHERE</span> 关联字段 <span class="keyword">IS</span> <span class="literal">NULL</span> <span class="keyword">AND</span> 等其他子句;</span><br><span class="line"></span><br><span class="line"> UNION </span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> 字段列表</span><br><span class="line"><span class="keyword">FROM</span> A表 <span class="keyword">RIGHT</span> <span class="keyword">JOIN</span> B表</span><br><span class="line"><span class="keyword">ON</span> 关联条件</span><br><span class="line"><span class="keyword">WHERE</span> 关联字段 <span class="keyword">IS</span> <span class="literal">NULL</span> <span class="keyword">AND</span> 等其他子句;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#A∪B,查询所以</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span>,<span class="keyword">name</span>,avengers.did,dname <span class="keyword">FROM</span> avengers <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> department <span class="keyword">ON</span> avengers.did = department.did</span><br><span class="line"></span><br><span class="line"> <span class="keyword">UNION</span> </span><br><span class="line"> </span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span>,<span class="keyword">name</span>,department.did,dname <span class="keyword">FROM</span> avengers <span class="keyword">RIGHT</span> <span class="keyword">JOIN</span> department <span class="keyword">ON</span> avengers.did = department.did;</span><br><span class="line"></span><br><span class="line">+<span class="comment">------+--------------+------+------------------+</span></span><br><span class="line">| id   | name         | did  | dname            |</span><br><span class="line">+<span class="comment">------+--------------+------+------------------+</span></span><br><span class="line">|    1 | 钢铁侠       |    1 | 初代复仇者       |</span><br><span class="line">|    3 | 觉醒雷神     |    1 | 初代复仇者       |</span><br><span class="line">|    4 | 绿巨人       |    1 | 初代复仇者       |</span><br><span class="line">|    7 | 美国队长     |    1 | 初代复仇者       |</span><br><span class="line">|    2 | 幻视         |    2 | 新复仇者         |</span><br><span class="line">|    5 | 猩红女巫     |    2 | 新复仇者         |</span><br><span class="line">|    6 | 星爵         |    2 | 新复仇者         |</span><br><span class="line">|    8 | 黑豹         | NULL | NULL             |</span><br><span class="line">|    9 | 灭霸         |    3 | NULL             |</span><br><span class="line">| NULL | NULL         |    5 | 测试did为5       |</span><br><span class="line">| NULL | NULL         | NULL | 测试did为NULL    |</span><br><span class="line">+<span class="comment">------+--------------+------+------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#A∪B -  A∩B</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span>,<span class="keyword">name</span>,avengers.did,dname <span class="keyword">FROM</span> avengers <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> department <span class="keyword">ON</span> avengers.did = department.did</span><br><span class="line"><span class="keyword">WHERE</span> department.did <span class="keyword">IS</span> <span class="literal">NULL</span></span><br><span class="line"></span><br><span class="line"> <span class="keyword">UNION</span> </span><br><span class="line"> </span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span>,<span class="keyword">name</span>,department.did,dname <span class="keyword">FROM</span> avengers <span class="keyword">RIGHT</span> <span class="keyword">JOIN</span> department <span class="keyword">ON</span> avengers.did = department.did</span><br><span class="line"> <span class="keyword">WHERE</span> avengers.did <span class="keyword">IS</span> <span class="literal">NULL</span>;</span><br><span class="line"> +<span class="comment">------+--------+------+------------------+</span></span><br><span class="line">| id   | name   | did  | dname            |</span><br><span class="line">+<span class="comment">------+--------+------+------------------+</span></span><br><span class="line">|    8 | 黑豹   | NULL | NULL             |</span><br><span class="line">|    9 | 灭霸   |    3 | NULL             |</span><br><span class="line">| NULL | NULL   |    5 | 测试did为5       |</span><br><span class="line">| NULL | NULL   | NULL | 测试did为NULL    |</span><br><span class="line">+<span class="comment">------+--------+------+------------------+</span></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
-</li>
-<li><p>补充</p>
-<ul>
-<li>关联查询时可以用<code>表名 AS 别名</code>的方式用别名代替表名。</li>
-<li>关联的两个表可以为同一个表，这样操作时一定要使用别名区分。</li>
-</ul>
-</li>
-</ul>
-<h3 id="3-子查询"><a href="#3-子查询" class="headerlink" title="3.子查询"></a>3.子查询</h3><p>​    嵌套在另一个查询中的查询，根据位置不同，分为：</p>
-<ul>
-<li><p><code>WHERE</code>型</p>
-<p>①子查询是单值结果，那么可以对其使用（=，&gt;等比较运算符）</p>
-<p>②子查询是多值结果，那么可对其使用（【not】in(子查询结果)，或 &gt;all(子查询结果)，或&gt;=all(子查询结果)，&lt;all(子查询结果)，&lt;=all（子查询结果)，或 &gt;any(子查询结果)，或&gt;=any(子查询结果)，&lt;any(子查询结果)，&lt;=any（子查询结果)）    </p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#例如查询avengers表中fighting_capacity最高的成员时可以使用子查询</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> avengers <span class="keyword">WHERE</span> fighting_capacity = (<span class="keyword">SELECT</span> <span class="keyword">MAX</span>(fighting_capacity) <span class="keyword">FROM</span> avengers);</span><br><span class="line">+<span class="comment">------+--------+--------+-------------------+------+</span></span><br><span class="line">| id   | name   | race   | fighting_capacity | did  |</span><br><span class="line">+<span class="comment">------+--------+--------+-------------------+------+</span></span><br><span class="line">|    9 | 灭霸   | 其他   |             30000 |    3 |</span><br><span class="line">+<span class="comment">------+--------+--------+-------------------+------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#查询fighting_capacity大于所有did为2成员的成员</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> avengers <span class="keyword">WHERE</span> fighting_capacity &gt; <span class="keyword">ALL</span>(<span class="keyword">SELECT</span> fighting_capacity <span class="keyword">FROM</span> avengers <span class="keyword">WHERE</span> did = <span class="number">2</span>);</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+------+</span></span><br><span class="line">| id   | name         | race   | fighting_capacity | did  |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+------+</span></span><br><span class="line">|    3 | 觉醒雷神     | 神族   |             23000 |    1 |</span><br><span class="line">|    9 | 灭霸         | 其他   |             30000 |    3 |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#查询fighting_capacity小于所有did为1成员的成员</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> avengers <span class="keyword">WHERE</span> fighting_capacity &lt; <span class="keyword">ANY</span>(<span class="keyword">SELECT</span> fighting_capacity <span class="keyword">FROM</span> avengers <span class="keyword">WHERE</span> did = <span class="number">1</span>);</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+------+</span></span><br><span class="line">| id   | name         | race   | fighting_capacity | did  |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+------+</span></span><br><span class="line">|    1 | 钢铁侠       | 人类   |             15000 |    1 |</span><br><span class="line">|    2 | 幻视         | 其他   |             11000 |    2 |</span><br><span class="line">|    4 | 绿巨人       | 其他   |             13000 |    1 |</span><br><span class="line">|    5 | 猩红女巫     | 人类   |             20000 |    2 |</span><br><span class="line">|    6 | 星爵         | 神族   |              6000 |    2 |</span><br><span class="line">|    7 | 美国队长     | 人类   |             10000 |    1 |</span><br><span class="line">|    8 | 黑豹         | 其他   |             13000 | NULL |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+------+</span></span><br></pre></td></tr></table></figure>
-
-
-
-</li>
-</ul>
-<ul>
-<li><p><code>FROM</code>型</p>
-<p>将子查询当做一张临时的表使用，必须给子查询取别名</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#查询department表中所有组织成员的平均战斗力（fighting_capacity），注意：要将统计结果当做字段名使用</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> department.did , dname , AVG_fc <span class="keyword">AS</span> <span class="string">&#x27;平均战斗力&#x27;</span> </span><br><span class="line"><span class="keyword">FROM</span> department <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> (<span class="keyword">SELECT</span> did,<span class="keyword">AVG</span>(fighting_capacity) <span class="keyword">AS</span> AVG_fc <span class="keyword">FROM</span> avengers <span class="keyword">GROUP</span> <span class="keyword">BY</span> did) temp</span><br><span class="line"><span class="keyword">ON</span> department.did = temp.did ;</span><br><span class="line">+<span class="comment">------+------------------+-----------------+</span></span><br><span class="line">| did  | dname            | 平均战斗力      |</span><br><span class="line">+<span class="comment">------+------------------+-----------------+</span></span><br><span class="line">|    1 | 初代复仇者       |      15250.0000 |</span><br><span class="line">|    2 | 新复仇者         |      12333.3333 |</span><br><span class="line">|    5 | 测试did为5       |            NULL |</span><br><span class="line">| NULL | 测试did为NULL    |            NULL |</span><br><span class="line">+<span class="comment">------+------------------+-----------------+</span></span><br></pre></td></tr></table></figure>
-
-
-
-</li>
-</ul>
-<ul>
-<li><p><code>EXISTS</code>型</p>
-<p>用于验证是否匹配子查询的结果</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#查询拥有员工的组织</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> department</span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">EXISTS</span></span><br><span class="line">(<span class="keyword">SELECT</span> did <span class="keyword">FROM</span> avengers <span class="keyword">WHERE</span> avengers.did = department.did);  </span><br></pre></td></tr></table></figure>
-
-
-
-</li>
-</ul>
-<p><strong>注意：不管子查询在哪里，子查询必须使用()括起来</strong></p>
-]]></content>
-      <categories>
-        <category>MySQL</category>
-      </categories>
-      <tags>
-        <tag>SQL</tag>
-        <tag>MySQL</tag>
-        <tag>MySQL基础</tag>
-        <tag>SQL语法</tag>
       </tags>
   </entry>
   <entry>
@@ -3470,6 +3314,165 @@
       </tags>
   </entry>
   <entry>
+    <title>MySQL基础之SQL语法(DML)</title>
+    <url>/2020/08/21/MySQL%E5%9F%BA%E7%A1%80%E4%B9%8BSQL%E8%AF%AD%E6%B3%95(DML)/</url>
+    <content><![CDATA[<h2 id="SQL的分类"><a href="#SQL的分类" class="headerlink" title="SQL的分类"></a>SQL的分类</h2><p>​    根据SQL语句的<strong>作用</strong>将SQL语句分为<strong>三大类：</strong></p>
+<ul>
+<li>DDL —  数据定义语言（Data Define Language）<a href="https://ykailh.github.io/2020/08/20/MySQL%E5%9F%BA%E7%A1%80%E4%B9%8BSQL%E8%AF%AD%E6%B3%95(DDL)/">DDL链接</a></li>
+<li>DML — 数据操纵语言（Data Manipulation Language）</li>
+<li>DCL —  数据控制语言（Data Control Language）</li>
+</ul>
+<p><strong>本文主要讲解DML</strong>，DML语句一般用于对<strong>数据</strong>进行增删改查，对应于<code>INSERT（新增）</code>、<code>DELETE（删除）</code>、<code>UPDATE（更新）</code>、<code>SELECT（查询）</code>。</p>
+<a id="more"></a>
+
+<p>​                                                                                                                        <strong><em>使用MySQL5.7演示</em></strong></p>
+<h2 id="INSERT"><a href="#INSERT" class="headerlink" title="INSERT"></a>INSERT</h2><p>​    <strong>用于插入数据</strong></p>
+<p>​    格式：<code>INSERT INTO [数据库名.]表名[(字段列表)] VALUES(数据列表),(数据列表二)....; </code></p>
+<p><strong>注意事项：</strong></p>
+<ul>
+<li><p>在已经使用（<code>USE</code>）数据库的情况下对<strong>本数据库的表</strong>插入数据可以省略[<code>数据库名.</code>]，下面类似情况不再强调。</p>
+</li>
+<li><p>数据列表要与字段列表<strong>一 一对应</strong>，字段/数据之间使用<code>,</code>隔开。</p>
+</li>
+<li><p>若<strong>省略字段列表则默认为全部字段</strong>。</p>
+</li>
+<li><p>可以<strong>同时添加多组数据</strong>，将同组数据写在同一<code>()</code>内，并以<code>,</code>间隔开。</p>
+</li>
+<li><p>对于<strong>含有默认值的字段</strong>，若想在插入数据时<strong>使用默认值</strong>可以在数据列表的<strong>对应位置</strong>中用<code>DEFAULT</code>。</p>
+</li>
+<li><p>对于字段列表外的字段的数值，若该字段有默认值则为默认值，若没有默认值则为NULL。</p>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#创建一个表格用于测试</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> avengers(</span><br><span class="line">            <span class="keyword">id</span> <span class="built_in">INT</span>,</span><br><span class="line">            <span class="keyword">name</span> <span class="built_in">VARCHAR</span>(<span class="number">20</span>),</span><br><span class="line">            race <span class="built_in">VARCHAR</span>(<span class="number">5</span>) <span class="keyword">DEFAULT</span> <span class="string">&#x27;其他&#x27;</span>,</span><br><span class="line">            fighting_capacity <span class="built_in">INT</span> </span><br><span class="line">            );</span><br><span class="line"><span class="comment">#未指定字段列表，默认为全字段,含有默认值的字段可以使用DEFAULT代替</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> avengers <span class="keyword">VALUES</span>(<span class="number">1</span>,<span class="string">&#x27;钢铁侠&#x27;</span>,<span class="string">&#x27;人类&#x27;</span>,<span class="number">12000</span>),(<span class="number">2</span>,<span class="string">&#x27;幻视&#x27;</span>,<span class="keyword">DEFAULT</span>,<span class="number">8000</span>);</span><br><span class="line"><span class="comment">#给自定字段赋值，同一行中未赋值的有默认值为默认值，没有则为NULL</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> avengers(<span class="keyword">id</span>,<span class="keyword">name</span>) <span class="keyword">VALUES</span>(<span class="number">3</span>,<span class="string">&#x27;雷神&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">#查询表验证</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> avengers;</span><br><span class="line">+<span class="comment">------+-----------+--------+-------------------+</span></span><br><span class="line">| id   | name      | race   | fighting_capacity |</span><br><span class="line">+<span class="comment">------+-----------+--------+-------------------+</span></span><br><span class="line">|    1 | 钢铁侠     | 人类   |             12000 |</span><br><span class="line">|    2 | 幻视       | 其他   |              8000 |</span><br><span class="line">|    3 | 雷神       | 其他   |              NULL |</span><br><span class="line">+<span class="comment">------+-----------+--------+-------------------+</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="DELETE"><a href="#DELETE" class="headerlink" title="DELETE"></a>DELETE</h2><p>​    <strong>用于删除表中数据</strong></p>
+<p>​    格式：<code>DELETE FROM [数据库名.]表名称 [WHERE 条件]</code></p>
+<p><strong>注意事项：</strong></p>
+<ul>
+<li>若语句中没有写<code>WHERE 条件</code>会将<strong>整个表的数据删除</strong>，但会<strong>保留表结构</strong>，务必<strong>谨慎使用</strong>。</li>
+<li>删除条件恒为真时效果相当于不写条件，例如<code>DELETE FROM [数据库名.]表名称 WHERE 2 &gt; 1</code>。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#删除avengers表中Fighting_capacity字段值为NULL的数据</span></span><br><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> avengers <span class="keyword">where</span> Fighting_capacity <span class="keyword">IS</span> <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> avengers;</span><br><span class="line">+<span class="comment">------+-----------+--------+-------------------+</span></span><br><span class="line">| id   | name      | race   | fighting_capacity |</span><br><span class="line">+<span class="comment">------+-----------+--------+-------------------+</span></span><br><span class="line">|    1 | 钢铁侠    | 人类   |             12000 |</span><br><span class="line">|    2 | 幻视      | 其他   |              8000 |</span><br><span class="line">+<span class="comment">------+-----------+--------+-------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#不写条件则会把表清空</span></span><br><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> avengers;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> avengers;</span><br><span class="line">Empty <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line"><span class="comment">#只清空了数据，表依然保留在数据库中。</span></span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">TABLES</span>;</span><br><span class="line">+<span class="comment">----------------+</span></span><br><span class="line">| Tables_in_test |</span><br><span class="line">+<span class="comment">----------------+</span></span><br><span class="line">| avengers       |      |</span><br><span class="line">+<span class="comment">----------------+</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="UPDATE"><a href="#UPDATE" class="headerlink" title="UPDATE"></a>UPDATE</h2><p><strong>用于修改表中数据</strong></p>
+<p>​    格式：<code>UPDATE [数据库名.]表名称 SET 字段名 = 新值，字段名2 = 新值 ... [WHERE 条件]</code></p>
+<p><strong>注意事项：</strong></p>
+<ul>
+<li>若语句中没有写<code>WHERE 条件</code>会将<strong>修改所有该字段的值</strong>，务必<strong>谨慎使用</strong>。</li>
+<li>删除条件恒为真时效果相当于不写条件，例如<code>UPDATE.... WHERE 1</code>。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#演示DELETE时清空了表格的数据，先添加回来</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> avengers <span class="keyword">VALUES</span></span><br><span class="line">(<span class="number">1</span>,<span class="string">&#x27;钢铁侠&#x27;</span>,<span class="string">&#x27;人类&#x27;</span>,<span class="number">12000</span>),</span><br><span class="line">(<span class="number">2</span>,<span class="string">&#x27;幻视&#x27;</span>,<span class="keyword">DEFAULT</span>,<span class="number">8000</span>),</span><br><span class="line">(<span class="number">3</span>,<span class="string">&#x27;雷神&#x27;</span>,<span class="string">&#x27;神族&#x27;</span>,<span class="number">14000</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> avengers;</span><br><span class="line">+<span class="comment">------+-----------+--------+-------------------+</span></span><br><span class="line">| id   | name      | race   | fighting_capacity |</span><br><span class="line">+<span class="comment">------+-----------+--------+-------------------+</span></span><br><span class="line">|    1 | 钢铁侠    | 人类   |             12000 |</span><br><span class="line">|    2 | 幻视      | 其他   |              8000 |</span><br><span class="line">|    3 | 雷神      | 神族   |             14000 |</span><br><span class="line">+<span class="comment">------+-----------+--------+-------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#将雷神的name改为觉醒雷神，Fighting_capacity增加6000；</span></span><br><span class="line"><span class="keyword">UPDATE</span> avengers <span class="keyword">SET</span> <span class="keyword">name</span> = <span class="string">&#x27;觉醒雷神&#x27;</span>, fighting_capacity = fighting_capacity +<span class="number">6000</span> <span class="keyword">WHERE</span> <span class="keyword">name</span> = <span class="string">&#x27;雷神&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> avengers;</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+</span></span><br><span class="line">| id   | name         | race   | fighting_capacity |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+</span></span><br><span class="line">|    1 | 钢铁侠       | 人类   |             12000 |</span><br><span class="line">|    2 | 幻视         | 其他   |              8000 |</span><br><span class="line">|    3 | 觉醒雷神     | 神族   |             20000 |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#不写条件则会改变整个字段的值，下面语句将fighting_capacity字段的值都增加3000</span></span><br><span class="line"><span class="keyword">UPDATE</span> avengers <span class="keyword">SET</span> fighting_capacity = fighting_capacity +<span class="number">3000</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> avengers;</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+</span></span><br><span class="line">| id   | name         | race   | fighting_capacity |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+</span></span><br><span class="line">|    1 | 钢铁侠       | 人类   |             15000 |</span><br><span class="line">|    2 | 幻视         | 其他   |             11000 |</span><br><span class="line">|    3 | 觉醒雷神     | 神族   |             23000 |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="SELECT"><a href="#SELECT" class="headerlink" title="SELECT"></a>SELECT</h2><p><strong>用于查询数据</strong></p>
+<p>​    格式：<code>SELECT 查询内容 [FROM 查询范围] [WHERE 筛选条件] [GROUP BY 分组依据] [HAVING 分组后的筛选] [ORDER BY 排序] [LIMIT 获取行的数量]</code></p>
+<h3 id="1-SELECT的六大子句"><a href="#1-SELECT的六大子句" class="headerlink" title="1.SELECT的六大子句"></a>1.SELECT的六大子句</h3><p>​    <strong>若子句同时出现需要严格按照以下顺序：</strong></p>
+<ul>
+<li><p><code>FROM</code></p>
+<p><code>FROM</code>后面跟的是查询范围，一般为多行多列的结构，比如表。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#例如上面查询整个表格的信息所使用到的，查询avengers表</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> avengers;</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+</span></span><br><span class="line">| id   | name         | race   | fighting_capacity |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+</span></span><br><span class="line">|    1 | 钢铁侠       | 人类   |             15000 |</span><br><span class="line">|    2 | 幻视         | 其他   |             11000 |</span><br><span class="line">|    3 | 觉醒雷神     | 神族   |             23000 |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>WHERE</code></p>
+<p><code>WHERE</code>后跟的内容为筛选条件，注意不能使用分组函数。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#查询avengers表中fighting_capacity字段值大于12000的所有字段信息</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> avengers <span class="keyword">WHERE</span> fighting_capacity &gt; <span class="number">12000</span>;</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+</span></span><br><span class="line">| id   | name         | race   | fighting_capacity |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+</span></span><br><span class="line">|    1 | 钢铁侠       | 人类   |             15000 |</span><br><span class="line">|    3 | 觉醒雷神     | 神族   |             23000 |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>GROUP BY</code></p>
+<p><code>GROUP BY</code>后跟的内容为分组的信息，一般为一个或多个字段。需要注意的是查询内容尽量不要出现与分组后的内容无关的信息。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#为了方便演示在avengers添加字段did表示所属组织的id号,并添加一些信息</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> avengers <span class="keyword">ADD</span> did <span class="built_in">INT</span>;</span><br><span class="line"><span class="keyword">UPDATE</span> avengers <span class="keyword">SET</span> did = <span class="number">1</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="number">1</span> <span class="keyword">OR</span> <span class="keyword">id</span> = <span class="number">3</span>;</span><br><span class="line"><span class="keyword">UPDATE</span> avengers <span class="keyword">SET</span> did = <span class="number">2</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> avengers <span class="keyword">VALUES</span></span><br><span class="line">(<span class="number">4</span>,<span class="string">&#x27;绿巨人&#x27;</span>,<span class="string">&#x27;其他&#x27;</span>,<span class="number">13000</span>,<span class="number">1</span>),</span><br><span class="line">(<span class="number">5</span>,<span class="string">&#x27;猩红女巫&#x27;</span>,<span class="string">&#x27;人类&#x27;</span>,<span class="number">20000</span>,<span class="number">2</span>),</span><br><span class="line">(<span class="number">6</span>,<span class="string">&#x27;星爵&#x27;</span>,<span class="string">&#x27;神族&#x27;</span>,<span class="number">6000</span>,<span class="number">2</span>),</span><br><span class="line">(<span class="number">7</span>,<span class="string">&#x27;美国队长&#x27;</span>,<span class="string">&#x27;人类&#x27;</span>,<span class="number">10000</span>,<span class="number">1</span>);</span><br><span class="line"><span class="comment">#修改后的表格</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> avengers;</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+------+</span></span><br><span class="line">| id   | name         | race   | fighting_capacity | did  |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+------+</span></span><br><span class="line">|    1 | 钢铁侠       | 人类   |             15000 |    1 |</span><br><span class="line">|    2 | 幻视         | 其他   |             11000 |    2 |</span><br><span class="line">|    3 | 觉醒雷神     | 神族   |             23000 |    1 |</span><br><span class="line">|    4 | 绿巨人       | 其他   |             13000 |    1 |</span><br><span class="line">|    5 | 猩红女巫     | 人类   |             20000 |    2 |</span><br><span class="line">|    6 | 星爵         | 神族   |              6000 |    2 |</span><br><span class="line">|    7 | 美国队长     | 人类   |             10000 |    1 |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#分组后分组依据字段只出现唯一的值，例如查询以did分组后的did字段</span></span><br><span class="line"><span class="keyword">SELECT</span> did <span class="keyword">FROM</span> avengers <span class="keyword">GROUP</span> <span class="keyword">BY</span> did;</span><br><span class="line">+<span class="comment">------+</span></span><br><span class="line">| did  |</span><br><span class="line">+<span class="comment">------+</span></span><br><span class="line">|    1 |</span><br><span class="line">|    2 |</span><br><span class="line">+<span class="comment">------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#但上面的作用不太明显，一般会配合筛选函数使用，如下是以did为分组并统计不同did的行数总和。</span></span><br><span class="line"><span class="keyword">SELECT</span> did <span class="keyword">AS</span> <span class="string">&quot;组织id&quot;</span>, <span class="keyword">COUNT</span>(*) <span class="keyword">AS</span> <span class="string">&quot;组织人数&quot;</span> <span class="keyword">FROM</span> avengers <span class="keyword">GROUP</span> <span class="keyword">BY</span> did;</span><br><span class="line">+<span class="comment">----------+--------------+</span></span><br><span class="line">| 组织id   | 组织人数     |</span><br><span class="line">+<span class="comment">----------+--------------+</span></span><br><span class="line">|        1 |            4 |</span><br><span class="line">|        2 |            3 |</span><br><span class="line">+<span class="comment">----------+--------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#GROUP BY 后还可以跟多个字段，分组的依据为字段的组合为唯一，类似于复合唯一键的约束效果。</span></span><br><span class="line"><span class="keyword">SELECT</span> did <span class="keyword">AS</span> <span class="string">&quot;组织id&quot;</span>, race <span class="keyword">AS</span> <span class="string">&#x27;种族&#x27;</span>,<span class="keyword">COUNT</span>(*) <span class="keyword">AS</span> <span class="string">&quot;人数&quot;</span> <span class="keyword">FROM</span> avengers <span class="keyword">GROUP</span> <span class="keyword">BY</span> did, race;</span><br><span class="line">+<span class="comment">----------+--------+--------+</span></span><br><span class="line">| 组织id   | 种族   | 人数   |</span><br><span class="line">+<span class="comment">----------+--------+--------+</span></span><br><span class="line">|        1 | 人类   |      2 |</span><br><span class="line">|        1 | 其他   |      1 |</span><br><span class="line">|        1 | 神族   |      1 |</span><br><span class="line">|        2 | 人类   |      1 |</span><br><span class="line">|        2 | 其他   |      1 |</span><br><span class="line">|        2 | 神族   |      1 |</span><br><span class="line">+<span class="comment">----------+--------+--------+</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>HAVING</code></p>
+<p>在分组后再次对分组的结果进行筛选，和<code>WHERE</code>的最大区别是<code>HAVING</code>可以使用分组函数</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#例如在以did和race分组后筛选did值为1的数据</span></span><br><span class="line"><span class="keyword">SELECT</span> did <span class="keyword">AS</span> <span class="string">&quot;组织id&quot;</span>, race <span class="keyword">AS</span> <span class="string">&#x27;种族&#x27;</span>,<span class="keyword">COUNT</span>(*) <span class="keyword">AS</span> <span class="string">&quot;人数&quot;</span> <span class="keyword">FROM</span> avengers <span class="keyword">GROUP</span> <span class="keyword">BY</span> did, race <span class="keyword">HAVING</span> did = <span class="number">1</span>;</span><br><span class="line">+<span class="comment">----------+--------+--------+</span></span><br><span class="line">| 组织id   | 种族   | 人数   |</span><br><span class="line">+<span class="comment">----------+--------+--------+</span></span><br><span class="line">|        1 | 人类   |      2 |</span><br><span class="line">|        1 | 其他   |      1 |</span><br><span class="line">|        1 | 神族   |      1 |</span><br><span class="line">+<span class="comment">----------+--------+--------+</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>ORDER BY</code></p>
+<p>​    用于将数据进行排序，格式为：<code>ORDER BY 字段名 升序/降序</code>,<code>DESC</code>为降序，<code>ASC</code>为升序，默认为升序。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#查询所有成员信息 按照fighting_capacity 进行升序排序</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> avengers <span class="keyword">ORDER</span> <span class="keyword">BY</span> fighting_capacity;</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+------+</span></span><br><span class="line">| id   | name         | race   | fighting_capacity | did  |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+------+</span></span><br><span class="line">|    6 | 星爵         | 神族   |              6000 |    2 |</span><br><span class="line">|    7 | 美国队长     | 人类   |             10000 |    1 |</span><br><span class="line">|    2 | 幻视         | 其他   |             11000 |    2 |</span><br><span class="line">|    4 | 绿巨人       | 其他   |             13000 |    1 |</span><br><span class="line">|    1 | 钢铁侠       | 人类   |             15000 |    1 |</span><br><span class="line">|    5 | 猩红女巫     | 人类   |             20000 |    2 |</span><br><span class="line">|    3 | 觉醒雷神     | 神族   |             23000 |    1 |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#ORDER BY后可以跟多个排序字段，并可分别指定升降序，后面的排序是在前面排序的结果上进行排序的。</span></span><br><span class="line"><span class="comment">#例如查询所有成员信息 按照did进行升序排列的情况下按照fighting_capacity进行降序排列</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> avengers <span class="keyword">ORDER</span> <span class="keyword">BY</span> did <span class="keyword">ASC</span>,fighting_capacity <span class="keyword">DESC</span>;</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+------+</span></span><br><span class="line">| id   | name         | race   | fighting_capacity | did  |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+------+</span></span><br><span class="line">|    3 | 觉醒雷神     | 神族   |             23000 |    1 |</span><br><span class="line">|    1 | 钢铁侠       | 人类   |             15000 |    1 |</span><br><span class="line">|    4 | 绿巨人       | 其他   |             13000 |    1 |</span><br><span class="line">|    7 | 美国队长     | 人类   |             10000 |    1 |</span><br><span class="line">|    5 | 猩红女巫     | 人类   |             20000 |    2 |</span><br><span class="line">|    2 | 幻视         | 其他   |             11000 |    2 |</span><br><span class="line">|    6 | 星爵         | 神族   |              6000 |    2 |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+------+</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>LIMIT</code></p>
+<p>用于指定取数据的行数以及数量，格式：<code>LIMIT 开始取数据的行数，取数据的数量</code></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#在按照fighting_capacity排序的情况下取前三条记录</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> avengers <span class="keyword">ORDER</span> <span class="keyword">BY</span> fighting_capacity <span class="keyword">LIMIT</span> <span class="number">0</span>,<span class="number">3</span>;</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+------+</span></span><br><span class="line">| id   | name         | race   | fighting_capacity | did  |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+------+</span></span><br><span class="line">|    6 | 星爵         | 神族   |              6000 |    2 |</span><br><span class="line">|    7 | 美国队长     | 人类   |             10000 |    1 |</span><br><span class="line">|    2 | 幻视         | 其他   |             11000 |    2 |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+------+</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="2-关联查询"><a href="#2-关联查询" class="headerlink" title="2.关联查询"></a>2.关联查询</h3><p>​    关联查询是指在查询两个或两个表以上的关联数据，用于规定筛选范围，所以语句在<code>FROM</code>从句后。</p>
+<p>以两个表为例一共有以下七种情况：</p>
+<p><img src="/image/MySQL%E5%9F%BA%E7%A1%80%E4%B9%8BSQL%E8%AF%AD%E6%B3%95(DML)/%E5%85%B3%E8%81%94%E6%9F%A5%E8%AF%A2%E7%A4%BA%E6%84%8F%E5%9B%BE.jpg" alt="关联查询示意图"></p>
+<p>​    按照表的连接关系进行讲解，为了方便演示定义一个组织表department 。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#为了方便演示，向添加avengers表中添加两条数据，并创建department表。</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> avengers <span class="keyword">VALUES</span>(<span class="number">8</span>,<span class="string">&#x27;黑豹&#x27;</span>,<span class="string">&#x27;其他&#x27;</span>,<span class="number">13000</span>,<span class="literal">NULL</span>),(<span class="number">9</span>,<span class="string">&#x27;灭霸&#x27;</span>,<span class="string">&#x27;其他&#x27;</span>,<span class="number">30000</span>,<span class="number">3</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> department(</span><br><span class="line">    did <span class="built_in">INT</span>, <span class="comment">#组织编号</span></span><br><span class="line">    dname <span class="built_in">VARCHAR</span>(<span class="number">10</span>), <span class="comment">#组织名</span></span><br><span class="line">    ddescribe <span class="built_in">VARCHAR</span>(<span class="number">50</span>) <span class="comment">#组织描述</span></span><br><span class="line">);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> department <span class="keyword">VALUES</span></span><br><span class="line">(<span class="number">1</span>,<span class="string">&#x27;初代复仇者&#x27;</span>,<span class="string">&#x27;包含复仇者联盟的最初六人&#x27;</span>),</span><br><span class="line">(<span class="number">2</span>,<span class="string">&#x27;新复仇者&#x27;</span>,<span class="string">&#x27;除复联最初六人外的成员&#x27;</span>),</span><br><span class="line">(<span class="number">5</span>,<span class="string">&#x27;测试did为5&#x27;</span>,<span class="string">&#x27;没有成员属于这个组织&#x27;</span>),</span><br><span class="line">(<span class="literal">NULL</span>,<span class="string">&#x27;测试did为NULL&#x27;</span>,<span class="string">&#x27;did为NULL&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>INNER JOIN</code></p>
+<p>内连接，可以实现查询A∩B的效果，格式如下：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#若涉及到重名的字段列表则需要全写为 表名.字段名</span></span><br><span class="line"><span class="keyword">SELECT</span> 字段列表</span><br><span class="line"><span class="keyword">FROM</span> A表 <span class="keyword">INNER</span> <span class="keyword">JOIN</span> B表</span><br><span class="line"><span class="keyword">ON</span> 关联条件</span><br><span class="line"><span class="keyword">WHERE</span> 等其他子句;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#查询英雄以did作为关联条件进行内连接查询</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span>,<span class="keyword">name</span>,avengers.did,dname <span class="keyword">FROM</span> avengers <span class="keyword">INNER</span> <span class="keyword">JOIN</span> department <span class="keyword">ON</span> avengers.did = department.did;</span><br><span class="line">+<span class="comment">------+--------------+------+-----------------+</span></span><br><span class="line">| id   | name         | did  | dname           |</span><br><span class="line">+<span class="comment">------+--------------+------+-----------------+</span></span><br><span class="line">|    1 | 钢铁侠       |    1 | 初代复仇者      |</span><br><span class="line">|    2 | 幻视         |    2 | 新复仇者        |</span><br><span class="line">|    3 | 觉醒雷神     |    1 | 初代复仇者      |</span><br><span class="line">|    4 | 绿巨人       |    1 | 初代复仇者      |</span><br><span class="line">|    5 | 猩红女巫     |    2 | 新复仇者        |</span><br><span class="line">|    6 | 星爵         |    2 | 新复仇者        |</span><br><span class="line">|    7 | 美国队长     |    1 | 初代复仇者      |</span><br><span class="line">+<span class="comment">------+--------------+------+-----------------+</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>LEFT JOIN</code></p>
+<p>左外连接，可以实现<code>A</code>以及<code>A - A∩B</code>的效果，格式如下:</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#实现查询结果是A</span></span><br><span class="line"><span class="keyword">SELECT</span> 字段列表</span><br><span class="line"><span class="keyword">FROM</span> A表 <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> B表</span><br><span class="line"><span class="keyword">ON</span> 关联条件</span><br><span class="line"><span class="keyword">WHERE</span> 等其他子句;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#实现A -  A∩B</span></span><br><span class="line"><span class="keyword">SELECT</span> 字段列表</span><br><span class="line"><span class="keyword">FROM</span> A表 <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> B表</span><br><span class="line"><span class="keyword">ON</span> 关联条件</span><br><span class="line"><span class="keyword">WHERE</span> 关联字段 <span class="keyword">IS</span> <span class="literal">NULL</span> <span class="keyword">AND</span> 等其他子句;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#A示例，与内连接最大的不同是以A中的did为主进行匹配，可以查询出did不匹配部分的数据</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span>,<span class="keyword">name</span>,avengers.did,dname <span class="keyword">FROM</span> avengers <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> department <span class="keyword">ON</span> avengers.did = department.did;</span><br><span class="line">+<span class="comment">------+--------------+------+-----------------+</span></span><br><span class="line">| id   | name         | did  | dname           |</span><br><span class="line">+<span class="comment">------+--------------+------+-----------------+</span></span><br><span class="line">|    1 | 钢铁侠       |    1 | 初代复仇者      |</span><br><span class="line">|    3 | 觉醒雷神     |    1 | 初代复仇者      |</span><br><span class="line">|    4 | 绿巨人       |    1 | 初代复仇者      |</span><br><span class="line">|    7 | 美国队长     |    1 | 初代复仇者      |</span><br><span class="line">|    2 | 幻视         |    2 | 新复仇者        |</span><br><span class="line">|    5 | 猩红女巫     |    2 | 新复仇者        |</span><br><span class="line">|    6 | 星爵         |    2 | 新复仇者        |</span><br><span class="line">|    8 | 黑豹         | NULL | NULL            |</span><br><span class="line">|    9 | 灭霸         |    3 | NULL            |</span><br><span class="line">+<span class="comment">------+--------------+------+-----------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#A - A∩B 示例，将两者上面查询的两种结果相减则</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span>,<span class="keyword">name</span>,avengers.did,dname <span class="keyword">FROM</span> avengers <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> department <span class="keyword">ON</span> avengers.did = department.did</span><br><span class="line"><span class="keyword">WHERE</span> department.did <span class="keyword">IS</span> <span class="literal">NULL</span>;</span><br><span class="line">+<span class="comment">------+--------+------+-------+</span></span><br><span class="line">| id   | name   | did  | dname |</span><br><span class="line">+<span class="comment">------+--------+------+-------+</span></span><br><span class="line">|    8 | 黑豹   | NULL | NULL  |</span><br><span class="line">|    9 | 灭霸   |    3 | NULL  |</span><br><span class="line">+<span class="comment">------+--------+------+-------+</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>RIGHT JOIN</code></p>
+<p>左外连接，可以实现<code>B</code>以及<code>B - A∩B</code>的效果，格式如下:</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#实现查询结果是B</span></span><br><span class="line"><span class="keyword">SELECT</span> 字段列表</span><br><span class="line"><span class="keyword">FROM</span> A表 <span class="keyword">RIGHT</span> <span class="keyword">JOIN</span> B表</span><br><span class="line"><span class="keyword">ON</span> 关联条件</span><br><span class="line"><span class="keyword">WHERE</span> 等其他子句;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#实现B -  A∩B</span></span><br><span class="line"><span class="keyword">SELECT</span> 字段列表</span><br><span class="line"><span class="keyword">FROM</span> A表 <span class="keyword">RIGHT</span> <span class="keyword">JOIN</span> B表</span><br><span class="line"><span class="keyword">ON</span> 关联条件</span><br><span class="line"><span class="keyword">WHERE</span> 关联字段 <span class="keyword">IS</span> <span class="literal">NULL</span> <span class="keyword">AND</span> 等其他子句;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">  <span class="comment">#查询B，为了更好显示效果将左外连接的语句中avengers.did修改为department.did</span></span><br><span class="line">  <span class="keyword">SELECT</span> <span class="keyword">id</span>,<span class="keyword">name</span>,department.did,dname <span class="keyword">FROM</span> avengers <span class="keyword">RIGHT</span> <span class="keyword">JOIN</span> department <span class="keyword">ON</span> avengers.did = department.did;</span><br><span class="line">+<span class="comment">------+--------------+------+------------------+</span></span><br><span class="line">  | id   | name         | did  | dname            |</span><br><span class="line">  +<span class="comment">------+--------------+------+------------------+</span></span><br><span class="line">  |    1 | 钢铁侠       |    1 | 初代复仇者       |</span><br><span class="line">  |    2 | 幻视         |    2 | 新复仇者         |</span><br><span class="line">  |    3 | 觉醒雷神     |    1 | 初代复仇者       |</span><br><span class="line">  |    4 | 绿巨人       |    1 | 初代复仇者       |</span><br><span class="line">  |    5 | 猩红女巫     |    2 | 新复仇者         |</span><br><span class="line">  |    6 | 星爵         |    2 | 新复仇者         |</span><br><span class="line">  |    7 | 美国队长     |    1 | 初代复仇者       |</span><br><span class="line">  | NULL | NULL         |    5 | 测试did为5       |</span><br><span class="line">  | NULL | NULL         | NULL | 测试did为NULL    |</span><br><span class="line">  +<span class="comment">------+--------------+------+------------------+</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment">#实现B -  A∩B</span></span><br><span class="line">  <span class="keyword">SELECT</span> <span class="keyword">id</span>,<span class="keyword">name</span>,department.did,dname <span class="keyword">FROM</span> avengers <span class="keyword">RIGHT</span> <span class="keyword">JOIN</span> department <span class="keyword">ON</span> avengers.did = department.did</span><br><span class="line">   <span class="keyword">WHERE</span> avengers.did <span class="keyword">IS</span> <span class="literal">NULL</span>;</span><br><span class="line">   +<span class="comment">------+------+------+------------------+</span></span><br><span class="line">  | id   | name | did  | dname            |</span><br><span class="line">  +<span class="comment">------+------+------+------------------+</span></span><br><span class="line">  | NULL | NULL |    5 | 测试did为5       |</span><br><span class="line">  | NULL | NULL | NULL | 测试did为NULL    |</span><br><span class="line">  +<span class="comment">------+------+------+------------------+</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>FULL OUTER JOIN</code></p>
+<p>全外连接，可以实现<code>A∪B</code>以及<code>A∪B - A∩B</code>，MySQL暂不支持，但能通过<code>UNION</code>实现一样的效果，<code>UNION</code>的作用为合并两个查询结果。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#实现A∪B，使用 A的结果 UNION B的结果</span></span><br><span class="line"><span class="keyword">SELECT</span> 字段列表</span><br><span class="line"><span class="keyword">FROM</span> A表 <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> B表</span><br><span class="line"><span class="keyword">ON</span> 关联条件</span><br><span class="line"><span class="keyword">WHERE</span> 等其他子句;</span><br><span class="line"></span><br><span class="line">UNION</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> 字段列表</span><br><span class="line"><span class="keyword">FROM</span> A表 <span class="keyword">RIGHT</span> <span class="keyword">JOIN</span> B表</span><br><span class="line"><span class="keyword">ON</span> 关联条件</span><br><span class="line"><span class="keyword">WHERE</span> 等其他子句;</span><br><span class="line"></span><br><span class="line"><span class="comment">#实现A∪B -  A∩B，使用 (A -  A∩B)的结果  UNION （B - A∩B）的结果</span></span><br><span class="line"><span class="keyword">SELECT</span> 字段列表</span><br><span class="line"><span class="keyword">FROM</span> A表 <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> B表</span><br><span class="line"><span class="keyword">ON</span> 关联条件</span><br><span class="line"><span class="keyword">WHERE</span> 关联字段 <span class="keyword">IS</span> <span class="literal">NULL</span> <span class="keyword">AND</span> 等其他子句;</span><br><span class="line"></span><br><span class="line"> UNION </span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> 字段列表</span><br><span class="line"><span class="keyword">FROM</span> A表 <span class="keyword">RIGHT</span> <span class="keyword">JOIN</span> B表</span><br><span class="line"><span class="keyword">ON</span> 关联条件</span><br><span class="line"><span class="keyword">WHERE</span> 关联字段 <span class="keyword">IS</span> <span class="literal">NULL</span> <span class="keyword">AND</span> 等其他子句;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#A∪B,查询所以</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span>,<span class="keyword">name</span>,avengers.did,dname <span class="keyword">FROM</span> avengers <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> department <span class="keyword">ON</span> avengers.did = department.did</span><br><span class="line"></span><br><span class="line"> <span class="keyword">UNION</span> </span><br><span class="line"> </span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span>,<span class="keyword">name</span>,department.did,dname <span class="keyword">FROM</span> avengers <span class="keyword">RIGHT</span> <span class="keyword">JOIN</span> department <span class="keyword">ON</span> avengers.did = department.did;</span><br><span class="line"></span><br><span class="line">+<span class="comment">------+--------------+------+------------------+</span></span><br><span class="line">| id   | name         | did  | dname            |</span><br><span class="line">+<span class="comment">------+--------------+------+------------------+</span></span><br><span class="line">|    1 | 钢铁侠       |    1 | 初代复仇者       |</span><br><span class="line">|    3 | 觉醒雷神     |    1 | 初代复仇者       |</span><br><span class="line">|    4 | 绿巨人       |    1 | 初代复仇者       |</span><br><span class="line">|    7 | 美国队长     |    1 | 初代复仇者       |</span><br><span class="line">|    2 | 幻视         |    2 | 新复仇者         |</span><br><span class="line">|    5 | 猩红女巫     |    2 | 新复仇者         |</span><br><span class="line">|    6 | 星爵         |    2 | 新复仇者         |</span><br><span class="line">|    8 | 黑豹         | NULL | NULL             |</span><br><span class="line">|    9 | 灭霸         |    3 | NULL             |</span><br><span class="line">| NULL | NULL         |    5 | 测试did为5       |</span><br><span class="line">| NULL | NULL         | NULL | 测试did为NULL    |</span><br><span class="line">+<span class="comment">------+--------------+------+------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#A∪B -  A∩B</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span>,<span class="keyword">name</span>,avengers.did,dname <span class="keyword">FROM</span> avengers <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> department <span class="keyword">ON</span> avengers.did = department.did</span><br><span class="line"><span class="keyword">WHERE</span> department.did <span class="keyword">IS</span> <span class="literal">NULL</span></span><br><span class="line"></span><br><span class="line"> <span class="keyword">UNION</span> </span><br><span class="line"> </span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span>,<span class="keyword">name</span>,department.did,dname <span class="keyword">FROM</span> avengers <span class="keyword">RIGHT</span> <span class="keyword">JOIN</span> department <span class="keyword">ON</span> avengers.did = department.did</span><br><span class="line"> <span class="keyword">WHERE</span> avengers.did <span class="keyword">IS</span> <span class="literal">NULL</span>;</span><br><span class="line"> +<span class="comment">------+--------+------+------------------+</span></span><br><span class="line">| id   | name   | did  | dname            |</span><br><span class="line">+<span class="comment">------+--------+------+------------------+</span></span><br><span class="line">|    8 | 黑豹   | NULL | NULL             |</span><br><span class="line">|    9 | 灭霸   |    3 | NULL             |</span><br><span class="line">| NULL | NULL   |    5 | 测试did为5       |</span><br><span class="line">| NULL | NULL   | NULL | 测试did为NULL    |</span><br><span class="line">+<span class="comment">------+--------+------+------------------+</span></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+</li>
+<li><p>补充</p>
+<ul>
+<li>关联查询时可以用<code>表名 AS 别名</code>的方式用别名代替表名。</li>
+<li>关联的两个表可以为同一个表，这样操作时一定要使用别名区分。</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-子查询"><a href="#3-子查询" class="headerlink" title="3.子查询"></a>3.子查询</h3><p>​    嵌套在另一个查询中的查询，根据位置不同，分为：</p>
+<ul>
+<li><p><code>WHERE</code>型</p>
+<p>①子查询是单值结果，那么可以对其使用（=，&gt;等比较运算符）</p>
+<p>②子查询是多值结果，那么可对其使用（【not】in(子查询结果)，或 &gt;all(子查询结果)，或&gt;=all(子查询结果)，&lt;all(子查询结果)，&lt;=all（子查询结果)，或 &gt;any(子查询结果)，或&gt;=any(子查询结果)，&lt;any(子查询结果)，&lt;=any（子查询结果)）    </p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#例如查询avengers表中fighting_capacity最高的成员时可以使用子查询</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> avengers <span class="keyword">WHERE</span> fighting_capacity = (<span class="keyword">SELECT</span> <span class="keyword">MAX</span>(fighting_capacity) <span class="keyword">FROM</span> avengers);</span><br><span class="line">+<span class="comment">------+--------+--------+-------------------+------+</span></span><br><span class="line">| id   | name   | race   | fighting_capacity | did  |</span><br><span class="line">+<span class="comment">------+--------+--------+-------------------+------+</span></span><br><span class="line">|    9 | 灭霸   | 其他   |             30000 |    3 |</span><br><span class="line">+<span class="comment">------+--------+--------+-------------------+------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#查询fighting_capacity大于所有did为2成员的成员</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> avengers <span class="keyword">WHERE</span> fighting_capacity &gt; <span class="keyword">ALL</span>(<span class="keyword">SELECT</span> fighting_capacity <span class="keyword">FROM</span> avengers <span class="keyword">WHERE</span> did = <span class="number">2</span>);</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+------+</span></span><br><span class="line">| id   | name         | race   | fighting_capacity | did  |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+------+</span></span><br><span class="line">|    3 | 觉醒雷神     | 神族   |             23000 |    1 |</span><br><span class="line">|    9 | 灭霸         | 其他   |             30000 |    3 |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+------+</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#查询fighting_capacity小于所有did为1成员的成员</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> avengers <span class="keyword">WHERE</span> fighting_capacity &lt; <span class="keyword">ANY</span>(<span class="keyword">SELECT</span> fighting_capacity <span class="keyword">FROM</span> avengers <span class="keyword">WHERE</span> did = <span class="number">1</span>);</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+------+</span></span><br><span class="line">| id   | name         | race   | fighting_capacity | did  |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+------+</span></span><br><span class="line">|    1 | 钢铁侠       | 人类   |             15000 |    1 |</span><br><span class="line">|    2 | 幻视         | 其他   |             11000 |    2 |</span><br><span class="line">|    4 | 绿巨人       | 其他   |             13000 |    1 |</span><br><span class="line">|    5 | 猩红女巫     | 人类   |             20000 |    2 |</span><br><span class="line">|    6 | 星爵         | 神族   |              6000 |    2 |</span><br><span class="line">|    7 | 美国队长     | 人类   |             10000 |    1 |</span><br><span class="line">|    8 | 黑豹         | 其他   |             13000 | NULL |</span><br><span class="line">+<span class="comment">------+--------------+--------+-------------------+------+</span></span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<ul>
+<li><p><code>FROM</code>型</p>
+<p>将子查询当做一张临时的表使用，必须给子查询取别名</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#查询department表中所有组织成员的平均战斗力（fighting_capacity），注意：要将统计结果当做字段名使用</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> department.did , dname , AVG_fc <span class="keyword">AS</span> <span class="string">&#x27;平均战斗力&#x27;</span> </span><br><span class="line"><span class="keyword">FROM</span> department <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> (<span class="keyword">SELECT</span> did,<span class="keyword">AVG</span>(fighting_capacity) <span class="keyword">AS</span> AVG_fc <span class="keyword">FROM</span> avengers <span class="keyword">GROUP</span> <span class="keyword">BY</span> did) temp</span><br><span class="line"><span class="keyword">ON</span> department.did = temp.did ;</span><br><span class="line">+<span class="comment">------+------------------+-----------------+</span></span><br><span class="line">| did  | dname            | 平均战斗力      |</span><br><span class="line">+<span class="comment">------+------------------+-----------------+</span></span><br><span class="line">|    1 | 初代复仇者       |      15250.0000 |</span><br><span class="line">|    2 | 新复仇者         |      12333.3333 |</span><br><span class="line">|    5 | 测试did为5       |            NULL |</span><br><span class="line">| NULL | 测试did为NULL    |            NULL |</span><br><span class="line">+<span class="comment">------+------------------+-----------------+</span></span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<ul>
+<li><p><code>EXISTS</code>型</p>
+<p>用于验证是否匹配子查询的结果</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#查询拥有员工的组织</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> department</span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">EXISTS</span></span><br><span class="line">(<span class="keyword">SELECT</span> did <span class="keyword">FROM</span> avengers <span class="keyword">WHERE</span> avengers.did = department.did);  </span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<p><strong>注意：不管子查询在哪里，子查询必须使用()括起来</strong></p>
+]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>SQL</tag>
+        <tag>MySQL</tag>
+        <tag>MySQL基础</tag>
+        <tag>SQL语法</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Spring入门之IOC容器与bean</title>
     <url>/2020/09/21/Spring%E5%85%A5%E9%97%A8%E4%B9%8BIOC%E5%AE%B9%E5%99%A8%E4%B8%8Ebean/</url>
     <content><![CDATA[<h2 id="IoC容器"><a href="#IoC容器" class="headerlink" title="IoC容器"></a>IoC容器</h2><h3 id="1-IoC容器的概念"><a href="#1-IoC容器的概念" class="headerlink" title="1.IoC容器的概念"></a>1.IoC容器的概念</h3><p>​    Spring 容器是 Spring 框架的<strong>核心</strong>。容器将<strong>创建对象</strong>，把它们<strong>连接</strong>在一起，<strong>配置</strong>它们，并<strong>管理</strong>他们的<strong>整个生命周期</strong>从创建到销毁。</p>
@@ -3822,6 +3825,591 @@
       <tags>
         <tag>Spring</tag>
         <tag>Spring入门</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Web基础之jQuery</title>
+    <url>/2020/09/04/Web%E5%9F%BA%E7%A1%80%E4%B9%8BjQuery/</url>
+    <content><![CDATA[<h2 id="什么是jQuery"><a href="#什么是jQuery" class="headerlink" title="什么是jQuery"></a>什么是jQuery</h2><p>​    jQuery是一个JavaScript函数库，可以简化JavaScript的代码。并且jQuery已经接近了大多数浏览器的兼容问题。</p>
+<a id="more"></a>
+
+<h2 id="jQuery基本语法"><a href="#jQuery基本语法" class="headerlink" title="jQuery基本语法"></a>jQuery基本语法</h2><p>​    使用jQuery之前需要导入jQuery的js文件</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;../libs/jquery-1.7.2.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="1-核心方法"><a href="#1-核心方法" class="headerlink" title="1.核心方法"></a>1.核心方法</h3><p>​    jQuery的核心方法为<code>$()</code>，它能够根据传入的不同参数实现不同JavaScript的功能，代码比JavaScript更简洁。</p>
+<ul>
+<li><p><strong>传入参数为函数：</strong></p>
+<p>在页面加载完成时执行这个函数。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>Insert title here<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 导入jQuery文件 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;../libs/jquery-1.7.2.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span></span><br><span class="line"><span class="javascript">        <span class="comment">//使用jQuery</span></span></span><br><span class="line"><span class="javascript">        $(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;);</span></span><br><span class="line"><span class="javascript">        <span class="comment">//效果相当于但不完全相同</span></span></span><br><span class="line"><span class="javascript">        <span class="built_in">window</span>.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>传入参数为HTML字符串：</p>
+<p>根据这个字符串创建元素节点jQuery对象</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span></span><br><span class="line"><span class="javascript">        $(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">            $(<span class="string">&quot;    &lt;h1&gt;标题1&lt;/h1&gt;&quot;</span>).appendTo(<span class="string">&quot;body&quot;</span>);</span></span><br><span class="line">        &#125;)</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>传入参数为选择器字符串：</p>
+<p>根据选择器返回节点对象</p>
+</li>
+<li><p>将传入参数为DOM对象时：</p>
+<p>把DOM对象转换为jQuery对象</p>
+</li>
+</ul>
+<h3 id="2-jQuery对象"><a href="#2-jQuery对象" class="headerlink" title="2.jQuery对象"></a>2.jQuery对象</h3><p>​    通过jQuery的APi所创建出来的都为jQuery对象。jQuery对象的<strong>本质为DOM的数组加上一系列的功能函数。</strong>jQuery对象不能直接使用DOM对象的属性和方法，jQuery对象的命名一般以$符号开头。</p>
+<ul>
+<li><p><strong>DOM对象转换为jQuery对象</strong></p>
+<p>与上面提到的一致，将DOM对象作为参数放到jQuery核心函数中。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>Insert title here<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 导入jQuery文件 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;../libs/jquery-1.7.2.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span></span><br><span class="line"><span class="javascript">        $(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">            <span class="comment">//获取DOM对象</span></span></span><br><span class="line"><span class="javascript">            <span class="keyword">var</span> dom = <span class="built_in">document</span>.getElementById(<span class="string">&quot;test&quot;</span>);</span></span><br><span class="line"><span class="javascript">            <span class="comment">//转换为jQuery对象</span></span></span><br><span class="line"><span class="javascript">            <span class="keyword">var</span> $dom = $(dom);</span></span><br><span class="line">        &#125;)</span><br><span class="line">    <span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span> <span class="attr">id</span>=<span class="string">&quot;test&quot;</span>&gt;</span>jQuery与DOM对象的转换<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>jQuery对象转换为DOM对象</strong></p>
+<p>因为jQuery对象就是DOM的数组，使用直接通过下标获取即可。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>Insert title here<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 导入jQuery文件 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;../libs/jquery-1.7.2.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span></span><br><span class="line"><span class="javascript">        $(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">            <span class="comment">//获取jQuery对象</span></span></span><br><span class="line"><span class="javascript">            <span class="keyword">var</span> $dom = $(<span class="string">&quot;#test&quot;</span>);</span></span><br><span class="line"><span class="javascript">            <span class="comment">//转换为DOM对象</span></span></span><br><span class="line"><span class="javascript">            <span class="keyword">var</span> dom = $dom[<span class="number">0</span>];        </span></span><br><span class="line">        &#125;)</span><br><span class="line">    <span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span> <span class="attr">id</span>=<span class="string">&quot;test&quot;</span>&gt;</span>jQuery与DOM对象的转换<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="3-加载完成的区别"><a href="#3-加载完成的区别" class="headerlink" title="3.加载完成的区别"></a>3.加载完成的区别</h3><p>​    上面提到<code>$(function()&#123;&#125;)</code>与<code>window.onload = function()&#123;&#125;</code>的效果类似，都是页面加载完成后执行，但其实还是有所区别。</p>
+<ul>
+<li><p><strong>执行时间区别</strong></p>
+<p><code>$(function()&#123;&#125;)</code>是在浏览器内核解析完页面标签并创建好DOM对象后执行。</p>
+<p><code>window.onload = function()&#123;&#125;</code>，则还需要等待浏览器加载需要显示的内容才执行。</p>
+<p>所以是<code>$(function()&#123;&#125;)</code>先执行。</p>
+</li>
+<li><p>执行次数区别</p>
+<p>每新写一个<code>window.onload = function()&#123;&#125;</code>就会覆盖上一个，所以只会执行一次。</p>
+<p>而<code>$(function()&#123;&#125;)</code>可以依次多次执行。</p>
+</li>
+</ul>
+<h2 id="jQuery选择器"><a href="#jQuery选择器" class="headerlink" title="jQuery选择器"></a>jQuery选择器</h2><p>​    选择器用于获取目标对象，详细的选择器以及使用方法参考jQuery的<a href="https://jquery.cuishifeng.cn/index.html">API文档</a>。</p>
+<h3 id="1-基本选择器"><a href="#1-基本选择器" class="headerlink" title="1.基本选择器"></a>1.基本选择器</h3><p>​    最常用的选择器</p>
+<table>
+<thead>
+<tr>
+<th>选择器</th>
+<th>作用</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>#id</td>
+<td>根据元素id获取对象</td>
+<td>$(“#id”)</td>
+</tr>
+<tr>
+<td>element</td>
+<td>根据标签名获取对象的集合</td>
+<td>$(“div”)</td>
+</tr>
+<tr>
+<td>*</td>
+<td>获取所以元素对象的集合</td>
+<td>$(“*”)</td>
+</tr>
+<tr>
+<td>selector1,selector2,selectorN</td>
+<td>获取多个选择器合并后的结果</td>
+<td>$(“div,span,p.myClass”)</td>
+</tr>
+</tbody></table>
+<h3 id="2-层级选择器"><a href="#2-层级选择器" class="headerlink" title="2.层级选择器"></a>2.层级选择器</h3><p>​    用于处理父子类元素的关系</p>
+<table>
+<thead>
+<tr>
+<th>选择器</th>
+<th>作用</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ancestor descendant</td>
+<td>匹配ancestor元素内的所有descendant元素</td>
+<td>$(“form input”)</td>
+</tr>
+<tr>
+<td>parent &gt; child</td>
+<td>匹配parent元素中的child子元素</td>
+<td>$(“form &gt; input”)</td>
+</tr>
+<tr>
+<td>prev + next</td>
+<td>匹配所有紧接在 prev 元素后的 next 元素</td>
+<td>$(“label + input”)</td>
+</tr>
+<tr>
+<td>prev ~ siblings</td>
+<td>匹配 prev 元素之后的所有 siblings 元素</td>
+<td>$(“form ~ input”)</td>
+</tr>
+</tbody></table>
+<h3 id="3-基本过滤器"><a href="#3-基本过滤器" class="headerlink" title="3.基本过滤器"></a>3.基本过滤器</h3><p>​    添加筛选标签的条件</p>
+<table>
+<thead>
+<tr>
+<th>过滤器</th>
+<th>作用</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>:first</td>
+<td>获取匹配的第一个元素</td>
+<td>$(‘li:first’);</td>
+</tr>
+<tr>
+<td>:last</td>
+<td>获取匹配的最后个元素</td>
+<td>$(‘li:last’)</td>
+</tr>
+<tr>
+<td>:not(selector)</td>
+<td>去除所有与给定选择器匹配的元素</td>
+<td>$(“input:not(:checked)”)</td>
+</tr>
+<tr>
+<td>:even</td>
+<td>匹配所有索引值为偶数的元素，从 0 开始计数</td>
+<td>$(“tr:even”)</td>
+</tr>
+<tr>
+<td>:odd</td>
+<td>匹配所有索引值为奇数的元素，从 0 开始计数</td>
+<td>$(“tr:odd”)</td>
+</tr>
+<tr>
+<td>:eq(index)</td>
+<td>匹配一个给定索引值的元素</td>
+<td>$(“tr:eq(1)”)</td>
+</tr>
+<tr>
+<td>:gt(index)</td>
+<td>匹配所有大于给定索引值的元素</td>
+<td>$(“tr:gt(0)”)</td>
+</tr>
+<tr>
+<td>:lt(index)</td>
+<td>匹配所有小于给定索引值的元素</td>
+<td>$(“tr:lt(2)”)</td>
+</tr>
+<tr>
+<td>:header</td>
+<td>匹配如 h1, h2, h3之类的标题元素</td>
+<td>$(“:header”)</td>
+</tr>
+<tr>
+<td>:animated</td>
+<td>匹配所有正在执行动画效果的元素</td>
+<td>$(“:animated”)</td>
+</tr>
+</tbody></table>
+<h3 id="4-内容过滤器"><a href="#4-内容过滤器" class="headerlink" title="4.内容过滤器"></a>4.内容过滤器</h3><p>​    添加筛选内容的条件</p>
+<table>
+<thead>
+<tr>
+<th>过滤器</th>
+<th>作用</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>:contains(text)</td>
+<td>匹配包含给定文本的元素</td>
+<td>$(“div:contains(‘John’)”)</td>
+</tr>
+<tr>
+<td>:empty</td>
+<td>匹配所有不包含子元素或者文本的空元素</td>
+<td>(“td:empty”)</td>
+</tr>
+<tr>
+<td>:parent</td>
+<td>匹配含有子元素或者文本的元素</td>
+<td>$(“td:parent”)</td>
+</tr>
+<tr>
+<td>:has(selector)</td>
+<td>匹配含有selector元素的元素</td>
+<td>$(“div:has(p)”)</td>
+</tr>
+</tbody></table>
+<h3 id="5-属性过滤器"><a href="#5-属性过滤器" class="headerlink" title="5.属性过滤器"></a>5.属性过滤器</h3><p>​    添加筛选属性的条件</p>
+<table>
+<thead>
+<tr>
+<th>过滤器</th>
+<th>作用</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>[attribute]</td>
+<td>匹配包含给定属性的元素。</td>
+<td>$(“div[id]”)</td>
+</tr>
+<tr>
+<td>[attribute=value]</td>
+<td>匹配给定的属性是某个特定值的元素</td>
+<td>$(“input[name=’newsletter’]”)</td>
+</tr>
+<tr>
+<td>[attribute!=value]</td>
+<td>匹配所有不含有指定的属性，或者属性不等于特定值的元素。</td>
+<td>$(“input[name!=’newsletter’]”)</td>
+</tr>
+<tr>
+<td>[attribute^=value]</td>
+<td>匹配给定的属性是以某些值开始的元素</td>
+<td>$(“input[name^=’news’]”)</td>
+</tr>
+<tr>
+<td>[attribute$=value]</td>
+<td>匹配给定的属性是以某些值结尾的元素</td>
+<td>$(“input[name$=’letter’]”)</td>
+</tr>
+<tr>
+<td>[attribute*=value]</td>
+<td>匹配给定的属性是以包含某些值的元素</td>
+<td>$(“input[name*=’man’]”)</td>
+</tr>
+<tr>
+<td>[selector1][selector2][selectorN]</td>
+<td>复合属性选择器，需要同时满足多个条件时使用。</td>
+<td>$(“input[id][name$=’man’]”)</td>
+</tr>
+</tbody></table>
+<h3 id="6-表单过滤器"><a href="#6-表单过滤器" class="headerlink" title="6.表单过滤器"></a>6.表单过滤器</h3><p>​    作用与表单元素的过滤器</p>
+<table>
+<thead>
+<tr>
+<th>过滤器</th>
+<th>作用</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>:input</td>
+<td>匹配所有 input, textarea, select 和 button 元素</td>
+<td>$(“:input”)</td>
+</tr>
+<tr>
+<td>:input的type属性</td>
+<td>匹配对应type属性值的元素，例如密码框(:password)</td>
+<td>$(“:password”)</td>
+</tr>
+<tr>
+<td>:enabled</td>
+<td>匹配所有可用元素</td>
+<td>$(“input:enabled”)</td>
+</tr>
+<tr>
+<td>:disabled</td>
+<td>匹配所有不可用元素</td>
+<td>$(“input:disabled”)</td>
+</tr>
+<tr>
+<td>:checked</td>
+<td>匹配所有选中的被选中元素(复选框、单选框等，select中的option)</td>
+<td>$(“input:checked”)</td>
+</tr>
+<tr>
+<td>:selected</td>
+<td>匹配所有选中的option元素</td>
+<td>$(“input:selected”)</td>
+</tr>
+</tbody></table>
+<h2 id="jQuery筛选"><a href="#jQuery筛选" class="headerlink" title="jQuery筛选"></a>jQuery筛选</h2><h3 id="1-过滤"><a href="#1-过滤" class="headerlink" title="1.过滤"></a>1.过滤</h3><p>​    用于筛选内容，使用方式类似于调用方法，一般用于在筛选的结果中再次过滤。使用方法为jQuery.方法名</p>
+<table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>eq(index|-index)</td>
+<td>获取当前链式操作中第N个jQuery对象，返回jQuery对象，当参数大于等于0时为正向选取，比如0代表第一个，1代表第二个。当参数为负数时为反向选取，比如-1为倒数第一个。</td>
+</tr>
+<tr>
+<td>first()</td>
+<td>获取第一个元素</td>
+</tr>
+<tr>
+<td>last()</td>
+<td>获取最后个元素</td>
+</tr>
+<tr>
+<td>hasClass(class)</td>
+<td>检查当前的元素是否含有某个特定的类，如果有，则返回true。</td>
+</tr>
+<tr>
+<td>filter(expr|obj|ele|fn)</td>
+<td>筛选出与指定表达式匹配的元素集合。</td>
+</tr>
+<tr>
+<td>is(expr|obj|ele|fn)</td>
+<td>根据选择器、DOM元素或 jQuery 对象来检测匹配元素集合，如果其中至少有一个元素符合这个给定的表达式就返回true。</td>
+</tr>
+<tr>
+<td>has(expr|ele)</td>
+<td>保留包含特定后代的元素，去掉那些不含有指定后代的元素。</td>
+</tr>
+<tr>
+<td>not(expr|ele|fn)</td>
+<td>从匹配元素的集合中删除与指定表达式匹配的元素</td>
+</tr>
+</tbody></table>
+<h3 id="2-查找"><a href="#2-查找" class="headerlink" title="2.查找"></a>2.查找</h3><table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>children(<em>[expr]</em>)</td>
+<td>取得一个包含匹配的元素集合中每一个元素的所有子元素的元素集合。</td>
+</tr>
+<tr>
+<td>next(<em>[expr]</em>)</td>
+<td>取得一个包含匹配的元素集合中每一个元素紧邻的后面同辈元素的元素集合。</td>
+</tr>
+<tr>
+<td>nextAll(<em>[expr]</em>)</td>
+<td>查找当前元素之后所有的同辈元素。</td>
+</tr>
+<tr>
+<td>closest(expr|object|element)</td>
+<td>closest会首先检查当前元素是否匹配，如果匹配则直接返回元素本身。如果不匹配则向上查找父元素，一层一层往上，直到找到匹配选择器的元素。如果什么都没找到则返回一个空的jQuery对象。</td>
+</tr>
+<tr>
+<td>find(expr|obj|ele)</td>
+<td>搜索所有与指定表达式匹配的元素。这个函数是找出正在处理的元素的后代元素的好方法。</td>
+</tr>
+<tr>
+<td>nextUntil([exp|ele][,fil])</td>
+<td>查找当前元素之后所有的同辈元素，直到遇到匹配的那个元素为止。</td>
+</tr>
+<tr>
+<td>offsetParent()</td>
+<td>返回第一个匹配元素用于定位的父节点。</td>
+</tr>
+<tr>
+<td>parent(<em>[expr]</em>)</td>
+<td>取得一个包含着所有匹配元素的唯一父元素的元素集合。</td>
+</tr>
+<tr>
+<td>parents(<em>[expr]</em>)</td>
+<td>取得一个包含着所有匹配元素的祖先元素的元素集合（不包含根元素）。可以通过一个可选的表达式进行筛选。</td>
+</tr>
+<tr>
+<td>parentsUntil([expr|element][,filter])</td>
+<td>查找当前元素的所有的父辈元素，直到遇到匹配的那个元素为止。</td>
+</tr>
+<tr>
+<td>prev(<em>[expr]</em>)</td>
+<td>取得一个包含匹配的元素集合中每一个元素紧邻的前一个同辈元素的元素集合。</td>
+</tr>
+<tr>
+<td>prevAll(<em>[expr]</em>)</td>
+<td>查找当前元素之前所有的同辈元素。</td>
+</tr>
+<tr>
+<td>prevUntil([exp|ele][,fil])</td>
+<td>查找当前元素之前所有的同辈元素，直到遇到匹配的那个元素为止。</td>
+</tr>
+<tr>
+<td>siblings(<em>[expr]</em>)</td>
+<td>取得一个包含匹配的元素集合中每一个元素的所有唯一同辈元素的元素集合。可以用可选的表达式进行筛选。</td>
+</tr>
+</tbody></table>
+<h2 id="jQuery属性"><a href="#jQuery属性" class="headerlink" title="jQuery属性"></a>jQuery属性</h2><h3 id="1-操作文本"><a href="#1-操作文本" class="headerlink" title="1.操作文本"></a>1.操作文本</h3><ul>
+<li><p><strong>html()</strong></p>
+<p>类似于DOM对象的innerHTML属性</p>
+<p>当无参时，为获取调用对象的标签内的值。</p>
+<p>当有参时，为设置改标签的内容为参数值。</p>
+</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>Insert title here<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 导入jQuery文件 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;../libs/jquery-1.7.2.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span></span><br><span class="line"><span class="javascript">        $(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="handlebars"><span class="xml">            //获取第一个div标签内的内容    ,结果为<span class="tag">&lt;<span class="name">span</span>&gt;</span>span1<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span></span></span><br><span class="line"><span class="javascript">            alert($(<span class="string">&quot;div&quot;</span>).html());</span></span><br><span class="line"><span class="javascript">            <span class="comment">//修改所有div标签的值</span></span></span><br><span class="line"><span class="javascript">            $(<span class="string">&quot;div&quot;</span>).html(<span class="string">&quot;&lt;span&gt;span3&lt;/span&gt;&quot;</span>);</span></span><br><span class="line">        &#125;)</span><br><span class="line">    <span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span> <span class="tag">&lt;<span class="name">span</span>&gt;</span>span1<span class="tag">&lt;/<span class="name">span</span>&gt;</span> <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span> <span class="tag">&lt;<span class="name">span</span>&gt;</span>span2<span class="tag">&lt;/<span class="name">span</span>&gt;</span> <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>text()</strong></p>
+<p>类似于DOM对象的innerText属性，无参为获取有参为设置。</p>
+</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>Insert title here<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 导入jQuery文件 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;../libs/jquery-1.7.2.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span></span><br><span class="line"><span class="javascript">        $(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">            <span class="comment">//获取div标签内的文本内容    ,结果为 span1 span2</span></span></span><br><span class="line"><span class="javascript">            alert($(<span class="string">&quot;div&quot;</span>).text());</span></span><br><span class="line"><span class="handlebars"><span class="xml">            //设置标签内的内容为参数的文本形式。结果：<span class="tag">&lt;<span class="name">div</span>&gt;</span>aaa<span class="tag">&lt;/<span class="name">div</span>&gt;</span><span class="tag">&lt;<span class="name">div</span>&gt;</span>aaa<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span></span><br><span class="line"><span class="javascript">            $(<span class="string">&quot;div&quot;</span>).text(<span class="string">&quot;aaa&quot;</span>);</span></span><br><span class="line">        &#125;)</span><br><span class="line">    <span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span> <span class="tag">&lt;<span class="name">span</span>&gt;</span>span1<span class="tag">&lt;/<span class="name">span</span>&gt;</span> <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span> <span class="tag">&lt;<span class="name">span</span>&gt;</span>span2<span class="tag">&lt;/<span class="name">span</span>&gt;</span> <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>val()</strong></p>
+<p>用于设置和获取表单项的value的属性值，与DOM对象的value属性类型，无参为获取有参为设置。</p>
+</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>Insert title here<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 导入jQuery文件 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;../libs/jquery-1.7.2.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span></span><br><span class="line"><span class="javascript">        $(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">            <span class="comment">//获取文本框的value值</span></span></span><br><span class="line"><span class="javascript">            alert($(<span class="string">&quot;#username&quot;</span>).val());</span></span><br><span class="line"><span class="javascript">            <span class="comment">//修改文本框的value值</span></span></span><br><span class="line"><span class="javascript">            $(<span class="string">&quot;#username&quot;</span>).val(<span class="string">&quot;修改文本框的值&quot;</span>);</span></span><br><span class="line">        &#125;)</span><br><span class="line">        </span><br><span class="line">    <span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span>  <span class="attr">id</span>=<span class="string">&quot;username&quot;</span> <span class="attr">value</span>=<span class="string">&quot;文本框默认值&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-操作属性"><a href="#2-操作属性" class="headerlink" title="2.操作属性"></a>2.操作属性</h3><ul>
+<li><p><strong>attr()</strong></p>
+<p>用于设置和获取属性的值，获取时参数为属性名，设置是参数为属性名和要设置的值。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>Insert title here<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 导入jQuery文件 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;../libs/jquery-1.7.2.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span></span><br><span class="line"><span class="javascript">        $(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">            <span class="comment">//获取name属性的值</span></span></span><br><span class="line"><span class="javascript">            alert($(<span class="string">&quot;#username&quot;</span>).attr(<span class="string">&quot;name&quot;</span>));</span></span><br><span class="line"><span class="javascript">            <span class="comment">//修改name属性的值</span></span></span><br><span class="line"><span class="javascript">            $(<span class="string">&quot;#username&quot;</span>).attr(<span class="string">&quot;name&quot;</span>,<span class="string">&quot;testname&quot;</span>);</span></span><br><span class="line">        &#125;)</span><br><span class="line">    <span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span>  <span class="attr">name</span>=<span class="string">&quot;username&quot;</span> <span class="attr">id</span>=<span class="string">&quot;username&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>但是attr方法在获取没有设置的属性时，会显示undefined。但对于比如checked这样具有默认值的属性时，这样显示就会有歧义，所以jQuery还提供了一个prop方法，解决了这个问题。</p>
+</li>
+<li><p><strong>prop()</strong></p>
+<p>相较于attr方法，prop方法对如checked、readOnly、selected、disabled等属性的显示进行了矫正外。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>Insert title here<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 导入jQuery文件 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;../libs/jquery-1.7.2.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span></span><br><span class="line"><span class="javascript">        $(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">            <span class="comment">//结果为undefined</span></span></span><br><span class="line"><span class="javascript">            alert($(<span class="string">&quot;#username&quot;</span>).attr(<span class="string">&quot;checked&quot;</span>));</span></span><br><span class="line"><span class="javascript">            <span class="comment">//结果为false</span></span></span><br><span class="line"><span class="javascript">            alert($(<span class="string">&quot;#username&quot;</span>).prop(<span class="string">&quot;checked&quot;</span>));</span></span><br><span class="line">        &#125;)    </span><br><span class="line">    <span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span>  <span class="attr">name</span>=<span class="string">&quot;username&quot;</span> <span class="attr">id</span>=<span class="string">&quot;username&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>attr还可以对自定义属性进行操作，所以在使用中如果为上述情况使用prop方法，否则一律使用attr方法。</strong></p>
+</li>
+</ul>
+<h2 id="jQuery文档处理"><a href="#jQuery文档处理" class="headerlink" title="jQuery文档处理"></a>jQuery文档处理</h2><p>​    动态的对元素进行增删改。</p>
+<table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>appendTo(content)</td>
+<td>作为子元素追加到另一个指定的元素末尾。</td>
+</tr>
+<tr>
+<td>prependTo(content)</td>
+<td>作为子元素追加到另一个指定的元素所以子元素前。</td>
+</tr>
+<tr>
+<td>insertAfter(content)</td>
+<td>作为同级元素添加到另一个指定的元素前。</td>
+</tr>
+<tr>
+<td>insertBefore(content)</td>
+<td>作为同级元素添加到另一个指定的元素后。</td>
+</tr>
+<tr>
+<td>replaceWith(content|fn)</td>
+<td>将所有匹配的元素替换成指定的HTML或DOM元素。所有匹配元素替换为一个指定元素</td>
+</tr>
+<tr>
+<td>replaceAll(selector)</td>
+<td>用匹配的元素替换掉所有 selector匹配到的元素。几个匹配元素就替换几个指定元素</td>
+</tr>
+<tr>
+<td>remove(<em>[expr]</em>)</td>
+<td>从DOM中删除所有匹配的元素。（删除节点，但保留jQuery对象）</td>
+</tr>
+<tr>
+<td>empty()</td>
+<td>删除匹配的元素集合中所有的子节点。（清空节点）</td>
+</tr>
+</tbody></table>
+<h2 id="jQuery事件"><a href="#jQuery事件" class="headerlink" title="jQuery事件"></a>jQuery事件</h2><h3 id="1-事件方法"><a href="#1-事件方法" class="headerlink" title="1.事件方法"></a>1.事件方法</h3><p>​    将事件与function绑定，绑定方式大同小异，简单举例几个：</p>
+<table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>click([[data],fn])</td>
+<td>点击事件</td>
+</tr>
+<tr>
+<td>mouseover([[data],fn])</td>
+<td>鼠标移入</td>
+</tr>
+<tr>
+<td>mouseout([[data],fn])</td>
+<td>鼠标移除</td>
+</tr>
+<tr>
+<td>on(events,[selector],[data],fn)</td>
+<td>在选择元素上绑定一个或多个事件的事件处理函数。</td>
+</tr>
+<tr>
+<td>one(type,[data],fn)</td>
+<td>为每一个匹配元素的特定事件（像click）绑定一个一次性的事件处理函数。</td>
+</tr>
+<tr>
+<td>off(events,[selector],[fn])</td>
+<td>解除绑定，与on()相反</td>
+</tr>
+</tbody></table>
+<h3 id="2-事件的冒泡"><a href="#2-事件的冒泡" class="headerlink" title="2.事件的冒泡"></a>2.事件的冒泡</h3><p>在父子元素同时监听一个事件时，在子元素触发事件时会连带触发父元素的事件，这种情况就叫冒泡。</p>
+<p>一般情况下我们是不想这种情况发生的，为了解决这个问题只需要在函数中return false即可。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span>&gt;</span></span><br><span class="line">    span&#123;</span><br><span class="line"><span class="css">        <span class="selector-tag">color</span><span class="selector-pseudo">:red</span>;</span></span><br><span class="line">    &#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>Insert title here<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 导入jQuery文件 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;../libs/jquery-1.7.2.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span></span><br><span class="line"><span class="javascript">        $(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">            <span class="comment">//div绑定点击事件</span></span></span><br><span class="line"><span class="javascript">            $(<span class="string">&quot;div&quot;</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">                alert(<span class="string">&quot;div点击事件触发&quot;</span>);</span></span><br><span class="line">            &#125;);</span><br><span class="line"><span class="javascript">            <span class="comment">//span绑定点击事件</span></span></span><br><span class="line"><span class="javascript">            $(<span class="string">&quot;span&quot;</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">                alert(<span class="string">&quot;span事件触发&quot;</span>);</span></span><br><span class="line"><span class="javascript">                <span class="comment">//return false 不会有冒泡现象</span></span></span><br><span class="line"><span class="javascript">                <span class="keyword">return</span> <span class="literal">false</span>;</span></span><br><span class="line">            &#125;);</span><br><span class="line">        </span><br><span class="line">        &#125;)</span><br><span class="line">    <span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">        div内容<span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">span</span>&gt;</span>span内容<span class="tag">&lt;<span class="name">br</span>/&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">        div内容</span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="样式相关"><a href="#样式相关" class="headerlink" title="样式相关"></a>样式相关</h2><h3 id="1-CSS相关"><a href="#1-CSS相关" class="headerlink" title="1.CSS相关"></a>1.CSS相关</h3><p>​    用于动态设置css样式</p>
+<table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>addClass(class|fn)</td>
+<td>为每个匹配的元素添加指定的类名。</td>
+</tr>
+<tr>
+<td>removeClass([class|fn])</td>
+<td>从所有匹配的元素中删除全部或者指定的类。</td>
+</tr>
+<tr>
+<td>toggleClass(class|fn[,sw])</td>
+<td>如果存在（不存在）就删除（添加）一个类。</td>
+</tr>
+<tr>
+<td>offset([coordinates])</td>
+<td>获取或设置匹配元素在当前视口的相对偏移。</td>
+</tr>
+</tbody></table>
+<h3 id="2-jQuery效果"><a href="#2-jQuery效果" class="headerlink" title="2.jQuery效果"></a>2.jQuery效果</h3><table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>show([speed,[easing],[fn]])</td>
+<td>显示隐藏的匹配元素。</td>
+</tr>
+<tr>
+<td>hide([speed,[easing],[fn]])</td>
+<td>隐藏显示的元素</td>
+</tr>
+<tr>
+<td>toggle([speed],[easing],[fn])</td>
+<td>如果元素是可见的，切换为隐藏的；如果元素是隐藏的，切换为可见的</td>
+</tr>
+<tr>
+<td>fadeIn([speed],[easing],[fn])</td>
+<td>通过不透明度的变化来实现所有匹配元素的淡入效果</td>
+</tr>
+<tr>
+<td>fadeOut([speed],[easing],[fn])</td>
+<td>通过不透明度的变化来实现所有匹配元素的淡出效果</td>
+</tr>
+<tr>
+<td>fadeToggle([speed,[easing],[fn]])</td>
+<td>通过不透明度的变化来开关所有匹配元素的淡入和淡出效果</td>
+</tr>
+<tr>
+<td>fadeTo([[speed],opacity,[easing],[fn]])</td>
+<td>把所有匹配元素的不透明度以渐进方式调整到指定的不透明度</td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>参数含义：</strong></li>
+</ul>
+<p><strong>speed:</strong> 隐藏/显示 效果的速度。默认是 “0”毫秒。可能的值：slow，normal，fast。”</p>
+<p><strong>easing:</strong>(Optional) 用来指定切换效果，默认是”swing”，可用参数”linear”</p>
+<p>**fn:**在动画完成时执行的函数，每个元素执行一次。</p>
+]]></content>
+      <categories>
+        <category>Web</category>
+      </categories>
+      <tags>
+        <tag>Web</tag>
+        <tag>Web基础</tag>
+        <tag>jQuery</tag>
       </tags>
   </entry>
   <entry>

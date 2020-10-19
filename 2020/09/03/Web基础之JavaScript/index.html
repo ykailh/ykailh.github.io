@@ -75,7 +75,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">2.6k</span>
+            <span class="post-count">2.7k</span>
         </span>
     </span>
 
@@ -262,7 +262,10 @@
 <li><p><strong>事件注册</strong></p>
 <p>事件注册分为静态注册和动态注册两种，静态注册是直接通过标签中的属性注册事件。动态注册是先获取元素的对象在通过这个对象来注册事件。</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>Insert title here<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span></span><br><span class="line"><span class="javascript">    <span class="comment">//静态函数所调用的函数</span></span></span><br><span class="line"><span class="javascript">    <span class="function"><span class="keyword">function</span> <span class="title">onclickFun</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="comment">//点击按钮后执行</span></span></span><br><span class="line"><span class="javascript">        alert(<span class="string">&quot;点击静态按钮&quot;</span>);</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line"><span class="javascript">    <span class="comment">//动态注册,在加载完成后再进行注册</span></span></span><br><span class="line"><span class="javascript">    <span class="built_in">window</span>.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line">        </span><br><span class="line"><span class="javascript">        <span class="comment">//通过document对象获取按钮元素的对象，document是JavaScript提供的一个对象，它包含了页面的信息。</span></span></span><br><span class="line"><span class="javascript">        <span class="keyword">var</span> buttonObject = <span class="built_in">document</span>.getElementById(<span class="string">&quot;button&quot;</span>);</span></span><br><span class="line"><span class="javascript">        <span class="comment">//通过对象.事件 = function()&#123;&#125;的方式注册事件</span></span></span><br><span class="line"><span class="javascript">        buttonObject.onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">            alert(<span class="string">&quot;点击动态按钮&quot;</span>)</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 通过onlick属性注册事件，可以直接写代码，但为了代码可读性一般是封装到一个函数中 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">onclick</span>=<span class="string">&quot;onclickFun()&quot;</span>&gt;</span>静态注册<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">&quot;button&quot;</span>&gt;</span>动态注册<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
+</li>
+<li><p><strong>事件对象</strong></p>
+<p>jQuery提供了一个事件对象，他封装了事件触发的详细信息，想要获取它只需要在绑定事件的函数的参数列表定义一个参数，这个参数一般命名为event。</p>
+<p>他的详细属性含义请参考：<a target="_blank" rel="noopener" href="https://www.w3school.com.cn/jsref/dom_obj_event.asp%EF%BC%9B">https://www.w3school.com.cn/jsref/dom_obj_event.asp；</a></p>
 </li>
 </ul>
 <h3 id="9-DOM"><a href="#9-DOM" class="headerlink" title="9.DOM"></a>9.DOM</h3><p>​    DOM（Document Object Model）文本对象模型，是将文本对象化后的结果。当网页被加载时，浏览器会创建页面的文档对象模型。</p>
@@ -512,11 +515,11 @@
    
   <nav class="article-nav">
     
-      <a href="/2020/09/20/Spring%E7%AE%80%E5%8D%95%E5%85%A5%E9%97%A8%E4%B9%8BSpring%E7%AE%80%E4%BB%8B/" class="article-nav-link">
+      <a href="/2020/09/04/Web%E5%9F%BA%E7%A1%80%E4%B9%8BjQuery/" class="article-nav-link">
         <strong class="article-nav-caption">上一篇</strong>
         <div class="article-nav-title">
           
-            Spring入门之Spring简介
+            Web基础之jQuery
           
         </div>
       </a>
