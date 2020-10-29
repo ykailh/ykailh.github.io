@@ -80,6 +80,565 @@
     
     
     <article
+  id="post-MyBatis入门之HelloWorld"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/10/14/MyBatis%E5%85%A5%E9%97%A8%E4%B9%8BHelloWorld/"
+    >MyBatis入门之HelloWorld</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/10/14/MyBatis%E5%85%A5%E9%97%A8%E4%B9%8BHelloWorld/" class="article-date">
+  <time datetime="2020-10-14T06:53:39.000Z" itemprop="datePublished">2020-10-14</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/MyBatis/">MyBatis</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="MyBatis简介"><a href="#MyBatis简介" class="headerlink" title="MyBatis简介"></a>MyBatis简介</h2><h3 id="1-什么是MyBatis"><a href="#1-什么是MyBatis" class="headerlink" title="1.什么是MyBatis"></a>1.什么是MyBatis</h3><ul>
+<li><p>MyBatis 是支持定制化 SQL、存储过程以及高级映射的优秀的持久层框架</p>
+</li>
+<li><p>MyBatis 避免了几乎所有的 JDBC 代码和手动设置参数以及获取结果集</p>
+</li>
+<li><p>MyBatis可以使用简单的XML或注解用于配置和原始映射，将接口和Java的POJO（Plain Old Java Objects，普通的Java对象）映射成数据库中的记录</p>
+</li>
+<li><p>Mybatis 是一个 半自动的ORM（Object   Relation  Mapping）框架</p>
+</li>
+</ul>
+<p>它也是现在JavaWeb开发中最流行的持久层框架，同时它也是开源免费的。</p>
+<p>github地址：<a target="_blank" rel="noopener" href="https://github.com/mybatis/mybatis-3/">https://github.com/mybatis/mybatis-3/</a></p>
+<h3 id="2-MyBatis的优势"><a href="#2-MyBatis的优势" class="headerlink" title="2.MyBatis的优势"></a>2.MyBatis的优势</h3><p><strong>JDBC：</strong></p>
+<p>​    ① SQL夹在Java代码块里，耦合度高导致硬编码内伤</p>
+<p>​    ② 维护不易且实际开发需求中sql有变化，频繁修改的情况多见</p>
+<p><strong>Hibernate和JPA：</strong></p>
+<p>​    ① 长难复杂SQL，对于Hibernate而言处理也不容易</p>
+<p>​    ② 内部自动生产的SQL，不容易做特殊优化</p>
+<p>​    ③ 基于全映射的全自动框架，大量字段的POJO进行部分映射时比较困难。导致数据库性能下降</p>
+<p>  <strong>MyBatis：</strong></p>
+<p>​    ① 对开发人员而言，核心sql还是需要自己优化</p>
+<p>​    ② sql和java编码分开，功能边界清晰，一个专注业务、一个专注数据</p>
+<h2 id="HelloWorld"><a href="#HelloWorld" class="headerlink" title="HelloWorld"></a>HelloWorld</h2><p>​    简单演示MyBatis，只需要搭建一个java项目即可，此次演示的为简单的查询功能，使用的数据库为MySQL。</p>
+<h3 id="1-搭建项目"><a href="#1-搭建项目" class="headerlink" title="1.搭建项目"></a>1.搭建项目</h3><p>​    创建一个Employee类以及对应的EmployeeDao。</p>
+<p><strong>Employee.java：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Employee</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Integer id;</span><br><span class="line">    <span class="keyword">private</span> String empName;</span><br><span class="line">    <span class="keyword">private</span> Integer gender;</span><br><span class="line">    <span class="keyword">private</span> String email;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">getId</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> id;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setId</span><span class="params">(Integer id)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.id = id;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getEmpName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> empName;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setEmpName</span><span class="params">(String empName)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.empName = empName;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">getGender</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> gender;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setGender</span><span class="params">(Integer gender)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.gender = gender;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getEmail</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> email;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setEmail</span><span class="params">(String email)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.email = email;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Employee [id=&quot;</span> + id + <span class="string">&quot;, empName=&quot;</span> + empName + <span class="string">&quot;, gender=&quot;</span> + gender + <span class="string">&quot;, email=&quot;</span> + email + <span class="string">&quot;]&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>EmployeeDao.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">EmployeeDao</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//根据id获取Employee对象</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Employee <span class="title">getEmployeeById</span><span class="params">(Integer id)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>创建一个名为mybatis_test的数据库，以及对应的t_employee表：</p>
+<p><img src="/image/MyBatis%E5%85%A5%E9%97%A8%E4%B9%8BHelloWorld/%E8%A1%A8%E7%BB%93%E6%9E%84.png" alt="表结构"></p>
+<p>随便写入一些数据。</p>
+<h3 id="2-导入Jar包"><a href="#2-导入Jar包" class="headerlink" title="2.导入Jar包"></a>2.导入Jar包</h3><p>MyBatis只依赖于自身的一个Jar包<code>mybatis-3.x.x.jar</code>以及数据库连接的所使用的jar包，这里是MySQl所以为<code>mysql-connector-java-5.x.x-bin.jar</code>如果想要输出日志还需要导入相关的日志jar包，这里使用log4j。</p>
+<p><img src="/image/MyBatis%E5%85%A5%E9%97%A8%E4%B9%8BHelloWorld/%E7%9B%B8%E5%85%B3jar%E5%8C%85.png" alt="相关jar包"></p>
+<p>使用log4j还需要相对于的xml文件配置，不了解的可以直接复制粘贴一下内容到<code>log4j.xml</code>中即可：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">log4j</span>:configuration <span class="meta-keyword">SYSTEM</span> <span class="meta-string">&quot;log4j.dtd&quot;</span>&gt;</span></span><br><span class="line"> </span><br><span class="line"><span class="tag">&lt;<span class="name">log4j:configuration</span> <span class="attr">xmlns:log4j</span>=<span class="string">&quot;http://jakarta.apache.org/log4j/&quot;</span>&gt;</span></span><br><span class="line"> </span><br><span class="line"> <span class="tag">&lt;<span class="name">appender</span> <span class="attr">name</span>=<span class="string">&quot;STDOUT&quot;</span> <span class="attr">class</span>=<span class="string">&quot;org.apache.log4j.ConsoleAppender&quot;</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">&quot;Encoding&quot;</span> <span class="attr">value</span>=<span class="string">&quot;UTF-8&quot;</span> /&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">layout</span> <span class="attr">class</span>=<span class="string">&quot;org.apache.log4j.PatternLayout&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">&quot;ConversionPattern&quot;</span> <span class="attr">value</span>=<span class="string">&quot;%-5p %d&#123;MM-dd HH:mm:ss,SSS&#125; %m  (%F:%L) \n&quot;</span> /&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="name">layout</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">appender</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">logger</span> <span class="attr">name</span>=<span class="string">&quot;java.sql&quot;</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">level</span> <span class="attr">value</span>=<span class="string">&quot;debug&quot;</span> /&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">logger</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">logger</span> <span class="attr">name</span>=<span class="string">&quot;org.apache.ibatis&quot;</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">level</span> <span class="attr">value</span>=<span class="string">&quot;info&quot;</span> /&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">logger</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">root</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">level</span> <span class="attr">value</span>=<span class="string">&quot;debug&quot;</span> /&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">appender-ref</span> <span class="attr">ref</span>=<span class="string">&quot;STDOUT&quot;</span> /&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">root</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">log4j:configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-配置MyBatis"><a href="#3-配置MyBatis" class="headerlink" title="3.配置MyBatis"></a>3.配置MyBatis</h3><p>​    MyBatis的配置分为全局配置以及SQL映射的配置文件。全局配置文件是对MyBatis的整体属性、信息进行配置。现在可以不需要理解配置文件中的内容，直接复制到自己的配置文件中修改相关的信息即可。</p>
+<p><strong>mybatis-config.xml:</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">configuration</span></span></span><br><span class="line"><span class="meta">  <span class="meta-keyword">PUBLIC</span> <span class="meta-string">&quot;-//mybatis.org//DTD Config 3.0//EN&quot;</span></span></span><br><span class="line"><span class="meta">  <span class="meta-string">&quot;http://mybatis.org/dtd/mybatis-3-config.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">environments</span> <span class="attr">default</span>=<span class="string">&quot;development&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">environment</span> <span class="attr">id</span>=<span class="string">&quot;development&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">transactionManager</span> <span class="attr">type</span>=<span class="string">&quot;JDBC&quot;</span>/&gt;</span></span><br><span class="line">      <span class="comment">&lt;!-- 配置数据库连接信息 --&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">dataSource</span> <span class="attr">type</span>=<span class="string">&quot;POOLED&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;driver&quot;</span> <span class="attr">value</span>=<span class="string">&quot;com.mysql.jdbc.Driver&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;url&quot;</span> <span class="attr">value</span>=<span class="string">&quot;jdbc:mysql://localhost:3306/mybatis_test&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;username&quot;</span> <span class="attr">value</span>=<span class="string">&quot;root&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;password&quot;</span> <span class="attr">value</span>=<span class="string">&quot;160430&quot;</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">dataSource</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">environment</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">environments</span>&gt;</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment">&lt;!-- 配置SQL映射文件 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">mappers</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">mapper</span> <span class="attr">resource</span>=<span class="string">&quot;Employee.xml&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">mappers</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>除了全局配置外，还需要为每一个Dao接口单独配置一个Sql映射文件，在使用了MyBatis后我们不需要在创建一个Dao接口的实现类，只需要将这些信息配置到这个文件当中即可。</p>
+<p><strong>EmployeeDao.xml：</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">mapper</span></span></span><br><span class="line"><span class="meta">  <span class="meta-keyword">PUBLIC</span> <span class="meta-string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span></span></span><br><span class="line"><span class="meta">  <span class="meta-string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- namespace:全类名，相当对这个接口的实现 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">&quot;com.ykailh.dao.EmployeeDao&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">&lt;!-- 相当于对于方法的实现</span></span><br><span class="line"><span class="comment">      select标签：定义为查询操作</span></span><br><span class="line"><span class="comment">      id：需要实现的方法名</span></span><br><span class="line"><span class="comment">      resultType：方法的返回类型全类名</span></span><br><span class="line"><span class="comment">      标签的值为SQL语句，使用#&#123;参数名&#125;替代条件（JDBC中的？）</span></span><br><span class="line"><span class="comment">   --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;getEmployeeById&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.ykailh.bean.Employee&quot;</span>&gt;</span></span><br><span class="line">    select * from t_employee where id = #&#123;id&#125;</span><br><span class="line">  <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line">  </span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>需要注意的是映射文件一定要在全局文件中配置才能生效，即</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 配置SQL映射文件 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">mappers</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">mapper</span> <span class="attr">resource</span>=<span class="string">&quot;Employee.xml&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mappers</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-执行流程"><a href="#4-执行流程" class="headerlink" title="4.执行流程"></a>4.执行流程</h3><p>​    现在已经配置好了MyBatis所需的环境，接下来创建一个测试类来尝试调用查询方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyBatisTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        <span class="comment">//根据全局配置文件创建一个SqlSessionFactory</span></span><br><span class="line">        String resource = <span class="string">&quot;mybatis-config.xml&quot;</span>;</span><br><span class="line">        InputStream inputStream = Resources.getResourceAsStream(resource);</span><br><span class="line">        SqlSessionFactory sqlSessionFactory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(inputStream);;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//获取SqlSession</span></span><br><span class="line">        SqlSession openSession = sqlSessionFactory.openSession();</span><br><span class="line">        <span class="comment">//获取EmployeeDao的实现</span></span><br><span class="line">        EmployeeDao employeeDao = openSession.getMapper(EmployeeDao.class);</span><br><span class="line">        <span class="comment">//调用方法</span></span><br><span class="line">        Employee employee = employeeDao.getEmployeeById(<span class="number">1</span>);</span><br><span class="line">        System.out.println(employee);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>简单说明一下上面的流程：</p>
+<ol>
+<li>根据全局配置文件创建一个SqlSessionFactory，它负责产生SqlSession。</li>
+<li>通过SqlSessionFactory获取一个SqlSession，它是一个与数据库的链接，类似于线程池与线程的关系。</li>
+<li>通过这个SqlSession可以获取到由MyBatis根据Sql映射文件所产生的Dao接口的实现类。</li>
+<li>调用方法，获取结果。</li>
+</ol>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MyBatis/" rel="tag">MyBatis</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MyBatis%E5%85%A5%E9%97%A8/" rel="tag">MyBatis入门</a></li></ul>
+
+    </footer>
+  </div>
+
+    
+ 
+   
+</article>
+
+    
+    <article
+  id="post-SpringMVC入门之异常处理"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/10/10/SpringMVC%E5%85%A5%E9%97%A8%E4%B9%8B%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/"
+    >SpringMVC入门之异常处理</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/10/10/SpringMVC%E5%85%A5%E9%97%A8%E4%B9%8B%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/" class="article-date">
+  <time datetime="2020-10-10T06:20:25.000Z" itemprop="datePublished">2020-10-10</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/SpringMVC/">SpringMVC</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="SpringMVC异常处理的方式"><a href="#SpringMVC异常处理的方式" class="headerlink" title="SpringMVC异常处理的方式"></a>SpringMVC异常处理的方式</h2><p>​    SpringMVC也是通过解析器的方式对异常进行处理，这些处理器的根接口为<code>org.springframework.web.servlet.HandlerExceptionResolver</code>，SpringMVC提供了以下实现类：</p>
+<p><img src="/image/SpringMVC%E5%85%A5%E9%97%A8%E4%B9%8B%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E5%99%A8%E4%BD%93%E7%B3%BB.png" alt="异常处理器体系"></p>
+<p><strong>在没有配置<code>&lt;mvc:annotation-driven /&gt;</code>的情况下，会自动装配以下三个异常解析器：</strong></p>
+<ul>
+<li><code>AnnotationMethodHandlerExceptionResolver</code></li>
+<li><code>ResponseStatusExceptionResolver</code></li>
+<li><code>DefaultHandlerExceptionResolver</code></li>
+</ul>
+<p><strong>而在配置了<code>&lt;mvc:annotation-driven /&gt;</code>的情况下，会自动装配这三个异常解析器：</strong></p>
+<ul>
+<li><code>ExceptionHandlerExceptionResolver</code></li>
+<li><code>ResponseStatusExceptionResolver</code></li>
+<li><code>DefaultHandlerExceptionResolver</code></li>
+</ul>
+<p>遇到异常时会像解析视图一样按照解析器顺序循环解析异常，直接能够解析为止。不同的解析器用于不同的使用场景，下面基于<code>&lt;mvc:annotation-driven /&gt;</code>的情况下进行讲解。</p>
+<h2 id="ExceptionHandlerExceptionResolver"><a href="#ExceptionHandlerExceptionResolver" class="headerlink" title="ExceptionHandlerExceptionResolver"></a>ExceptionHandlerExceptionResolver</h2><p>​    用于处理标记了<code>@ExceptionHandler</code>的方法，在处理异常时会匹配这些标签上的异常类型是否匹配，若匹配则调用该方法处理异常。</p>
+<h3 id="1-处理控制器中的异常"><a href="#1-处理控制器中的异常" class="headerlink" title="1.处理控制器中的异常"></a>1.处理控制器中的异常</h3><p>​    若想要指定方法处理该控制器中所发生的异常，只需要在控制器中的方法上加上<code>@ExceptionHandler</code>即可，<code>@ExceptionHandler</code>的<strong>value值表示这个方法能够处理的异常类型</strong>，可以在这个方法的<strong>形参中使用对应的异常类型参数接收异常对象</strong>，这个方法的<strong>返回值扔和处理方法的一致</strong>最终都会转换为ModelAndView，但<strong>不会有默认的数据模型对象</strong>，可以用ModelAndView实现异常对象的传递。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestException</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/test&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">testHandle</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//产生空指针异常，用于测试</span></span><br><span class="line">        String s = <span class="keyword">null</span>;</span><br><span class="line">        s.getBytes();</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//指定这个方法为处理该控制器异常的方法，value值为处理异常的类型</span></span><br><span class="line">    <span class="meta">@ExceptionHandler(&#123;NullPointerException.class&#125;)</span></span><br><span class="line">    <span class="comment">//在参数中使用对应的异常类型接受这个异常对象，注意参数列表只有这个有效参数</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ModelAndView <span class="title">exception</span><span class="params">(Exception e)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;发生异常&quot;</span>);</span><br><span class="line">        <span class="comment">//在没有其他形参的情况下，可以使用ModelAndView传递异常信息</span></span><br><span class="line">        ModelAndView mv = <span class="keyword">new</span> ModelAndView(<span class="string">&quot;error&quot;</span>);</span><br><span class="line">        mv.addObject(<span class="string">&quot;exception&quot;</span>, e);</span><br><span class="line">        <span class="keyword">return</span> mv;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>访问<code>/test</code>时会跳转到<code>exception方法</code>中并进行异常处理，最终跳转到<code>error页面</code>中。</strong></p>
+<h3 id="2-全局异常处理"><a href="#2-全局异常处理" class="headerlink" title="2.全局异常处理"></a>2.全局异常处理</h3><p>​    如果需要对全部的控制器的异常进行统一处理，可以定义一个类并在这个类上加上<code>@ControllerAdvice</code>注解</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//标记这个类中的处理异常方法作用于所有控制器</span></span><br><span class="line"><span class="meta">@ControllerAdvice</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PublicException</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 处理所有控制器的空指针异常</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@ExceptionHandler(&#123;NullPointerException.class&#125;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ModelAndView <span class="title">exception</span><span class="params">(Exception e)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;发生异常&quot;</span>);</span><br><span class="line">        ModelAndView mv = <span class="keyword">new</span> ModelAndView(<span class="string">&quot;error&quot;</span>);</span><br><span class="line">        mv.addObject(<span class="string">&quot;exception&quot;</span>, e);</span><br><span class="line">        <span class="keyword">return</span> mv;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-异常处理优先级"><a href="#3-异常处理优先级" class="headerlink" title="3.异常处理优先级"></a>3.异常处理优先级</h3><p>​    在都符合可以处理的异常类型的情况下，优先匹配本控制器的异常处理方法再匹配全局的异常处理方法，在同一范围的情况下优先匹配范围精确（父类与子类之间优先匹配子类）的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestException</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/test&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">testHandle</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//产生空指针异常，用于测试</span></span><br><span class="line">        String s = <span class="keyword">null</span>;</span><br><span class="line">        s.getBytes();</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//优先级第一</span></span><br><span class="line">    <span class="meta">@ExceptionHandler(&#123;NullPointerException.class&#125;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">exception1</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//优先级第二</span></span><br><span class="line">    <span class="meta">@ExceptionHandler(&#123;Exception.class&#125;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">exception2</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//标记这个类中的处理异常方法作用于所有控制器</span></span><br><span class="line"><span class="meta">@ControllerAdvice</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PublicException</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//优先级第三</span></span><br><span class="line">    <span class="meta">@ExceptionHandler(&#123;NullPointerException.class&#125;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">exception</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="ResponseStatusExceptionResolver"><a href="#ResponseStatusExceptionResolver" class="headerlink" title="ResponseStatusExceptionResolver"></a>ResponseStatusExceptionResolver</h2><p>​    用于处理标记了<code>@ResponseStatus</code>的方法或类，它的两个属性分别为<code>reason</code>表示页面描述信息已经<code>value</code>为页面的状态码，所以的状态码封装在<code>HttpStatus</code>这个枚举类中。当访问这个注解下的方法时会跳转到SpringMVC生成的错误页面当中。</p>
+<h3 id="1-作用于方法"><a href="#1-作用于方法" class="headerlink" title="1.作用于方法"></a>1.作用于方法</h3><p>​    访问方法时跳转到错误页面中</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestException</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@ResponseStatus(reason=&quot;发生异常了&quot;,value=HttpStatus.METHOD_NOT_ALLOWED)</span></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/error&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">error</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/test&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">testHandle</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;forward:/error&quot;</span>;            </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>效果：</strong></p>
+<p>​    <img src="/image/SpringMVC%E5%85%A5%E9%97%A8%E4%B9%8B%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/%E5%BC%82%E5%B8%B8%E9%A1%B5%E9%9D%A2.png" alt="异常页面"></p>
+<h3 id="2-作用于类"><a href="#2-作用于类" class="headerlink" title="2.作用于类"></a>2.作用于类</h3><p>​    一般使用在自定义异常上，加上<code>@ResponseStatus</code>后抛出这个自定义异常时会跳转到错误页面中。</p>
+<p><strong>自定义异常：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//自定义异常使用ResponseStatus注解</span></span><br><span class="line"><span class="meta">@ResponseStatus(reason=&quot;发生异常了&quot;,value=HttpStatus.METHOD_NOT_ALLOWED)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyException</span> <span class="keyword">extends</span> <span class="title">RuntimeException</span></span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>控制器：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestException</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/test&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">testHandle</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> i=<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span>(i==<span class="number">1</span>) &#123;</span><br><span class="line">            <span class="comment">//抛出这个异常时会跳转到错误页面</span></span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> MyException();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;            </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="DefaultHandlerExceptionResolver"><a href="#DefaultHandlerExceptionResolver" class="headerlink" title="DefaultHandlerExceptionResolver"></a>DefaultHandlerExceptionResolver</h2><p>这个处理器是SpringMVC用于处理一些自身异常的处理器，它可以使一些异常发生时跳转到SpringMVC自己定义的页面中而不是服务器的错误页面。它可以处理比如：</p>
+<ul>
+<li>NoSuchRequestHandlingMethodException</li>
+<li>HttpRequestMethodNotSupportedException</li>
+<li>HttpMediaTypeNotSupportedException</li>
+<li>HttpMediaTypeNotAcceptableException等等</li>
+</ul>
+<h2 id="SimpleMappingExceptionResolver"><a href="#SimpleMappingExceptionResolver" class="headerlink" title="SimpleMappingExceptionResolver"></a>SimpleMappingExceptionResolver</h2><p>​    基于文件配置的异常处理器，在前置控制器的配置文件中配置即可生效。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">&quot;org.springframework.web.servlet.handler.SimpleMappingExceptionResolver&quot;</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 关联异常与目标错误页面 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;exceptionMappings&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">props</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!-- key为异常全类名，值为目标视图名 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">prop</span> <span class="attr">key</span>=<span class="string">&quot;java.lang.NullPointerException&quot;</span>&gt;</span>error<span class="tag">&lt;/<span class="name">prop</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">props</span>&gt;</span>        </span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringMVC/" rel="tag">SpringMVC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringMVC%E5%85%A5%E9%97%A8/" rel="tag">SpringMVC入门</a></li></ul>
+
+    </footer>
+  </div>
+
+    
+ 
+   
+</article>
+
+    
+    <article
+  id="post-SpringMVC入门之拦截器"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/10/09/SpringMVC%E5%85%A5%E9%97%A8%E4%B9%8B%E6%8B%A6%E6%88%AA%E5%99%A8/"
+    >SpringMVC入门之拦截器</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/10/09/SpringMVC%E5%85%A5%E9%97%A8%E4%B9%8B%E6%8B%A6%E6%88%AA%E5%99%A8/" class="article-date">
+  <time datetime="2020-10-09T09:16:25.000Z" itemprop="datePublished">2020-10-09</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/SpringMVC/">SpringMVC</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="拦截器概述"><a href="#拦截器概述" class="headerlink" title="拦截器概述"></a>拦截器概述</h2><p>​    拦截器由SpringMVC所提供，用于在处理请求的方法执行前后进行操作。它与处理方法的关系类似于Filter与Servlet的关系。</p> 
+      <a class="article-more-link" href="/2020/10/09/SpringMVC%E5%85%A5%E9%97%A8%E4%B9%8B%E6%8B%A6%E6%88%AA%E5%99%A8/"
+        >阅读更多...</a
+      >
+       
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringMVC/" rel="tag">SpringMVC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringMVC%E5%85%A5%E9%97%A8/" rel="tag">SpringMVC入门</a></li></ul>
+
+    </footer>
+  </div>
+
+    
+ 
+   
+</article>
+
+    
+    <article
+  id="post-SpringMVC入门之视图解析"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/09/29/SpringMVC%E5%85%A5%E9%97%A8%E4%B9%8B%E8%A7%86%E5%9B%BE%E8%A7%A3%E6%9E%90/"
+    >SpringMVC入门之视图解析</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/09/29/SpringMVC%E5%85%A5%E9%97%A8%E4%B9%8B%E8%A7%86%E5%9B%BE%E8%A7%A3%E6%9E%90/" class="article-date">
+  <time datetime="2020-09-29T04:18:32.000Z" itemprop="datePublished">2020-09-29</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/SpringMVC/">SpringMVC</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="回顾与补充"><a href="#回顾与补充" class="headerlink" title="回顾与补充"></a>回顾与补充</h2><p>​    在之前的演示当中在处理方法中以String类型作为返回值即可以转发的方式实现页面的跳转，可是要如何携带数据到目标页面，又如何以重定向的方式进行跳转呢？</p> 
+      <a class="article-more-link" href="/2020/09/29/SpringMVC%E5%85%A5%E9%97%A8%E4%B9%8B%E8%A7%86%E5%9B%BE%E8%A7%A3%E6%9E%90/"
+        >阅读更多...</a
+      >
+       
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringMVC/" rel="tag">SpringMVC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringMVC%E5%85%A5%E9%97%A8/" rel="tag">SpringMVC入门</a></li></ul>
+
+    </footer>
+  </div>
+
+    
+ 
+   
+</article>
+
+    
+    <article
+  id="post-SpringMVC入门之获取请求参数"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/09/28/SpringMVC%E5%85%A5%E9%97%A8%E4%B9%8B%E8%8E%B7%E5%8F%96%E8%AF%B7%E6%B1%82%E5%8F%82%E6%95%B0/"
+    >SpringMVC入门之处理请求数据</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/09/28/SpringMVC%E5%85%A5%E9%97%A8%E4%B9%8B%E8%8E%B7%E5%8F%96%E8%AF%B7%E6%B1%82%E5%8F%82%E6%95%B0/" class="article-date">
+  <time datetime="2020-09-28T12:48:15.000Z" itemprop="datePublished">2020-09-28</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/SpringMVC/">SpringMVC</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>​    SpringMVC会分析控制层中的处理方法进行参数的匹配并传入，你可以根据自己的需要编写参数列表获取想要的参数，SpringMVC为此提供了许多参数注解。</p> 
+      <a class="article-more-link" href="/2020/09/28/SpringMVC%E5%85%A5%E9%97%A8%E4%B9%8B%E8%8E%B7%E5%8F%96%E8%AF%B7%E6%B1%82%E5%8F%82%E6%95%B0/"
+        >阅读更多...</a
+      >
+       
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringMVC/" rel="tag">SpringMVC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringMVC%E5%85%A5%E9%97%A8/" rel="tag">SpringMVC入门</a></li></ul>
+
+    </footer>
+  </div>
+
+    
+ 
+   
+</article>
+
+    
+    <article
+  id="post-SpringMVC入门之REST风格的实现"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/09/27/SpringMVC%E5%85%A5%E9%97%A8%E4%B9%8BREST%E9%A3%8E%E6%A0%BC%E7%9A%84%E5%AE%9E%E7%8E%B0/"
+    >SpringMVC入门之REST风格的实现</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/09/27/SpringMVC%E5%85%A5%E9%97%A8%E4%B9%8BREST%E9%A3%8E%E6%A0%BC%E7%9A%84%E5%AE%9E%E7%8E%B0/" class="article-date">
+  <time datetime="2020-09-27T11:48:15.000Z" itemprop="datePublished">2020-09-27</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/SpringMVC/">SpringMVC</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="什么是REST"><a href="#什么是REST" class="headerlink" title="什么是REST"></a>什么是REST</h2><p>​    REST全称为Representational State Transfer，<strong>表现层状态转化</strong>。它认为每次请求的目的都是获取或操作资源，所有在设计URL时应该与资源是一一对应的，对资源的操作应该通过同一资源的不同状态来完成。</p> 
+      <a class="article-more-link" href="/2020/09/27/SpringMVC%E5%85%A5%E9%97%A8%E4%B9%8BREST%E9%A3%8E%E6%A0%BC%E7%9A%84%E5%AE%9E%E7%8E%B0/"
+        >阅读更多...</a
+      >
+       
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringMVC/" rel="tag">SpringMVC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringMVC%E5%85%A5%E9%97%A8/" rel="tag">SpringMVC入门</a></li></ul>
+
+    </footer>
+  </div>
+
+    
+ 
+   
+</article>
+
+    
+    <article
+  id="post-SpringMVC入门之RequestMapping详解"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/09/26/SpringMVC%E5%85%A5%E9%97%A8%E4%B9%8BRequestMapping%E8%AF%A6%E8%A7%A3/"
+    >SpringMVC入门之RequestMapping详解</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/09/26/SpringMVC%E5%85%A5%E9%97%A8%E4%B9%8BRequestMapping%E8%AF%A6%E8%A7%A3/" class="article-date">
+  <time datetime="2020-09-26T10:16:25.000Z" itemprop="datePublished">2020-09-26</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/SpringMVC/">SpringMVC</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>​    <code>@RequestMapping</code>的功能为指定控制器可以处理的URL，在HelloWorld中只演示了它的最基本的使用。实际上它还可以进行更详细的配置。</p> 
+      <a class="article-more-link" href="/2020/09/26/SpringMVC%E5%85%A5%E9%97%A8%E4%B9%8BRequestMapping%E8%AF%A6%E8%A7%A3/"
+        >阅读更多...</a
+      >
+       
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringMVC/" rel="tag">SpringMVC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringMVC%E5%85%A5%E9%97%A8/" rel="tag">SpringMVC入门</a></li></ul>
+
+    </footer>
+  </div>
+
+    
+ 
+   
+</article>
+
+    
+    <article
+  id="post-SpringMVC入门之HelloWorld"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/09/25/SpringMVC%E5%85%A5%E9%97%A8%E4%B9%8BHelloWorld/"
+    >SpringMVC入门之HelloWorld</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/09/25/SpringMVC%E5%85%A5%E9%97%A8%E4%B9%8BHelloWorld/" class="article-date">
+  <time datetime="2020-09-25T09:16:25.000Z" itemprop="datePublished">2020-09-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/SpringMVC/">SpringMVC</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="什么是SpringMVC"><a href="#什么是SpringMVC" class="headerlink" title="什么是SpringMVC"></a>什么是SpringMVC</h2><p>​    简单来说，SpringMVC就是一个Spring提供的MVC框架，它通过<code>DispatcherServlet</code>这个组件处理所有的求情和响应。基于这个<code>DispatcherServlet</code>可以使一个普通的java类在不需要任何继承的情况下实现servlet的功能。</p>
+<p>SpringMVC基于以下jar包：</p>
+<ul>
+<li><p>Spring核心jar包</p>
+</li>
+<li><p>spring-web-RELEASE.jar</p>
+</li>
+<li><p>spring-webmvc-RELEASE.jar</p>
+</li>
+</ul> 
+      <a class="article-more-link" href="/2020/09/25/SpringMVC%E5%85%A5%E9%97%A8%E4%B9%8BHelloWorld/"
+        >阅读更多...</a
+      >
+       
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringMVC/" rel="tag">SpringMVC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringMVC%E5%85%A5%E9%97%A8/" rel="tag">SpringMVC入门</a></li></ul>
+
+    </footer>
+  </div>
+
+    
+ 
+   
+</article>
+
+    
+    <article
   id="post-Spring入门之AOP"
   class="article article-type-post"
   itemscope
@@ -192,466 +751,13 @@
 </article>
 
     
-    <article
-  id="post-Spring入门之依赖注入"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/09/22/Spring%E5%85%A5%E9%97%A8%E4%B9%8B%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/"
-    >Spring入门之依赖注入</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2020/09/22/Spring%E5%85%A5%E9%97%A8%E4%B9%8B%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/" class="article-date">
-  <time datetime="2020-09-22T05:03:20.000Z" itemprop="datePublished">2020-09-22</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Spring/">Spring</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="理解依赖注入"><a href="#理解依赖注入" class="headerlink" title="理解依赖注入"></a>理解依赖注入</h2><p>​    每个基于应用程序的 java 都有几个对象，由这些对象一起工作来呈现出终端用户所看到的工作的应用程序。当编写一个复杂的 Java 应用程序时，应用程序类应该尽可能独立于其他 Java 类来<strong>增加这些类重用的可能性</strong>，并且在做单元测试时，测试独立于其他类的独立性。<code>依赖注入（或有时称为布线）</code>有助于把这些类<strong>粘合在一起</strong>，同时<strong>保持他们独立</strong>。</p> 
-      <a class="article-more-link" href="/2020/09/22/Spring%E5%85%A5%E9%97%A8%E4%B9%8B%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/"
-        >阅读更多...</a
-      >
-       
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spring/" rel="tag">Spring</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spring%E5%85%A5%E9%97%A8/" rel="tag">Spring入门</a></li></ul>
-
-    </footer>
-  </div>
-
-    
- 
-   
-</article>
-
-    
-    <article
-  id="post-Spring入门之IOC容器与bean"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/09/21/Spring%E5%85%A5%E9%97%A8%E4%B9%8BIOC%E5%AE%B9%E5%99%A8%E4%B8%8Ebean/"
-    >Spring入门之IOC容器与bean</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2020/09/21/Spring%E5%85%A5%E9%97%A8%E4%B9%8BIOC%E5%AE%B9%E5%99%A8%E4%B8%8Ebean/" class="article-date">
-  <time datetime="2020-09-21T04:03:20.000Z" itemprop="datePublished">2020-09-21</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Spring/">Spring</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="IoC容器"><a href="#IoC容器" class="headerlink" title="IoC容器"></a>IoC容器</h2><h3 id="1-IoC容器的概念"><a href="#1-IoC容器的概念" class="headerlink" title="1.IoC容器的概念"></a>1.IoC容器的概念</h3><p>​    Spring 容器是 Spring 框架的<strong>核心</strong>。容器将<strong>创建对象</strong>，把它们<strong>连接</strong>在一起，<strong>配置</strong>它们，并<strong>管理</strong>他们的<strong>整个生命周期</strong>从创建到销毁。</p>
-<p>​    <strong>IOC 容器</strong>具有<strong>依赖注入功能</strong>的容器，它可以创建对象，IOC 容器负责实<strong>例化、定位、配置应用程序中的对象及建立这些对象间的依赖</strong>。通常new一个实例，控制权由程序员控制，而”控制反转”是指<strong>new实例工作</strong>不由程序员来做而是<strong>交给Spring容器</strong>来做。</p> 
-      <a class="article-more-link" href="/2020/09/21/Spring%E5%85%A5%E9%97%A8%E4%B9%8BIOC%E5%AE%B9%E5%99%A8%E4%B8%8Ebean/"
-        >阅读更多...</a
-      >
-       
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spring/" rel="tag">Spring</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spring%E5%85%A5%E9%97%A8/" rel="tag">Spring入门</a></li></ul>
-
-    </footer>
-  </div>
-
-    
- 
-   
-</article>
-
-    
-    <article
-  id="post-Spring简单入门之Spring简介"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/09/20/Spring%E7%AE%80%E5%8D%95%E5%85%A5%E9%97%A8%E4%B9%8BSpring%E7%AE%80%E4%BB%8B/"
-    >Spring入门之Spring简介</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2020/09/20/Spring%E7%AE%80%E5%8D%95%E5%85%A5%E9%97%A8%E4%B9%8BSpring%E7%AE%80%E4%BB%8B/" class="article-date">
-  <time datetime="2020-09-20T04:01:20.000Z" itemprop="datePublished">2020-09-20</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Spring/">Spring</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="简单了解Spring"><a href="#简单了解Spring" class="headerlink" title="简单了解Spring"></a>简单了解Spring</h2><h3 id="1-什么是Spring"><a href="#1-什么是Spring" class="headerlink" title="1.什么是Spring"></a>1.什么是Spring</h3><p>​    Spring是一个<strong>开源框架</strong>，它可以通过简单的配置实现以前<strong>EJB容器</strong>（不了解可以跳过）的功能，它最核心的两个思想一个是<strong>IoC（控制反转）</strong>，一个是<strong>AOP（面向切面编程）</strong>。</p> 
-      <a class="article-more-link" href="/2020/09/20/Spring%E7%AE%80%E5%8D%95%E5%85%A5%E9%97%A8%E4%B9%8BSpring%E7%AE%80%E4%BB%8B/"
-        >阅读更多...</a
-      >
-       
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spring/" rel="tag">Spring</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spring%E5%85%A5%E9%97%A8/" rel="tag">Spring入门</a></li></ul>
-
-    </footer>
-  </div>
-
-    
- 
-   
-</article>
-
-    
-    <article
-  id="post-Web基础之jQuery"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/09/04/Web%E5%9F%BA%E7%A1%80%E4%B9%8BjQuery/"
-    >Web基础之jQuery</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2020/09/04/Web%E5%9F%BA%E7%A1%80%E4%B9%8BjQuery/" class="article-date">
-  <time datetime="2020-09-04T07:10:06.000Z" itemprop="datePublished">2020-09-04</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Web/">Web</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h2 id="什么是jQuery"><a href="#什么是jQuery" class="headerlink" title="什么是jQuery"></a>什么是jQuery</h2><p>​    jQuery是一个JavaScript函数库，可以简化JavaScript的代码。并且jQuery已经接近了大多数浏览器的兼容问题。</p> 
-      <a class="article-more-link" href="/2020/09/04/Web%E5%9F%BA%E7%A1%80%E4%B9%8BjQuery/"
-        >阅读更多...</a
-      >
-       
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Web/" rel="tag">Web</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Web%E5%9F%BA%E7%A1%80/" rel="tag">Web基础</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jQuery/" rel="tag">jQuery</a></li></ul>
-
-    </footer>
-  </div>
-
-    
- 
-   
-</article>
-
-    
-    <article
-  id="post-Web基础之JavaScript"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/09/03/Web%E5%9F%BA%E7%A1%80%E4%B9%8BJavaScript/"
-    >Web基础之JavaScript</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2020/09/03/Web%E5%9F%BA%E7%A1%80%E4%B9%8BJavaScript/" class="article-date">
-  <time datetime="2020-09-03T10:32:13.000Z" itemprop="datePublished">2020-09-03</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Web/">Web</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <p><strong>Web基础系列</strong>主要对Java开发中Web相关的内容(如<code>HTML</code>、<code>CSS</code>、<code>JavaScript</code>等)进行<strong>最基本的讲解</strong>，本系列其他文章请参考<a target="_blank" rel="noopener" href="https://ykailh.github.io/tags/Web%E5%9F%BA%E7%A1%80/">Web基础</a> 。</p>
-<p>本文主要对<code>JavaScript</code>进行简单的了解，想要更详细的了解HTML可以参考这个教程<a target="_blank" rel="noopener" href="https://www.runoob.com/js/js-tutorial.html">JS教程</a> 。</p> 
-      <a class="article-more-link" href="/2020/09/03/Web%E5%9F%BA%E7%A1%80%E4%B9%8BJavaScript/"
-        >阅读更多...</a
-      >
-       
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Web/" rel="tag">Web</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Web%E5%9F%BA%E7%A1%80/" rel="tag">Web基础</a></li></ul>
-
-    </footer>
-  </div>
-
-    
- 
-   
-</article>
-
-    
-    <article
-  id="post-Web基础之CSS"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/09/02/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/"
-    >Web基础之CSS</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2020/09/02/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/" class="article-date">
-  <time datetime="2020-09-02T09:30:20.000Z" itemprop="datePublished">2020-09-02</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Web/">Web</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <p><strong>Web基础系列</strong>主要对Java开发中Web相关的内容(如<code>HTML</code>、<code>CSS</code>、<code>JavaScript</code>等)进行<strong>最基本的讲解</strong>，本系列其他文章请参考<a target="_blank" rel="noopener" href="https://ykailh.github.io/tags/Web%E5%9F%BA%E7%A1%80/">Web基础</a> 。</p>
-<p>​    本文主要对<code>CSS</code>进行简单的了解，想要更详细的了解HTML可以参考这个教程<a target="_blank" rel="noopener" href="https://www.runoob.com/css/css-tutorial.html">CSS教程</a> 。</p> 
-      <a class="article-more-link" href="/2020/09/02/Web%E5%9F%BA%E7%A1%80%E4%B9%8BCSS/"
-        >阅读更多...</a
-      >
-       
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CSS/" rel="tag">CSS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Web/" rel="tag">Web</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Web%E5%9F%BA%E7%A1%80/" rel="tag">Web基础</a></li></ul>
-
-    </footer>
-  </div>
-
-    
- 
-   
-</article>
-
-    
-    <article
-  id="post-Web基础之HTML"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/09/01/Web%E5%9F%BA%E7%A1%80%E4%B9%8BHTML/"
-    >Web基础之HTML</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2020/09/01/Web%E5%9F%BA%E7%A1%80%E4%B9%8BHTML/" class="article-date">
-  <time datetime="2020-09-01T09:16:20.000Z" itemprop="datePublished">2020-09-01</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Web/">Web</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <p>​    <strong>Web基础系列</strong>主要对Java开发中Web相关的内容(如<code>HTML</code>、<code>CSS</code>、<code>JavaScrip</code>t等)进行<strong>最基本的讲解</strong>，本系列其他文章请参考<a target="_blank" rel="noopener" href="https://ykailh.github.io/tags/Web%E5%9F%BA%E7%A1%80/">Web基础</a> 。</p>
-<p>​    本文主要对<code>HTML</code>进行简单的了解，想要更详细的了解HTML可以参考这个教程<a target="_blank" rel="noopener" href="https://www.runoob.com/html/html-tutorial.html">HTML教程</a> 。</p>
-<p>​                                                                                                                                                        <strong><em>基于HTML5演示</em></strong></p> 
-      <a class="article-more-link" href="/2020/09/01/Web%E5%9F%BA%E7%A1%80%E4%B9%8BHTML/"
-        >阅读更多...</a
-      >
-       
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/HTML/" rel="tag">HTML</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Web/" rel="tag">Web</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Web%E5%9F%BA%E7%A1%80/" rel="tag">Web基础</a></li></ul>
-
-    </footer>
-  </div>
-
-    
- 
-   
-</article>
-
-    
-    <article
-  id="post-MySQL基础之函数"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/08/22/MySQL%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%87%BD%E6%95%B0/"
-    >MySQL基础之函数</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2020/08/22/MySQL%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%87%BD%E6%95%B0/" class="article-date">
-  <time datetime="2020-08-22T11:38:46.000Z" itemprop="datePublished">2020-08-22</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/MySQL/">MySQL</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <p>​    MySQL函数主要分为<strong>单行函数</strong>以及<strong>分组函数</strong>两种，其中单行函数又以作用对象不同分为字符串函数、数值函数等。以下按照类型进行演示。</p> 
-      <a class="article-more-link" href="/2020/08/22/MySQL%E5%9F%BA%E7%A1%80%E4%B9%8B%E5%87%BD%E6%95%B0/"
-        >阅读更多...</a
-      >
-       
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MySQL/" rel="tag">MySQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MySQL%E5%9F%BA%E7%A1%80/" rel="tag">MySQL基础</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SQL/" rel="tag">SQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SQL%E5%87%BD%E6%95%B0/" rel="tag">SQL函数</a></li></ul>
-
-    </footer>
-  </div>
-
-    
- 
-   
-</article>
-
-    
   </article>
   
 
   
   <nav class="page-nav">
     
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">下一页</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">下一页</a>
   </nav>
   
 </section>
