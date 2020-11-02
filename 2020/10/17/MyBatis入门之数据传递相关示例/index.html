@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    MyBatis入门之数据传递相关示例 |  
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+  
+  
+
+  
+
+<link rel="alternate" href="/atom.xml" title="Ykailh" type="application/atom+xml">
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-MyBatis入门之数据传递相关示例"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  MyBatis入门之数据传递相关示例
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/10/17/MyBatis%E5%85%A5%E9%97%A8%E4%B9%8B%E6%95%B0%E6%8D%AE%E4%BC%A0%E9%80%92%E7%9B%B8%E5%85%B3%E7%A4%BA%E4%BE%8B/" class="article-date">
+  <time datetime="2020-10-17T10:20:30.000Z" itemprop="datePublished">2020-10-17</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/MyBatis/">MyBatis</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">2k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">8 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>​    对映射文件中有关于参数部分的一些常用场景以及查询结果的封装进行一些讲解，建议与官方手册配合阅读。</p>
+<a id="more"></a>
+
+<h2 id="获取主键的值"><a href="#获取主键的值" class="headerlink" title="获取主键的值"></a>获取主键的值</h2><p>​    一般在插入操作时需要获取插入后数据库中主键的值，对于不同的数据库分为以下两个情况。支持主键自增的数据库，如<code>MySQL</code>。和不支持主键自增的数据库，如<code>Oracle</code>。</p>
+<h3 id="1-支持主键自增"><a href="#1-支持主键自增" class="headerlink" title="1.支持主键自增"></a>1.支持主键自增</h3><p>​    对于支持主键自增的数据库，可以在配置SQL映射元素的属性中将<code>useGeneratedKeys</code>设为true，这样MyBatis将会获取插入后的主键值并赋值到<code>keyProperty</code>属性所指定的参数中。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--     public Boolean insertEmployee(Employee employee); --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">insert</span> <span class="attr">id</span>=<span class="string">&quot;insertEmployee&quot;</span> </span></span><br><span class="line"><span class="tag"><span class="attr">parameterType</span>=<span class="string">&quot;com.ykailh.bean.Employee&quot;</span> </span></span><br><span class="line"><span class="tag"><span class="attr">databaseId</span>=<span class="string">&quot;mysql&quot;</span></span></span><br><span class="line"><span class="tag"><span class="attr">useGeneratedKeys</span>=<span class="string">&quot;true&quot;</span> <span class="attr">keyProperty</span>=<span class="string">&quot;id&quot;</span>&gt;</span></span><br><span class="line">    INSERT INTO </span><br><span class="line">    t_employee(empname,gender,email) </span><br><span class="line">    VALUES(#&#123;empName&#125;,#&#123;gender&#125;,#&#123;email&#125;) </span><br><span class="line"><span class="tag">&lt;/<span class="name">insert</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>上面配置中，当调用<code>insertEmployee(Employee employee)</code>方法时，会将主键自增后的值赋予参数对象<code>employee</code>的id属性。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyBatisTest</span> </span>&#123;</span><br><span class="line">    SqlSessionFactory sqlSessionFactory;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@BeforeEach</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">initSqlSessionFactory</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        <span class="comment">//根据全局配置文件创建一个SqlSessionFactory</span></span><br><span class="line">        String resource = <span class="string">&quot;mybatis-config.xml&quot;</span>;</span><br><span class="line">        InputStream inputStream = Resources.getResourceAsStream(resource);</span><br><span class="line">        sqlSessionFactory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(inputStream);;</span><br><span class="line">    &#125;    </span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">insertEmployeeTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        </span><br><span class="line">        SqlSession openSession = sqlSessionFactory.openSession();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//获取SqlSession</span></span><br><span class="line">            <span class="comment">//获取EmployeeDao的实现</span></span><br><span class="line">            EmployeeDao employeeDao = openSession.getMapper(EmployeeDao.class);</span><br><span class="line">            <span class="comment">//调用方法</span></span><br><span class="line">            Employee employee = <span class="keyword">new</span> Employee(<span class="string">&quot;wangwu&quot;</span>,<span class="number">1</span>,<span class="string">&quot;147258@163.com&quot;</span>);</span><br><span class="line">            Boolean result = employeeDao.insertEmployee(employee);</span><br><span class="line">            System.out.println(result);    <span class="comment">//ture</span></span><br><span class="line">            System.out.println(employee.getId());<span class="comment">//1</span></span><br><span class="line">            openSession.commit();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            openSession.close();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-不支持主键自增"><a href="#2-不支持主键自增" class="headerlink" title="2.不支持主键自增"></a>2.不支持主键自增</h3><p>​    对于不支持主键自增的情况，可以在使用<code>selectKey</code>标签在执行插入语句前查询出主键的值加一后赋给<code>keyProperty</code>属性所指定的参数。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--     public Boolean insertEmployee(Employee employee); --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">insert</span> <span class="attr">id</span>=<span class="string">&quot;insertEmployee&quot;</span> </span></span><br><span class="line"><span class="tag"><span class="attr">parameterType</span>=<span class="string">&quot;com.ykailh.bean.Employee&quot;</span> </span></span><br><span class="line"><span class="tag"><span class="attr">databaseId</span>=<span class="string">&quot;oracle&quot;</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- order指定查询执行的顺序 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">selectKey</span> <span class="attr">order</span>=<span class="string">&quot;BEFORE&quot;</span> <span class="attr">keyProperty</span>=<span class="string">&quot;id&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;Integer&quot;</span>&gt;</span></span><br><span class="line">        SELECT MAX(id)+1 FROM t_employee </span><br><span class="line"><span class="tag">&lt;/<span class="name">selectKey</span>&gt;</span></span><br><span class="line">    INSERT INTO </span><br><span class="line">    t_employee(id,empname,gender,email) </span><br><span class="line">    VALUES(#&#123;id&#125;,#&#123;empName&#125;,#&#123;gender&#125;,#&#123;email&#125;) </span><br><span class="line"><span class="tag">&lt;/<span class="name">insert</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="获取参数的值"><a href="#获取参数的值" class="headerlink" title="获取参数的值"></a>获取参数的值</h2><p>​    参数列表传入不同参数时，如何在映射文件编写SQL语句时正确的获取？MyBatis对参数传入Map类型和POJO类型时有特殊处理，传入多个参数时MyBatis也会将这些参数封装为Map。参数列表大致分为以下几种情况。</p>
+<h3 id="1-单个一般参数"><a href="#1-单个一般参数" class="headerlink" title="1.单个一般参数"></a>1.单个一般参数</h3><p>​    在方法只有一个一般参数时，可以使用<code>#&#123;任意值&#125;</code>的方式获取到这个值。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">&lt;!-- public Employee getEmployeeById(Integer id) --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;getEmployeeById&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.ykailh.bean.Employee&quot;</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 无论#&#123;&#125;内是什么值 所获取到的都是id的值 --&gt;</span></span><br><span class="line">  select * from t_employee where id = #&#123;abc&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span></span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-单个POJO参数"><a href="#2-单个POJO参数" class="headerlink" title="2.单个POJO参数"></a>2.单个POJO参数</h3><p>​    以POJO做为参数的情况下，MyBatis会将POJO封装为<strong>以属性名作为Key以属性值作为Value的map</strong>中。这样可以使用<code>#&#123;属性名&#125;</code>的方式进行参数的获取</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--     public Boolean updateEmployeeById(Employee employee) --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">update</span> <span class="attr">id</span>=<span class="string">&quot;updateEmployeeById&quot;</span>&gt;</span></span><br><span class="line">    UPDATE </span><br><span class="line">    t_employee </span><br><span class="line">    SET empname=#&#123;empName&#125;,gender=#&#123;gender&#125;,email=#&#123;email&#125;</span><br><span class="line">    WHERE id=#&#123;id&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">update</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-单个Map类型参数"><a href="#3-单个Map类型参数" class="headerlink" title="3.单个Map类型参数"></a>3.单个Map类型参数</h3><p>​    以Map类型作为参数时，获取值的方式为<code>#&#123;Key&#125;</code>。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- public Employee getEmployeeByIdAndName(Map&lt;String,Object&gt; map) --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;getEmployeeByIdAndName&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.ykailh.bean.Employee&quot;</span>&gt;</span></span><br><span class="line">    select * from t_employee where id = #&#123;id&#125; AND empname = #&#123;name&#125; </span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>测试：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">getEmployeeByIdAndNameTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    SqlSession openSession = sqlSessionFactory.openSession();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">//获取SqlSession</span></span><br><span class="line">        <span class="comment">//获取EmployeeDao的实现</span></span><br><span class="line">        EmployeeDao employeeDao = openSession.getMapper(EmployeeDao.class);</span><br><span class="line">        Map&lt;String, Object&gt; map = <span class="keyword">new</span> HashMap&lt;String, Object&gt;();</span><br><span class="line">        map.put(<span class="string">&quot;id&quot;</span>,<span class="number">2</span>);</span><br><span class="line">        map.put(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;admin&quot;</span>);</span><br><span class="line">        Employee employee = employeeDao.getEmployeeByIdAndName(map);</span><br><span class="line">        System.out.println(employee);</span><br><span class="line">           <span class="comment">//Employee [id=2, empName=admin, gender=1, email=16549849@qq.com]</span></span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        openSession.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-多个参数"><a href="#4-多个参数" class="headerlink" title="4.多个参数"></a>4.多个参数</h3><p>​    在有多个参数的情况下，MyBatis会将这些参数封装为一个map，它们的Key值默认为为参数位置索引，0,1,2…，和参数位置Parma1，Parma2 ….。<strong>注意，使用<code>#&#123;参数名&#125;</code>是无法获取参数的值的。</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- public Employee getEmployeeByGenderAndName(Integer gender,String name); --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;getEmployeeByGenderAndName&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.ykailh.bean.Employee&quot;</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 使用索引或参数位置获取参数值 --&gt;</span></span><br><span class="line">    select * from t_employee where gender = #&#123;0&#125; AND empname = #&#123;param2&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>如果不想使用默认的Key，可以在方法的参数前使用<code>@Param(Key值)</code>这个注解，这样就能够通过指定的Key值去获取参数值。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">  <span class="comment">&lt;!-- public Employee getEmployeeByGenderAndName</span></span><br><span class="line"><span class="comment">(@Param(&quot;gender&quot;)Integer gender,@Param(&quot;name&quot;)String name); --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;getEmployeeByGenderAndName&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.ykailh.bean.Employee&quot;</span>&gt;</span></span><br><span class="line">      <span class="comment">&lt;!-- 使用索引或参数位置获取参数值 --&gt;</span></span><br><span class="line">      select * from t_employee where gender = #&#123;gender&#125; AND empname = #&#123;name&#125;</span><br><span class="line">  <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="5-与"><a href="#5-与" class="headerlink" title="5.#{}与${}"></a>5.#{}与${}</h3><p>​    除了可以通过<code>#&#123;&#125;</code>的方式获取值外还可以使用<code>$&#123;&#125;</code>获取，它们的区别为使用<code>#&#123;&#125;</code>方式获取是通过预编译的方式写入SQL语句中的（类似JDBC里设置？值），而使用<code>$&#123;&#125;</code>方式为以拼接字符串的形式拼接到SQL语句中。针对这两个特性，一般在获取参数值时使用<code>#&#123;&#125;</code>获取，除此之外的情况（例如动态获取表名等）使用<code>$&#123;&#125;</code>方式获取。</p>
+<h2 id="查询结果的封装"><a href="#查询结果的封装" class="headerlink" title="查询结果的封装"></a>查询结果的封装</h2><p>​    对于查询结果的返回值一般有以下几种情况：</p>
+<h3 id="1-以整型为返回值类型"><a href="#1-以整型为返回值类型" class="headerlink" title="1.以整型为返回值类型"></a>1.以整型为返回值类型</h3><p>​    返回值为整型时MyBatis会返回SQL语句所影响的行数。</p>
+<h3 id="2-以布尔为返回值类型"><a href="#2-以布尔为返回值类型" class="headerlink" title="2.以布尔为返回值类型"></a>2.以布尔为返回值类型</h3><p>​    若语句对数据库影响行数大于0则返回true，否则返回false。</p>
+<h3 id="3-以POJO为返回值类型"><a href="#3-以POJO为返回值类型" class="headerlink" title="3.以POJO为返回值类型"></a>3.以POJO为返回值类型</h3><p>​    需要先将<code>resultType</code>属性设置为POJO类型，MyBatis会根据字段名与POJO的属性名一一对应封装为POJO对象并返回。</p>
+<h3 id="4-以List为返回值类型"><a href="#4-以List为返回值类型" class="headerlink" title="4.以List为返回值类型"></a>4.以List为返回值类型</h3><p>一般用于接收多条查询结果，需要注意的是需要将<code>resultType</code>属性设置为List所装载的对象，而不是List本身。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- public List&lt;Employee&gt; getEmployees(); --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;getEmployees&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.ykailh.bean.Employee&quot;</span>&gt;</span></span><br><span class="line">    select * from t_employee</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="5-以Map类型为返回值"><a href="#5-以Map类型为返回值" class="headerlink" title="5.以Map类型为返回值"></a>5.以Map类型为返回值</h3><p>​    以map为返回值有两种情况：</p>
+<ul>
+<li><p><strong>单条记录封装为Map</strong></p>
+<p>查询返回单条记录时，指定<code>resultType</code>为map，MyBatis会<strong>以字段名为Key，值为Value封装Map</strong>。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- public Map&lt;String,Object&gt; getEmployeeByIdReturnMap(Integer id); --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;getEmployeeByIdReturnMap&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;map&quot;</span>&gt;</span></span><br><span class="line">    select * from t_employee where id = #&#123;id&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>多条记录封装为Map</strong></p>
+<p>将返回的多条记录封装为Map一般为是以主键值为Key，POJO为Value。在方法上使用<code>@MapKey(&quot;字段名&quot;)</code>指定Key值，使用<code>resultType</code>指定Value值。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">&lt;!-- @MapKey(&quot;id&quot;)</span></span><br><span class="line"><span class="comment">public Map&lt;Integer,Employee&gt; getEmployeesReturnMap(); --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;getEmployeesReturnMap&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.ykailh.bean.Employee&quot;</span>&gt;</span></span><br><span class="line">      select * from t_employee</span><br><span class="line">  <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="6-自定义封装规则"><a href="#6-自定义封装规则" class="headerlink" title="6.自定义封装规则"></a>6.自定义封装规则</h3><p>​    除了默认的封装规则外，还可以根据自己的需求定义数据库的字段与POJO的属性间的映射关系。一般用在字段名与属性名不一致的情况。</p>
+<p>例如：</p>
+<p><strong>Cat.java：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Cat</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Integer id;</span><br><span class="line">    <span class="keyword">private</span> String name;    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>Cat所对应的表为:</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> t_cat(</span><br><span class="line">cid <span class="built_in">INT</span>(<span class="number">11</span>),</span><br><span class="line">cname <span class="built_in">VARCHAR</span>(<span class="number">50</span>)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>规则定义</strong></p>
+<p>在<code>mapper</code>下使用<code>resultMap</code>元素定义封装规则，其中元素<code>id</code>为定义主键列映射关系，元素<code>result</code>定义普通列的映射关系。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">type</span>=<span class="string">&quot;com.ykailh.bean.Cat&quot;</span> <span class="attr">id</span>=<span class="string">&quot;cat&quot;</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 使用id元素指定主键列，column为字段名，property为对应的属性名 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">&quot;id&quot;</span> <span class="attr">column</span>=<span class="string">&quot;cid&quot;</span>/&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 使用result元素指定普通列的映射关系 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;name&quot;</span> <span class="attr">column</span>=<span class="string">&quot;cname&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用自定义规则</p>
+<p>在原来使用<code>resultType</code>的地方使用<code>resultMap</code>属性，指定需要使用自定义封装规则的id值。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- public Cat getCatById(Integer id); --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;getCatById&quot;</span> <span class="attr">resultMap</span>=<span class="string">&quot;cat&quot;</span>&gt;</span></span><br><span class="line">    SELECT * FROM t_cat WHERE cid = #&#123;id&#125;;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2020/10/17/MyBatis%E5%85%A5%E9%97%A8%E4%B9%8B%E6%95%B0%E6%8D%AE%E4%BC%A0%E9%80%92%E7%9B%B8%E5%85%B3%E7%A4%BA%E4%BE%8B/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MyBatis/" rel="tag">MyBatis</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MyBatis%E5%85%A5%E9%97%A8/" rel="tag">MyBatis入门</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+    
+      <a href="/2020/10/16/MyBatis%E5%85%A5%E9%97%A8%E4%B9%8B%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">MyBatis入门之映射文件</div>
+      </a>
+    
+  </nav>
+
+   
+<!-- valine评论 -->
+<div id="vcomments-box">
+  <div id="vcomments"></div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script>
+<script>
+  new Valine({
+    el: "#vcomments",
+    app_id: "",
+    app_key: "",
+    path: window.location.pathname,
+    avatar: "monsterid",
+    placeholder: "给我的文章加点评论吧~",
+    recordIP: true,
+  });
+  const infoEle = document.querySelector("#vcomments .info");
+  if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+    infoEle.childNodes.forEach(function (item) {
+      item.parentNode.removeChild(item);
+    });
+  }
+</script>
+<style>
+  #vcomments-box {
+    padding: 5px 30px;
+  }
+
+  @media screen and (max-width: 800px) {
+    #vcomments-box {
+      padding: 5px 0px;
+    }
+  }
+
+  #vcomments-box #vcomments {
+    background-color: #fff;
+  }
+
+  .v .vlist .vcard .vh {
+    padding-right: 20px;
+  }
+
+  .v .vlist .vcard {
+    padding-left: 10px;
+  }
+</style>
+
+ 
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2020
+        <i class="ri-heart-fill heart_icon"></i> Ykailh
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        Powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="division">|</span>
+        Theme - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Ykailh"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+
+<link rel="stylesheet" href="/css/clipboard.css">
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>

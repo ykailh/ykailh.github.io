@@ -154,7 +154,7 @@
 <p>简单说明一下上面的流程：</p>
 <ol>
 <li>根据全局配置文件创建一个SqlSessionFactory，它负责产生SqlSession。</li>
-<li>通过SqlSessionFactory获取一个SqlSession，它是一个与数据库的链接，类似于线程池与线程的关系。</li>
+<li>通过SqlSessionFactory获取SqlSession，一个与数据库的连接对象。</li>
 <li>通过这个SqlSession可以获取到由MyBatis根据Sql映射文件所产生的Dao接口的实现类。</li>
 <li>调用方法，获取结果。</li>
 </ol>
@@ -222,6 +222,15 @@
 
    
   <nav class="article-nav">
+    
+      <a href="/2020/10/15/MyBatis%E5%85%A5%E9%97%A8%E4%B9%8B%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            MyBatis入门之全局配置文件
+          
+        </div>
+      </a>
     
     
       <a href="/2020/10/10/SpringMVC%E5%85%A5%E9%97%A8%E4%B9%8B%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/" class="article-nav-link">
